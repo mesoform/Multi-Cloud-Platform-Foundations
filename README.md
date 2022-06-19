@@ -1,4 +1,4 @@
-# Multi-Cloud Platform Module
+# Multi-Cloud Platform Foundations
 
 * [Information](#Information)  
 * [Structure](#Structure)     
