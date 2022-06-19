@@ -13,8 +13,8 @@ def test_list_org_policy_allow_value(query):
     tests that when given a list of organization policies in a format which is both simple for users
     and easily scalable, that an allow list policy has the correct value
 
-    "gcp.resourceLocations-98765432100" = {
-    "constraint" = "gcp.resourceLocations"
+    "Google Cloud.resourceLocations-98765432100" = {
+    "constraint" = "Google Cloud.resourceLocations"
     "list_policy" = {
       "allow" = [
         "in:europe-west2-locations",

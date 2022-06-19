@@ -13,8 +13,8 @@ def test_restore_project_policy_default_value(query):
     tests that when given a list of organization policies in a format which is both simple for users
     and easily scalable, that an allow list policy has the correct value
 
-    "gcp.resourceLocations-mcp-testing-23452432" = {
-        "constraint" = "gcp.resourceLocations"
+    "Google Cloud.resourceLocations-mcp-testing-23452432" = {
+        "constraint" = "Google Cloud.resourceLocations"
         "project_id" = "mcp-testing-23452432"
         "restore_policy" = {
           "default" = "true"
