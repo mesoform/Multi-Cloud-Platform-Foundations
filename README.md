@@ -1,6 +1,6 @@
 # Multi-Cloud Platform Foundations
 
-* [Mesoform Multi-Cloud Platform Foundatuins](#multi-cloud-platform-foundations)
+* [Mesoform Multi-Cloud Platform Foundations](#multi-cloud-platform-foundations)
   * [Background](#Background)
 * [This Repository](#this-repository)
   * [MCCF](#MCCF)
