@@ -20,6 +20,12 @@ adapts it into HCL, the language of Hashicorp Terraform, and deploys it using Te
 state management) which Terraform offers.
 
 
+## MCCF
+MCCF is a YAML-based configuration allowing for simple mapping of platform APIs for deploying applications. The adapters 
+in this repository allow users to provide MCCF to configure these foundational resources as described [above](#this-repository).
+Full details of MCCF can be found in the main [MCP repository](https://github.com/mesoform/Multi-Cloud-Platform).
+
+
 # This Repository
 This repository contains the codebase for IaaS and PaaS adapters necessary as part of a foundational platform to which 
 MCP serverless/container workloads can be deployed to. For example, before a Google Cloud Run application can be deployed, 
@@ -30,12 +36,6 @@ The adapters defined here are for resources which are part of a local context (w
 but most likely managed by a core platform team because they introduce security risks. By using compliance considerations 
 designed into MCCF, such teams can delegate the management of these resources to project teams whilst applying controls 
 on their usage which may not be readily available through other tools (like Google Organisation Policies or AWS Guardrails)
-
-
-## MCCF
-MCCF is a YAML-based configuration allowing for simple mapping of platform APIs for deploying applications. The adapters 
-in this repository allow users to provide MCCF to configure these foundational resources as described [above](#this-repository).
-Full details of MCCF can be found in the main [MCP repository](https://github.com/mesoform/Multi-Cloud-Platform).
 
 
 # Contributing
