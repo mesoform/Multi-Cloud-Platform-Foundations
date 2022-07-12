@@ -1,9 +1,0 @@
-folders:
-  - name: 123
-    parent: organization
-  - name: 345
-    parent: organization
-  - name: 555
-    parent: 345
-  - name: 996
-    parent: 123
