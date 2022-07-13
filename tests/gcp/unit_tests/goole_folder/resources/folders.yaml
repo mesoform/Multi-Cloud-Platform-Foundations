@@ -1,0 +1,7 @@
+components:
+  level_1:
+    - parent: "organizations/85112035544"
+      name: 
+        - stage
+        - dev
+        - prod
