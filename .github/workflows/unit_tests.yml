@@ -46,7 +46,8 @@ jobs:
     # Run unit tests in GCP module
     - name: Run GCP unit tests
       run: |
-        cd ./tests/gcp/unit_tests
+        ls
+        cd tests/gcp/unit_tests
         MESSAGE="PASSED: All unit tests passed"
         for dir in $(find $(pwd) \( -type f -name 'main.tf' \) |  sed -r 's|/[^/]+$||'); do
         if [ $dir != "google_folder" ]
