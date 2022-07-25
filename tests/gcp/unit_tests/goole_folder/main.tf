@@ -1,24 +1,16 @@
-resource "google_folder" "level_1" {
-  for_each     = { for entry in local.level_1 : "${entry.name}.${entry.parent}" => entry }
-  display_name = each.value.name
-  parent       = each.value.parent
+
+data google_folder self {
+  count = can(regex("^folders/", local.parent_id)) ? 1 : 0
+  folder = local.parent_id
 }
 
-resource "google_folder" "level_2" {
-  for_each     = { for entry in local.resource_level_2 : "${entry.name}.${entry.parent}" => entry }
-  display_name = each.value.name
-  parent       = each.value.parent
-  depends_on = [
-    google_folder.level_1
-  ]
+data google_organization self {
+  count = can(regex("^organizations/", local.parent_id)) ? 1 : 0
+  organization = local.parent_id
 }
 
-resource "google_folder" "level_3" {
-  for_each     = { for entry in local.resource_level_3 : "${entry.name}.${entry.parent}" => entry }
-  display_name = each.value.name
-  parent       = each.value.parent
-  depends_on = [
-    google_folder.level_1,
-    google_folder.level_2
-  ]
+resource google_folder self {
+  for_each     = local.names
+  display_name = each.value
+  parent       = local.parent
 }

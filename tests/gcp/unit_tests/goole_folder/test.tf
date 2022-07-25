@@ -1,6 +1,6 @@
 
 data external test_google_folder {
-  query   = local.level_1[0]
+  query   = local.parent_id
   program = ["python", "${path.module}/test_google_folder.py"]
 }
 output docker_config {

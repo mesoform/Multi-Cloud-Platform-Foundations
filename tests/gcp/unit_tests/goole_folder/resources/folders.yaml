@@ -1,7 +1,6 @@
-components:
-  level_1:
-    - parent: "organizations/85112035544"
-      name: 
-        - stage
-        - dev
-        - prod
+components: 
+  parent_id: "folders/227414018885"
+  display_name: 
+    - python
+    - bash
+    - java

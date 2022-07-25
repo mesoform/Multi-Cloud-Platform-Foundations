@@ -15,9 +15,8 @@ except Exception as e:
 """
 
 expected_data = {
-    "name" : "stage",
-    "parent" :"organizations/85112035544"
-  }
+    parent_id = "folders/227414018885"
+}
 
 if __name__ == '__main__':
     python_validator(expected_data)
