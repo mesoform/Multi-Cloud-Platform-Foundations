@@ -1,3 +1,6 @@
+locals {
+  parent = can(regex("^folders/", local.parent_id)) ? data.google_folder.self[0].name : data.google_organization.self[0].name
+}
 
 data "google_folder" "self" {
   count  = can(regex("^folders/", local.parent_id)) ? 1 : 0
