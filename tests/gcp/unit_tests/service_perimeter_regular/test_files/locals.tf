@@ -1,1 +1,0 @@
-../../../../../Google Cloud/resource-manager/organization_policy/locals.tf
