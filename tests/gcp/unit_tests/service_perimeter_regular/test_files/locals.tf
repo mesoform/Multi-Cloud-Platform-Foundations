@@ -1,1 +1,1 @@
-../../../../../gcp/access_context_manager/service_perimeter_regular/locals.tf
+../../../../../Google Cloud/resource-manager/organization_policy/locals.tf

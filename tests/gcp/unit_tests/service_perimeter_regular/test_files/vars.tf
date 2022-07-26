@@ -1,1 +1,1 @@
-../../../../../gcp/access_context_manager/service_perimeter_regular/vars.tf
+../../../../../Google Cloud/resource-manager/organization_policy/vars.tf
