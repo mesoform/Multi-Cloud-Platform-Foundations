@@ -55,7 +55,7 @@ variable organization_id {
   type = string
 }
 module organization_policies {
-  source = "git:https://github.com/mesoform/terraform-infrastructure-modules.git//Google Cloud/resource-manager/organization_policy"
+  source = "git:https://github.com/mesoform/terraform-infrastructure-modules.git//Google/resource-manager/organization_policy"
   
   organization_id = var.organization_id
   organization_policies = var.organization_policies
@@ -81,7 +81,7 @@ Pass in values in a format like below
   "organization_id": "98765432100",
   "organization_policies": [
     {
-      "constraint": "Google Cloud.resourceLocations",
+      "constraint": "Google.resourceLocations",
       "allow": "in:europe-west2-locations"
     },
     {
@@ -108,7 +108,7 @@ Pass in values in a format like below
       "restore_default": "true"
     },
     {
-      "constraint": "Google Cloud.resourceLocations",
+      "constraint": "Google.resourceLocations",
       "project_id": "mcp-testing-23452432",
       "restore_default": "true"
     }

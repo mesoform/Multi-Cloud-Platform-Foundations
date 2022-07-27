@@ -1,4 +1,4 @@
 module resources {
-  source = "../../../../../Google Cloud/resource-manager/projects"
+  source = "../../../../../Google/resource-manager/projects"
   project_ids = var.resources
 }
