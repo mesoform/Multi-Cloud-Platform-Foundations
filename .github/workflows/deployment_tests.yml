@@ -115,17 +115,17 @@ jobs:
       #    sed -i "s/<image_uri>/europe-west2-docker.pkg.dev\/${{ steps.vars.outputs.GCP_PROJECT_ID }}\/app-repo\/helloworld:latest/" gcp_cloudrun.yml
 
       # Setup main.tf and deploy gcp modules. Also plan destroy but don't apply due to app engine issues.
-      - name: Deploy GCP modules
-        run: |
-          cd GCP/terraform
-          sleep 5m
-          sed -i "s/gcs-bucket-name/${{ steps.vars.outputs.GCP_PROJECT_ID }}_bucket/" main.tf
-          sed -i "s/source-path/..\/..\/..\/..\/..\/mcp/" main.tf
-          cat main.tf
-          terraform init
-          terraform plan -out="./plan.tfplan"
-          terraform apply plan.tfplan
-          terraform plan -destroy -out="./destroy.tfplan"
+      # - name: Deploy GCP modules
+      #   run: |
+      #     cd GCP/terraform
+      #     sleep 5m
+      #     sed -i "s/gcs-bucket-name/${{ steps.vars.outputs.GCP_PROJECT_ID }}_bucket/" main.tf
+      #     sed -i "s/source-path/..\/..\/..\/..\/..\/mcp/" main.tf
+      #     cat main.tf
+      #     terraform init
+      #     terraform plan -out="./plan.tfplan"
+      #     terraform apply plan.tfplan
+      #     terraform plan -destroy -out="./destroy.tfplan"
 
       - name: delete project
         if : ${{ always() }}
