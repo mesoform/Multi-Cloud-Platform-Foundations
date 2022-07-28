@@ -1,3 +1,6 @@
+"""
+Terraform external provider just handles strings in maps, so tests need to consider this
+"""
 from sys import path, stderr
 
 try:
@@ -6,16 +9,14 @@ try:
 except Exception as e:
     print(e, stderr)
 
-"""
-    Tests whether not specifying valyues will default allowed services to being the enum "RESTRICTED-SERVICES"
-"""
 
+"""
+    Checks the data specified in the required metadata
+"""
 
 expected_data = {
-        "RESTRICTED-SERVICES": "RESTRICTED-SERVICES"
+    "parent_id": "folders/227414018885"
 }
-
-
 
 if __name__ == '__main__':
     python_validator(expected_data)

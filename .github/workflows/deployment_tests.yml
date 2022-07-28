@@ -12,9 +12,9 @@ jobs:
     runs-on: ubuntu-latest
 
     env:
-      working-directory: ./tests/mcp/deployment
+      working-directory: ./tests/gcp/deployment
       GCP_PROJECT_ID: "mcpdeploytest-${GITHUB_SHA::8}-$(date +%H%M%S)"
-      KUBE_CONFIG_PATH: ~/.kube/config
+      #KUBE_CONFIG_PATH: ~/.kube/config
 
     defaults:
       run:
@@ -81,38 +81,38 @@ jobs:
 
 
       # Install kubectl and create gke cluster
-      - name: setup kubectl
-        run: |
-          gcloud components install kubectl
-          gcloud container clusters create-auto mcpdeploytest-cluster --region=europe-west2
-          gcloud container clusters get-credentials mcpdeploytest-cluster --region=europe-west2
+      #- name: setup kubectl
+      #  run: |
+      #    gcloud components install kubectl
+      #    gcloud container clusters create-auto mcpdeploytest-cluster --region=europe-west2
+      #    gcloud container clusters get-credentials mcpdeploytest-cluster --region=europe-west2
 
       # Setup main.tf, deploy and destroy k8s
-      - name: deploy k8s
-        run: |
-          cd k8s/terraform
-          sed -i "s/gcs-bucket-name/${{ steps.vars.outputs.GCP_PROJECT_ID }}_bucket/" main.tf
-          sed -i "s/source-path/..\/..\/..\/..\/..\/mcp/" main.tf
-          cat main.tf
-          terraform init
-          terraform plan -out="./plan.tfplan"
-          terraform apply plan.tfplan
-          terraform plan -destroy -out="./destroy.tfplan"
-          terraform apply destroy.tfplan
+      #- name: deploy k8s
+      #  run: |
+      #    cd k8s/terraform
+      #    sed -i "s/gcs-bucket-name/${{ steps.vars.outputs.GCP_PROJECT_ID }}_bucket/" main.tf
+      #    sed -i "s/source-path/..\/..\/..\/..\/..\/mcp/" main.tf
+      #    cat main.tf
+      #    terraform init
+      #    terraform plan -out="./plan.tfplan"
+      #    terraform apply plan.tfplan
+      #    terraform plan -destroy -out="./destroy.tfplan"
+      #    terraform apply destroy.tfplan
 
       # Deploy app image to Artifact Repository
-      - name: Build App
-        run: |
-          cd GCP/app/build/helloworld
-          gcloud artifacts repositories create app-repo --repository-format=docker --location=europe-west2 --description="Repository for storing app"
-          gcloud builds submit --tag europe-west2-docker.pkg.dev/${{ steps.vars.outputs.GCP_PROJECT_ID }}/app-repo/helloworld
+      #- name: Build App
+      #  run: |
+      #    cd GCP/app/build/helloworld
+      #    gcloud artifacts repositories create app-repo --repository-format=docker --location=europe-west2 --description="Repository for storing app"
+      #    gcloud builds submit --tag europe-west2-docker.pkg.dev/${{ steps.vars.outputs.GCP_PROJECT_ID }}/app-repo/helloworld
 
       # Configure yaml files to contain relevant project info
-      - name: Add image URI to GCP Files
-        run: |
-          cd GCP
-          sed -i "s/<image_uri>/europe-west2-docker.pkg.dev\/${{ steps.vars.outputs.GCP_PROJECT_ID }}\/app-repo\/helloworld:latest/" gcp_ae.yml
-          sed -i "s/<image_uri>/europe-west2-docker.pkg.dev\/${{ steps.vars.outputs.GCP_PROJECT_ID }}\/app-repo\/helloworld:latest/" gcp_cloudrun.yml
+      #- name: Add image URI to GCP Files
+      #  run: |
+      #    cd GCP
+      #    sed -i "s/<image_uri>/europe-west2-docker.pkg.dev\/${{ steps.vars.outputs.GCP_PROJECT_ID }}\/app-repo\/helloworld:latest/" gcp_ae.yml
+      #    sed -i "s/<image_uri>/europe-west2-docker.pkg.dev\/${{ steps.vars.outputs.GCP_PROJECT_ID }}\/app-repo\/helloworld:latest/" gcp_cloudrun.yml
 
       # Setup main.tf and deploy gcp modules. Also plan destroy but don't apply due to app engine issues.
       - name: Deploy GCP modules
@@ -135,22 +135,22 @@ jobs:
 
   ############################# Deployment Tests for GCP Access Context Manager ####################################
   ## Job to check if secret with service account for deploying perimeter exists
-  check-vpc-sa:
-    runs-on: ubuntu-latest
-    outputs:
-      sa-exists: ${{ steps.check.outputs.EXISTS }}
+  # check-vpc-sa:
+  #   runs-on: ubuntu-latest
+  #   outputs:
+  #     sa-exists: ${{ steps.check.outputs.EXISTS }}
 
-    steps:
-      - uses: actions/checkout@v2
+  #   steps:
+  #     - uses: actions/checkout@v2
 
-      - name: Check service account exists
-        id: check
-        run: |
-          if [[ "${{ secrets.GCP_VPC_SA_KEY }}" == *"private_key_id"* ]]; then
-            echo ::set-output name=EXISTS::true
-          else
-            echo ::set-output name=EXISTS::false
-          fi
+  #     - name: Check service account exists
+  #       id: check
+  #       run: |
+  #         if [[ "${{ secrets.GCP_VPC_SA_KEY }}" == *"private_key_id"* ]]; then
+  #           echo ::set-output name=EXISTS::true
+  #         else
+  #           echo ::set-output name=EXISTS::false
+  #         fi
 
   # If service account exists run this job
   GCP-perimeter-tests:
