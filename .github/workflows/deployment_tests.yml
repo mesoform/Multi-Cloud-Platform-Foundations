@@ -135,22 +135,22 @@ jobs:
 
   ############################# Deployment Tests for GCP Access Context Manager ####################################
   ## Job to check if secret with service account for deploying perimeter exists
-  check-vpc-sa:
-    runs-on: ubuntu-latest
-    outputs:
-      sa-exists: ${{ steps.check.outputs.EXISTS }}
+  # check-vpc-sa:
+  #   runs-on: ubuntu-latest
+  #   outputs:
+  #     sa-exists: ${{ steps.check.outputs.EXISTS }}
 
-    steps:
-      - uses: actions/checkout@v2
+  #   steps:
+  #     - uses: actions/checkout@v2
 
-      - name: Check service account exists
-        id: check
-        run: |
-          if [[ "${{ secrets.GCP_VPC_SA_KEY }}" == *"private_key_id"* ]]; then
-            echo ::set-output name=EXISTS::true
-          else
-            echo ::set-output name=EXISTS::false
-          fi
+  #     - name: Check service account exists
+  #       id: check
+  #       run: |
+  #         if [[ "${{ secrets.GCP_VPC_SA_KEY }}" == *"private_key_id"* ]]; then
+  #           echo ::set-output name=EXISTS::true
+  #         else
+  #           echo ::set-output name=EXISTS::false
+  #         fi
 
   # If service account exists run this job
   GCP-perimeter-tests:

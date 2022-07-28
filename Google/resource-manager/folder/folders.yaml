@@ -28,5 +28,4 @@ components:
         role: "roles/owner"
         members:
           - "user:info@kvit.pub"
-          
       

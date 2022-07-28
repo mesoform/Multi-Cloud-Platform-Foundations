@@ -10,7 +10,7 @@ How to use
 
 ```terraform
 module resources {
-  source = "github.com/mesoform/terraform-infrastructure-modules/Google Cloud/data/resource-manager/projects"
+  source = "github.com/mesoform/terraform-infrastructure-modules/Google/data/resource-manager/projects"
   project_ids = var.resources
 }
 
