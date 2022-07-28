@@ -135,7 +135,7 @@ jobs:
           terraform plan -out="./plan.tfplan"
           terraform apply plan.tfplan
           terraform plan -destroy -out="./destroy.tfplan"
-          terraform destroy destroy.tfplan
+          terraform apply destroy.tfplan
 
       # - name: delete project
       #   if : ${{ always() }}
