@@ -12,9 +12,9 @@ jobs:
     runs-on: ubuntu-latest
 
     env:
-      working-directory: ./tests/mcp/deployment
+      working-directory: ./tests/gcp/deployment
       GCP_PROJECT_ID: "mcpdeploytest-${GITHUB_SHA::8}-$(date +%H%M%S)"
-      KUBE_CONFIG_PATH: ~/.kube/config
+      #KUBE_CONFIG_PATH: ~/.kube/config
 
     defaults:
       run:
