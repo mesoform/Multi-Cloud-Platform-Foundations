@@ -126,7 +126,7 @@ jobs:
       #     terraform plan -out="./plan.tfplan"
       #     terraform apply plan.tfplan
       #     terraform plan -destroy -out="./destroy.tfplan"
-      Setup main.tf and deploy gcp modules. Also plan destroy but don't apply due to app engine issues.
+      # Setup main.tf and deploy gcp modules. Also plan destroy but don't apply due to app engine issues.
       - name: Deploy GCP modules
         run: |
           cd google_folder
