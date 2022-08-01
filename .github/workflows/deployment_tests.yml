@@ -41,7 +41,7 @@ jobs:
       - name: Add project ID to GCP Files
         run: |
           cd google_folder/resource
-          sed -i "s/<project_id>/${{secrets.GCP_PROJECT_ID}}/" folders.yaml
+          sed -i "s/<folder_id>/${{secrets.GCP_FOLDER_ID}}/" folders.yaml
           cat folders.yaml
           
       - name: Deploy Google folder 
