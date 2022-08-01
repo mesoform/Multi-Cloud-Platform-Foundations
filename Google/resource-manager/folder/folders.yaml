@@ -1,8 +1,8 @@
-project_id: "decisive-coda-355402"
+project_id: "project-id"
 location_id: "europe-west1"
 create_google_project: "false"
 components:
-  parent_id: "folders/227414018885"
+  parent_id: "folders/12345678"
   folders:
     - display_name: python
       folder_iam:
@@ -19,10 +19,10 @@ components:
         role: "roles/owner"
         members:
           - "user:info@kvit.pub"
-        # condition:
-        #   title: "expires_after_2019_12_31"
-        #   description: "Expiring at midnight of 2019-12-31"
-        #   expression: "request.time < timestamp(\"2020-01-01T00:00:00Z\")"
+        condition:
+          title: "expires_after_2019_12_31"
+          description: "Expiring at midnight of 2019-12-31"
+          expression: "request.time < timestamp(\"2020-01-01T00:00:00Z\")"
     - display_name: react
       folder_iam:
         role: "roles/owner"
