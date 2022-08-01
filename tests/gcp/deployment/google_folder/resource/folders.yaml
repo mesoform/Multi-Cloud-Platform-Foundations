@@ -1,4 +1,4 @@
-project_id: <project_id>
+project_id: &project_id <project_id>
 location_id: "europe-west1"
 create_google_project: "false"
 components:
