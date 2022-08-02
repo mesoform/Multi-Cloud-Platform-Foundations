@@ -1,8 +1,8 @@
-project_id: "decisive-coda-355402"
+project_id: "project-id"
 location_id: "europe-west1"
 create_google_project: "false"
 components:
-  parent_id: "folders/227414018885"
+  parent_id: "folders/12345678"
   folders:
     - display_name: python
       folder_iam:
