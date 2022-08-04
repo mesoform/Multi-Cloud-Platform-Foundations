@@ -37,7 +37,7 @@ jobs:
           service_account_key: ${{secrets.GCP_SA_KEY}}
           export_default_credentials: true
 
-      # Configure yaml files to contain relevant project info
+      # Deploy google folders
       - name: Add project ID to GCP Files
         run: |
           cd google_folder/resource
@@ -48,6 +48,23 @@ jobs:
       - name: Deploy Google folder 
         run: |
           cd google_folder
+          terraform init
+          terraform plan -out="./plan.tfplan"
+          terraform apply plan.tfplan
+          terraform plan -destroy -out="./destroy.tfplan"
+          terraform apply destroy.tfplan
+
+      # Deploy google projects
+      - name: Add project ID to GCP Files
+        run: |
+          cd google_project/resource
+          sed -i "s/<project_id>/${{secrets.GCP_PROJECT_ID}}/" projects.yaml
+          sed -i "s/<folder_id>/folders\/${{secrets.GCP_FOLDER_ID}}/" projects.yaml
+          cat projects.yaml
+          
+      - name: Deploy Google folder 
+        run: |
+          cd google_project
           terraform init
           terraform plan -out="./plan.tfplan"
           terraform apply plan.tfplan
