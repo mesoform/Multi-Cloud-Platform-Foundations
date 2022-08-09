@@ -39,31 +39,6 @@ data "google_iam_policy" "self" {
         expression  = lookup(condition.value, "expression", null)
       }
     }
-    }
+  }
   }
 }
-
-
-# data "google_iam_policy" "self" {
-#   for_each = local.folder_properties
-#   binding {
-#     role    = each.value.folder_iam.role
-#     members = each.value.folder_iam.members
-#     dynamic "condition" {
-#       for_each = lookup(each.value.folder_iam, "condition", null) == null ? {} : { condition : each.value.folder_iam.condition }
-#       content {
-#         title       = lookup(condition.value, "title", null)
-#         description = lookup(condition.value, "description", null)
-#         expression  = lookup(condition.value, "expression", null)
-#       }
-#     }
-#   }
-# }
-
- output "folder_properties" {
-   value = local.folder_properties
- }
-
- output "folder_iam" {
-   value = data.google_iam_policy.self[*]
- }

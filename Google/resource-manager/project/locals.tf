@@ -4,6 +4,7 @@ locals {
   projects_components       = try(lookup(local.projects, "components", {}), lookup(local.projects, "components"))
   projects_components_specs = lookup(local.projects_components, "specs", {})  
   project_properties = {for key, value in lookup (local.projects_components, "projects", {}) : 
-    key => value
+    key => {for name, content in value : name => value["${name}"]}
   }
+
 }

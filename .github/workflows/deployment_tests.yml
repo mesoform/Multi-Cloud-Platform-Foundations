@@ -60,6 +60,7 @@ jobs:
           cd google_project/resource
           sed -i "s/<project_id>/${{secrets.GCP_PROJECT_ID}}/" projects.yaml
           sed -i "s/<folder_id>/folders\/${{secrets.GCP_FOLDER_ID}}/" projects.yaml
+          sed -i "s/<billing_account>/${{secrets.GCP_BILLING_ACCOUNT}}/" projects.yaml
           cat projects.yaml
           
       - name: Deploy Google folder 
