@@ -6,26 +6,29 @@ components:
   folders:
     - display_name: python
       folder_iam:
-        role: "roles/editor"
-        members:
-          - "user:info@kvit.pub"
+        - role: "roles/editor"
+          members:
+            - "user:info@kvit.pub"
+        - role: "roles/viewer"
+          members:
+            - "user:user@kvit.pub"
     - display_name: java
       folder_iam:
-        role: "roles/owner"
-        members:
-          - "user:info@kvit.pub"
+        - role: "roles/owner"
+          members:
+            - "user:info@kvit.pub"
     - display_name: bash
       folder_iam:
-        role: "roles/owner"
-        members:
-          - "user:info@kvit.pub"
-        condition:
-          title: "expires_after_2019_12_31"
-          description: "Expiring at midnight of 2019-12-31"
-          expression: "request.time < timestamp(\"2020-01-01T00:00:00Z\")"
+        - role: "roles/owner"
+          members:
+            - "user:info@kvit.pub"
+          condition:
+            title: "expires_after_2019_12_31"
+            description: "Expiring at midnight of 2019-12-31"
+            expression: "request.time < timestamp(\"2020-01-01T00:00:00Z\")"
     - display_name: react
       folder_iam:
-        role: "roles/owner"
-        members:
-          - "user:info@kvit.pub"
+        - role: "roles/owner"
+          members:
+            - "user:info@kvit.pub"
       

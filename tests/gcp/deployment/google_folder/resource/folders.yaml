@@ -6,22 +6,25 @@ components:
   folders:
     - display_name: python
       folder_iam:
-        role: "roles/editor"
-        members:
-          - "user:info@kvit.pub"
+        - role: "roles/editor"
+          members:
+            - "user:info@kvit.pub"
+        - role: "roles/viewer"
+          members:
+            - "user:user@kvit.pub"
     - display_name: java
       folder_iam:
-        role: "roles/owner"
-        members:
-          - "user:info@kvit.pub"
+        - role: "roles/owner"
+          members:
+            - "user:info@kvit.pub"
     - display_name: bash
       folder_iam:
-        role: "roles/owner"
-        members:
-          - "user:info@kvit.pub"
+        - role: "roles/owner"
+          members:
+            - "user:info@kvit.pub"
     - display_name: react
       folder_iam:
-        role: "roles/owner"
-        members:
-          - "user:info@kvit.pub"
+        - role: "roles/owner"
+          members:
+            - "user:info@kvit.pub"
       
