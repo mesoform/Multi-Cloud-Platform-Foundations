@@ -1,0 +1,25 @@
+project_id: "project-id"
+location_id: "europe-west1"
+create_google_project: "false"
+components:
+  projects:
+    - name: mypsql
+      project_id: yenakievo-sun-987654321
+      org_id: 12345678901
+      billing_account: 12345-12345-12344
+      skip_delete: true
+      labels:
+        key: value
+      auto_create_network: false
+      project_iam:
+        - role: "roles/viewer"
+          members:
+            - "user:info@kvit.pub"
+        - role: "roles/viewer"
+          members:
+            - "user:user@kvit.pub"
+        condition:
+          title: "expires_after_2019_12_31"
+          description: "Expiring at midnight of 2019-12-31"
+          expression: "request.time < timestamp(\"2020-01-01T00:00:00Z\")"
+    

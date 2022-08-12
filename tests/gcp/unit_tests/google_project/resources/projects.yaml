@@ -1,0 +1,20 @@
+project_id: <project_id>
+location_id: "europe-west1"
+create_google_project: "false"
+components:
+  projects:
+    - name: mypsql
+      project_id: yenakievo-sun-987654321
+      folder_id: <folder_id>
+      billing_account: 0102E0-3659E7-D8CE79
+      skip_delete: true
+      labels:
+        key: value
+      auto_create_network: false
+      project_iam:
+        - role: "roles/viewer"
+          members:
+            - "user:info@kvit.pub"
+        - role: "roles/viewer"
+          members:
+            - "user:user@kvit.pub"

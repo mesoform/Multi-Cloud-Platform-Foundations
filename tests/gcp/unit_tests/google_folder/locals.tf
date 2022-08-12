@@ -1,0 +1,1 @@
+../../../../Google/resource-manager/folder/locals.tf

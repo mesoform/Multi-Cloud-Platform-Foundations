@@ -1,0 +1,2 @@
+variable "folders_yml" {
+}
