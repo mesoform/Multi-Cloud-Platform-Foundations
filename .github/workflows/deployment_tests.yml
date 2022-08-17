@@ -39,10 +39,10 @@ jobs:
       
       # AWS account test
       - name: Configure AWS Credentials
-      uses: aws-actions/configure-aws-credentials@v1
-      with:
-        role-to-assume: ${{secrets.AWS_ROLE_TO_ASSUME}}
-        aws-region: us-east-2
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          role-to-assume: ${{secrets.AWS_ROLE_TO_ASSUME}}
+          aws-region: eu-west-2
 
       # Deploy google folders
       - name: Add project ID to GCP Files
