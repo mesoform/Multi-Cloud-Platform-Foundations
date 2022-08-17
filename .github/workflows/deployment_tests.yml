@@ -36,6 +36,13 @@ jobs:
         with:
           service_account_key: ${{secrets.GCP_SA_KEY}}
           export_default_credentials: true
+      
+      # AWS account test
+      - name: Configure AWS Credentials
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        role-to-assume: ${{secrets.AWS_ROLE_TO_ASSUME}}
+        aws-region: us-east-2
 
       # Deploy google folders
       - name: Add project ID to GCP Files
