@@ -1,5 +1,5 @@
 locals {
-  test_var = lookup(local.project_properties[0], "skip_delete", null) == null ? {} : { skip_delete : local.project_properties[0].skip_delete }
+  test_var = lookup(local.project_properties["mypsql"], "skip_delete", null) == null ? {} : { skip_delete : local.project_properties["mypsql"].skip_delete }
 }
 
 data "external" "test_google_project" {
