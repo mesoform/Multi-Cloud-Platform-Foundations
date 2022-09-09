@@ -15,14 +15,14 @@ The output will have the format `<display_name> = <folder-name>` where folder na
 This is useful if defining a folders as subfolder of other created folders: 
 e.g. 
 ```terraform
+module core_folders {
+  source      = "github.com/mesoform/Multi-Cloud-Platform-Foundations//Google/resource-manager/folder"
+  projects_yml = "./core_folders.yaml"
+}
 module dev_folders {
   source      = "github.com/mesoform/Multi-Cloud-Platform-Foundations//Google/resource-manager/folder"
   projects_yml = "./dev_folders.yaml"
-}
-module test_folders {
-  source      = "github.com/mesoform/Multi-Cloud-Platform-Foundations//Google/resource-manager/folder"
-  projects_yml = "./test_folders.yaml"
-  parent_folder = module.dev_folders.folder_names
+  parent_folder = module.core_folders.folder_names["development"]
 }
 ```
 
