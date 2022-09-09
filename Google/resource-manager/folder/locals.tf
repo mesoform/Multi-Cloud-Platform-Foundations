@@ -7,7 +7,9 @@ locals {
   folder_properties = {for key, value in lookup (local.folder_components, "folders", {}) :
     value["display_name"] => {for name, content in value : name => value["${name}"]}
   }
+  //noinspection HILUnresolvedReference
   folder_iam = { for key, value in local.folder_properties :
-    key => lookup(local.folder_properties[key], "folder_iam", {})
+    key => local.folder_properties[key].folder_iam
+    if lookup(local.folder_properties[key], "folder_iam", null) != null
   }
 }

@@ -7,7 +7,9 @@ locals {
   project_properties = {for key, value in lookup (local.projects_components, "projects", {}) :
     value["name"] => {for name, content in value : name => value["${name}"]}
   }
+  //noinspection HILUnresolvedReference
   projects_iam = { for key, value in local.project_properties :
-    key => lookup(local.project_properties[key], "project_iam", {})
+    key => local.project_properties[key].folder_iam
+    if lookup(local.project_properties[key], "folder_iam", null) != null
   }
 }
