@@ -3,30 +3,29 @@ locals {
 }
 
 data "google_folder" "self" {
-  count  = can(regex("^folders/", local.parent_id)) ? 1 : 0
+  count  = local.parent_folder
   folder = local.parent_id
 }
 
 data "google_organization" "self" {
-  count        = can(regex("^organizations/", local.parent_id)) ? 1 : 0
+  count        = local.parent_organization
   organization = local.parent_id
 }
 
 resource "google_folder" "self" {
-  for_each     = local.folder_properties
-  //noinspection HILUnresolvedReference
-  display_name = each.value.display_name
+  for_each     = local.folders_specs
+  display_name = lookup(each.value, "display_name", each.key)
   parent       = local.parent
 }
 
 resource "google_folder_iam_policy" "self" {
-  for_each    = local.folder_iam
+  for_each    = local.folders_iam
   folder      = google_folder.self[each.key].name
   policy_data = data.google_iam_policy.self[each.key].policy_data
 }
 
 data "google_iam_policy" "self" {
-  for_each = local.folder_iam
+  for_each = local.folders_iam
   dynamic binding {
     for_each = each.value
     content {
@@ -34,11 +33,11 @@ data "google_iam_policy" "self" {
       members = lookup(binding.value, "members", null)
       //noinspection HILUnresolvedReference
       dynamic "condition" {
-      for_each = lookup(binding.value, "condition", null) == null ? {} : { condition : binding.value.condition }
+        for_each = lookup(binding.value, "condition", { condition = null }) == { condition = null } ? {} : { condition : binding.value.condition }
         content {
           title       = lookup(condition.value, "title", null)
           description = lookup(condition.value, "description", null)
-          expression  = lookup(condition.value, "expression", null)
+          expression  = lookup(condition.value, "expression", {condition = null})
         }
       }
     }

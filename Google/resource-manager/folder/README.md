@@ -27,12 +27,14 @@ module dev_folders {
 ```
 
 ## Google Folder basic configuration
-The `component` block contains:
+The `components.specs` block contains maps of folder configuration, with the following attributes
+* `display_name` - Display name for the folder (defaults to the key for the folder's definition)
+* `folder_iam` (optional) - List of IAM role bindings used to create IAM policy for the project (see details [below](#folder-iam)).
+
+These values can also be present in the `components.common` block, which contains:
 *`parent_id` - ID of the organisation or folder for the folder to be in to be in taking format `organization/<org-id>` or `folder/<folder-id>`. 
   If needing to dynamically add the `parent_id` of a folder created by another definition of the module, can use the `parent_folder` variable in the module block (see above).
-* `folders` - A list of project definitions, containing the following values:
-  * `display_name` (required) - Display name for the folder
-  * `folder_iam` (optional) - List of IAM role bindings used to create IAM policy for the project (see details [below](#folder-iam)).
+* Any of the attributes available to the `components.spec` block (see above)
 
 ### Folder IAM
 The IAM policy for each defined project can be set in the `folder_iam`.
@@ -47,34 +49,26 @@ The IAM policy for each defined project can be set in the `folder_iam`.
 ### Example
 ```yaml
 components:
-  parent_id: "folders/12345678"
-  folders:
-    - display_name: python
+  common:
+    parent_id: "folders/12345678"
+    folder_iam:
+      - role: "roles/owner"
+        member: "user:owner@example.com"
+  specs:
+    staging:
+      folder_iam:
+        - role: "roles/viewer"
+          members:
+            - "user:info@example.com"
+    department-2:
+      display_name: "Department 2"
       folder_iam:
         - role: "roles/editor"
           members:
-            - "user:info@kvit.pub"
-        - role: "roles/viewer"
-          members:
-            - "user:user@kvit.pub"
-    - display_name: java
-      folder_iam:
-        - role: "roles/owner"
-          members:
-            - "user:info@kvit.pub"
-    - display_name: bash
-      folder_iam:
-        - role: "roles/owner"
-          members:
-            - "user:info@kvit.pub"
+            - "user:info@example.com"
           condition:
             title: "expires_after_2019_12_31"
             description: "Expiring at midnight of 2019-12-31"
             expression: "request.time < timestamp(\"2020-01-01T00:00:00Z\")"
-    - display_name: react
-      folder_iam:
-        - role: "roles/owner"
-          members:
-            - "user:info@kvit.pub"
       
 ```
