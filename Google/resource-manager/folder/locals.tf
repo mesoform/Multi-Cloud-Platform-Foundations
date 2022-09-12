@@ -5,7 +5,7 @@ locals {
   folders_components_specs  = lookup(local.folders_components, "specs", {})
   folders_components_common = lookup(local.folders_components, "common", {})
 
-  parent_id = var.parent_folder == null ? lookup(local.folders_specs, "parent_id", null) : var.parent_folder
+  parent_id = var.parent_folder == null ? lookup(local.folders_components_common, "parent_id", null) : var.parent_folder
 
   parent_folder = can(regex("^folders/", local.parent_id)) ? 1 : 0
   parent_organization = can(regex("^organizations/", local.parent_id)) ? 1: 0
