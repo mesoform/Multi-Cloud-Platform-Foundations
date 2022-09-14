@@ -6,7 +6,7 @@ resource "aws_ce_anomaly_monitor" "self" {
 
 resource "aws_ce_anomaly_subscription" "self" {
   name      = "DAILYSUBSCRIPTION"
-  threshold = 100
+  threshold = var.threshold
   frequency = "DAILY"
 
   monitor_arn_list = [
@@ -15,6 +15,6 @@ resource "aws_ce_anomaly_subscription" "self" {
 
   subscriber {
     type    = "EMAIL"
-    address = "dmytro.gavryschuk@mesoform.com"
+    address = var.subscription_email
   }
 }
