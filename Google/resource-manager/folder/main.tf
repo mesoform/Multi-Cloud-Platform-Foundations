@@ -1,21 +1,7 @@
-locals {
-  parent = can(regex("^folders/", local.parent_id)) ? data.google_folder.self[0].name : data.google_organization.self[0].name
-}
-
-data "google_folder" "self" {
-  count  = local.parent_folder
-  folder = local.parent_id
-}
-
-data "google_organization" "self" {
-  count        = local.parent_organization
-  organization = local.parent_id
-}
-
 resource "google_folder" "self" {
   for_each     = local.folders_specs
   display_name = lookup(each.value, "display_name", each.key)
-  parent       = local.parent
+  parent       = local.parent_id
 }
 
 resource "google_folder_iam_policy" "self" {

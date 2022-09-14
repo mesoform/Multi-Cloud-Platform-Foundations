@@ -1,3 +1,3 @@
 components:
-  folders:
-    - display_name: sub-folder
+  specs:
+    sub_folder:

@@ -7,15 +7,10 @@ locals {
 
   parent_id = var.parent_folder == null ? lookup(local.folders_components_common, "parent_id", null) : var.parent_folder
 
-  parent_folder = can(regex("^folders/", local.parent_id)) ? 1 : 0
-  parent_organization = can(regex("^organizations/", local.parent_id)) ? 1: 0
-
-
   folders_specs = {
     for folder, config in local.folders_components_specs :
       folder => merge(local.folders_components_common, config)
   }
-
 
   folders_iam_merged = {
     for folder, specs in local.folders_specs : folder => concat(lookup(local.folders_components_common, "folder_iam", []), lookup(specs, "folder_iam", []))
@@ -33,12 +28,5 @@ locals {
         condition = lookup(binding, "condition", { condition = null })
       }
     ])
-#    distinct([
-#      for binding in policy : {
-#        role = lookup(binding, "role", null)
-#        members = lookup(binding, "members", null)
-#        condition = lookup(binding, "condition", { condition = null })
-#      }
-#    ])
   }
 }

@@ -1,20 +1,24 @@
-project_id: <project_id>
-location_id: "europe-west1"
-create_google_project: "false"
 components:
-  projects:
-    - name: mypsql
-      project_id: yenakievo-sun-987654321
-      folder_id: <folder_id>
-      billing_account: <billing_account>
-      skip_delete: true
+  common:
+    folder_id: <folder_id>
+    billing_account: <billing_account>
+    skip_delete: true
+    auto_create_network: false
+    labels:
+      default: value
+      key-1: value-1
+    project_iam:
+      - role: "roles/owner"
+        members:
+          - "serviceAccount:<service-account>"
+  specs:
+    staging-sandbox:
+      name: Staging Sandbox
+      project_id: mcp-staging-sandbox
+      skip_delete: false
       labels:
-        key: value
-      auto_create_network: false
-      project_iam:
-        - role: "roles/viewer"
-          members:
-            - "user:info@kvit.pub"
-        - role: "roles/viewer"
-          members:
-            - "user:user@kvit.pub"
+        key-1: overwrite-value
+        key-2: value-2
+      auto_create_network: true
+    test-project:
+      project_id: mcp-test-project-<project-id>
