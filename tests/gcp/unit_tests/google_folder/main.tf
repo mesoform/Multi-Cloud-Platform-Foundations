@@ -1,14 +1,7 @@
-locals {
-  test_var = lookup(local.folder_components, "parent_id", null) == null ? {} : { parent_id : local.folder_components.parent_id }
+data external test_folder_parent_id {
+  query   = {parent_id = local.folders_components_common.parent_id}
+  program = ["python", "${path.module}/test_folder_parent_id.py"]
 }
-
-data "external" "test_google_folder" {
-  query   = local.test_var
-  program = ["python", "${path.module}/test_google_folder.py"]
+output folder_parent_id {
+  value = data.external.test_folder_parent_id.result
 }
-output "google_folder" {
-  value = data.external.test_google_folder.result
-}
-
-
-

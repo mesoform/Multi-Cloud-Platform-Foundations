@@ -1,11 +1,23 @@
-project_id: "project-id"
-location_id: "europe-west1"
-create_google_project: "false"
 components:
-  parent_id: "folders/12345678"
-  folders:
-    - display_name: python
-      folder_iam:
-        role: "roles/editor"
+  common:
+    parent_id: "folders/12345678"
+    folder_iam:
+      - role: "roles/owner"
         members:
-          - "user:info@kvit.pub"
+          - "user:owner@example.com"
+  specs:
+    staging:
+      folder_iam:
+        - role: "roles/viewer"
+          members:
+            - "user:info@example.com"
+    department-2:
+      display_name: "Department 2"
+      folder_iam:
+        - role: "roles/editor"
+          members:
+            - "user:info@example.com"
+          condition:
+            title: "expires_after_2019_12_31"
+            description: "Expiring at midnight of 2019-12-31"
+            expression: "request.time < timestamp(\"2020-01-01T00:00:00Z\")"
