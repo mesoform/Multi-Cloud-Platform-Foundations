@@ -28,7 +28,7 @@ module dev_folders {
 
 ## Google Folder basic configuration
 The `components.specs` block contains maps of folder configuration, with the following attributes
-* `display_name` - Display name for the folder (defaults to the key for the folder's definition)
+* `display_name` - Display name for the folder (defaults to the key for the folder's definition). Display name needs to match the requirements of the API (https://cloud.google.com/resource-manager/reference/rest/v2/folders#resource:-folder)
 * `folder_iam` (optional) - List of IAM role bindings used to create IAM policy for the project (see details [below](#folder-iam)).
 
 These values can also be present in the `components.common` block, which contains:
@@ -61,7 +61,7 @@ components:
           members:
             - "user:info@example.com"
     department-2:
-      display_name: "Department 2"
+      display_name: "Department-Bob"
       folder_iam:
         - role: "roles/editor"
           members:
