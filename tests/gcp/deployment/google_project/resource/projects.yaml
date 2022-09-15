@@ -10,7 +10,7 @@ components:
     project_iam:
       - role: "roles/owner"
         members:
-          - "serviceAccount:<service-account>"
+          - "serviceAccount:<service_account>"
   specs:
     staging-sandbox:
       name: Staging Sandbox
