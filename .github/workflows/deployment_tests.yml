@@ -39,6 +39,8 @@ jobs:
 
       # Deploy google folders
       - name: Add IDs to GCP Folder Files
+        env:
+          GOOGLE_CREDENTIALS: ${{secrets.GCP_SA_KEY}}
         run: |
           cd google_folder/resource
           sed -i "s/<folder_id>/folders\/${{secrets.GCP_FOLDER_ID}}/" folders.yaml
@@ -57,6 +59,8 @@ jobs:
 
       # Deploy google projects
       - name: Add IDs to GCP Project Files
+        env:
+          GOOGLE_CREDENTIALS: ${{secrets.GCP_SA_KEY}}
         run: |
           cd google_project/resource
           sed -i "s/<project_id>/${{secrets.GCP_PROJECT_ID}}-$(date +%y%m%d%H%M)//" projects.yaml

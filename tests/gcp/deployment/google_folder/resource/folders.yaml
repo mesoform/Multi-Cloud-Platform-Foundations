@@ -4,13 +4,13 @@ components:
     folder_iam:
       - role: "roles/viewer"
         members:
-          - <service_account>
+          - "serviceAccount:<service-account>"
   specs:
     staging:
       folder_iam:
         - role: "roles/viewer"
           members:
-            - <service_account>
+            - "serviceAccount:<service-account>"
     department-2:
       display_name: "Department 2"
       
