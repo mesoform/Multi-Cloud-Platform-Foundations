@@ -38,11 +38,14 @@ jobs:
           export_default_credentials: true
 
       # Deploy google folders
-      - name: Add project ID to GCP Files
+      - name: Add IDs to GCP Folder Files
+        env:
+          GOOGLE_CREDENTIALS: ${{secrets.GCP_SA_KEY}}
         run: |
           cd google_folder/resource
-          sed -i "s/<project_id>/${{secrets.GCP_PROJECT_ID}}/" folders.yaml
           sed -i "s/<folder_id>/folders\/${{secrets.GCP_FOLDER_ID}}/" folders.yaml
+          SERVICE_ACCOUNT=$(echo $GOOGLE_CREDENTIALS | jq -r '.client_email')
+          sed -i "s/<service_account>/$SERVICE_ACCOUNT/"  folders.yaml
           cat folders.yaml
           
       - name: Deploy Google folder 
@@ -55,12 +58,16 @@ jobs:
           terraform apply destroy.tfplan
 
       # Deploy google projects
-      - name: Add project ID to GCP Files
+      - name: Add IDs to GCP Project Files
+        env:
+          GOOGLE_CREDENTIALS: ${{secrets.GCP_SA_KEY}}
         run: |
           cd google_project/resource
-          sed -i "s/<project_id>/${{secrets.GCP_PROJECT_ID}}/" projects.yaml
+          sed -i "s/<project_id>/${{secrets.GCP_PROJECT_ID}}-$(date +%y%m%d%H%M)//" projects.yaml
           sed -i "s/<folder_id>/folders\/${{secrets.GCP_FOLDER_ID}}/" projects.yaml
           sed -i "s/<billing_account>/${{secrets.GCP_BILLING_ACCOUNT}}/" projects.yaml
+          SERVICE_ACCOUNT=$(echo $GOOGLE_CREDENTIALS | jq -r '.client_email')
+          sed -i "s/<service_account>/$SERVICE_ACCOUNT"  projects.yaml
           cat projects.yaml
           
       - name: Deploy Google folder 

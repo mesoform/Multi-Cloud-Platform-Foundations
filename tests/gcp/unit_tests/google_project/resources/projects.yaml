@@ -1,20 +1,37 @@
-project_id: <project_id>
-location_id: "europe-west1"
-create_google_project: "false"
 components:
-  projects:
-    - name: mypsql
-      project_id: yenakievo-sun-987654321
-      folder_id: <folder_id>
-      billing_account: 0102E0-3659E7-D8CE79
+  common:
+    org_id: 12345678901
+    #folder_id: 12345678
+    billing_account: 12345-12345-12345
+    skip_delete: true
+    auto_create_network: false
+    labels:
+      default: value
+      key-1: value-1
+    project_iam:
+      - role: "roles/owner"
+        members:
+          - "user:owner@example.com"
+
+  specs:
+    staging-sandbox:
+      name: Staging Sandbox
+      project_id: project-id-123456
       skip_delete: true
       labels:
-        key: value
-      auto_create_network: false
+        key-1: overwrite-value
+        key-2: value-2
+      auto_create_network: true
       project_iam:
         - role: "roles/viewer"
           members:
-            - "user:info@kvit.pub"
-        - role: "roles/viewer"
+            - "user:info@example.com"
+        - role: "roles/editor"
           members:
-            - "user:user@kvit.pub"
+            - "user:info@example.com"
+          condition:
+            title: "expires_after_2019_12_31"
+            description: "Expiring at midnight of 2019-12-31"
+            expression: "request.time < timestamp(\"2020-01-01T00:00:00Z\")"
+    test-project:
+      project_id: test-project-123
