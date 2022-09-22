@@ -1,7 +1,7 @@
 # Google Folder Module
 This module can be used to deploy Google Folders in a specified parent folder/organization.
-This is created by defining a terraform `module` which references a `yaml` configuration file (see [configuration](#google-folder-basic-configuration)).
-e.g. `main.tf`:
+This is created by defining a Terraform `module` which references a `yaml` configuration file (see [configuration](#google-folder-basic-configuration)).  
+E.g. `main.tf`:
 ```terraform
 module test_folders {
   source      = "github.com/mesoform/Multi-Cloud-Platform-Foundations//Google/resource-manager/folder"
@@ -12,8 +12,15 @@ module test_folders {
 
 Terraform will output the `folder_names` of all defined folders after `terraform apply`.  
 The output will have the format `<display_name> = <folder-name>` where folder name will have the format like `folder/12345678`. 
-This is useful if defining a folders as subfolder of other created folders: 
-e.g. 
+```terraform
+folder_names = {
+  "department-2" = "folders/123456789101"
+  "staging" = "folders/123456789102"
+}
+
+```
+This is useful if defining a subfolder of a folder created using the module: 
+E.g. 
 ```terraform
 module core_folders {
   source      = "github.com/mesoform/Multi-Cloud-Platform-Foundations//Google/resource-manager/folder"
@@ -32,14 +39,15 @@ The `components.specs` block contains maps of folder configuration, with the fol
 * `folder_iam` (optional) - List of IAM role bindings used to create IAM policy for the project (see details [below](#folder-iam)).
 
 These values can also be present in the `components.common` block, which contains:
-*`parent_id` - ID of the organisation or folder for the folder to be in to be in taking format `organization/<org-id>` or `folder/<folder-id>`. 
+* `parent_id` - ID of the organisation or folder for the folder to be in to be in taking format `organization/<org-id>` or `folder/<folder-id>`. 
   If needing to dynamically add the `parent_id` of a folder created by another definition of the module, can use the `parent_folder` variable in the module block (see above).
 * Any of the attributes available to the `components.spec` block (see above)
 
 ### Folder IAM
 The IAM policy for each defined project can be set in the `folder_iam`.
 > **NOTE**: This policy is authoritative and replaces any existing policy already attached. 
-> Omit the `folder_iam` key if terraform shouldn't override an existing policy 
+> Omit the `folder_iam` key if terraform shouldn't override an existing policy.   
+> **Warning**: Having the `folder_iam` key present but 
 
 `folder_iam` is a list of role bindings with the keys:
 * `role`(required): Role for the binding, takes the format `roles/<role` or for custom `[projects|organizations]/{parent-name}/roles/{role-name}`

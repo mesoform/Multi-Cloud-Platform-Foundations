@@ -12,9 +12,16 @@ locals {
       folder => merge(local.folders_components_common, config)
   }
 
+  set_iam_policy = {
+    for folder, specs in local.folders_specs: folder => lookup(specs, "folder_iam", false) != false || lookup(local.folders_components_common, "folder_iam", false) != false
+  }
+
+  # If blank IAM policy is set, but common components are set, ignore the override common with blank IAM.
   folders_iam_merged = {
-    for folder, specs in local.folders_specs : folder => concat(lookup(local.folders_components_common, "folder_iam", []), lookup(specs, "folder_iam", []))
-    if lookup(specs, "folder_iam", null) != null || lookup(local.folders_components_common, "folder_iam", null) != null
+    for folder, specs in local.folders_specs : folder => lookup(specs, "folder_iam", []) == null ? [] :
+      concat( lookup(local.folders_components_common, "folder_iam", []), lookup(specs, "folder_iam", []))
+    if local.set_iam_policy[folder]
+  #    if lookup(specs, "folder_iam", null) != null || lookup(local.folders_components_common, "folder_iam", null) != null
   }
 
   #Remove duplicate bindings from folder_iam_merged and ensure all IAM binding fields are present

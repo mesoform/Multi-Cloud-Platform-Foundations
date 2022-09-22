@@ -11,13 +11,14 @@ except Exception as e:
 
 
 """
-    Checks the data specified in the required metadata
+    Checks the bindings of the IAM policies in the folder
 """
 
 expected_data = {
-    "staging-sandbox" : 3,
-    "test-project" : 2,
-    "test-project2": 0
+    "staging": 2,
+    "department-2": 2,
+    "department-3": 1,
+    "department-4": 0
 }
 
 if __name__ == '__main__':

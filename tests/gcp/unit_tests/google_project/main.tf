@@ -6,10 +6,7 @@ output "skip_delete" {
   value = data.external.test_skip_delete.result
 }
 data external test_iam_bindings_count {
-  query   = {
-    staging_sandbox_count = length(local.projects_iam["staging-sandbox"])
-    test_project_count = length(local.projects_iam["test-project"])
-  }
+  query   = { for project, bindings in local.projects_iam: project => length(bindings)}
   program = ["python", "${path.module}/test_iam_bindings_count.py"]
 }
 output "iam_bindings_count" {

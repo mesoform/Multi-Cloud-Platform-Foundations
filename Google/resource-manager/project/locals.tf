@@ -12,9 +12,14 @@ locals {
         project => merge(local.projects_components_common, config)
   }
 
+  set_iam_policy = {
+    for project, specs in local.projects_specs: project => lookup(specs, "project_iam", false) != false || lookup(local.projects_components_common, "project_iam", false) != false
+  }
+
   projects_iam_merged = {
-    for project, specs in local.projects_specs : project => concat(lookup(local.projects_components_common, "project_iam", []), lookup(specs, "project_iam", []))
-    if lookup(specs, "project_iam", null) != null || lookup(local.projects_components_common, "project_iam", null) != null
+    for project, specs in local.projects_specs : project => lookup(specs, "project_iam", []) == null ? [] :
+      concat( lookup(local.projects_components_common, "project_iam", []), lookup(specs, "project_iam", []))
+    if local.set_iam_policy[folder]
   }
 
   #Remove duplicate bindings from project_iam_merged and ensure all IAM binding fields are present

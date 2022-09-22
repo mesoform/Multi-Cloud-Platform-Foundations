@@ -5,3 +5,11 @@ data external test_folder_parent_id {
 output folder_parent_id {
   value = data.external.test_folder_parent_id.result
 }
+
+data external test_folder_iam {
+  query   = {for folder, bindings in local.folders_iam: folder => tostring(length(bindings))}
+  program = ["python", "${path.module}/test_iam_bindings_count.py"]
+}
+output test_folder_iam {
+  value = data.external.test_folder_parent_id.result
+}

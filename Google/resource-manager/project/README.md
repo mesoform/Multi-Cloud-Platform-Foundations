@@ -1,7 +1,7 @@
 # Google Project Module
 This module can be used to deploy Google Projects in a specified folder or organisation.
-This is created by defining a terraform `module` which references a `yaml` configuration file (see [configuration](#google-project-basic-configuration)).
-e.g. `main.tf`:
+This is created by defining a Terraform `module` which references a `yaml` configuration file (see [configuration](#google-project-basic-configuration)).  
+E.g. `main.tf`:
 ```terraform
 module dev_projects {
   source      = "github.com/mesoform/Multi-Cloud-Platform-Foundations//Google/resource-manager/project"
@@ -27,9 +27,11 @@ The `components.specs` block contains maps of project configuration, with the fo
 | `project_iam`         |  list   |  false   | List of IAM role bindings used to create IAM policy for the project (see details [below](#project-iam)) |                   none                    |
 
 ### Project IAM
-The IAM policy for each defined project can be set in the `project_iam`.
+The IAM policy for each defined project can be set in the `project_iam`.  
+
 > **NOTE**: This policy is authoritative and replaces any existing policy already attached.
 > Omit the `project_iam` key if terraform shouldn't override an existing policy
+  
 `project_iam` is a list of role bindings with the keys:
 * `role`(required): Role for the binding, takes the format `roles/<role` or for custom `[projects|organizations]/{parent-name}/roles/{role-name}`
 * `members` (required): Identities who the role is granted to (see [documentation](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/google_project_iam#member/members) for format)

@@ -35,3 +35,5 @@ components:
             expression: "request.time < timestamp(\"2020-01-01T00:00:00Z\")"
     test-project:
       project_id: test-project-123
+    test-project2:
+      project_iam:
