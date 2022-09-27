@@ -9,16 +9,16 @@ To create a Cost monitor in the AWS console, you need to:
 
 You can choose from several options for Cost monitors:
 
-- AWS Services - Recommended
+- AWS Services - Recommended  
 This monitor evaluates each of the services you use individually, allowing smaller anomalies to be detected. Anomaly thresholds are automatically adjusted based on your historical service spend patterns.
 
-- Linked account
+- Linked account  
 This monitor evaluates total spend for an individual Linked Account. This monitor can be helpful if your organization defines teams (or products, services, environments) by linked account.
 
-- Cost Category
+- Cost Category  
 This monitor evaluates total spend for an individual cost category value. This monitor can be helpful if your organization defines teams (or products, services, environments) by using cost categories.
 
-- Cost Allocation Tag
+- Cost Allocation Tag  
 This monitor evaluates total spend for an individual tag key-value pair. This monitor can be helpful if your organization defines teams (or products, services, environments) by using cost allocation tags.
 
 After that, you will be prompted to set up an alert subscription
