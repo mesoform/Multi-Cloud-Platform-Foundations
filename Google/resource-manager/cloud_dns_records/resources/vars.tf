@@ -3,19 +3,34 @@ variable "managed_zone" {
   description = "Zone recordset applies to"
   nullable = false
 }
+
+variable "project_id" {
+  type = string
+  nullable = false
+}
+
+variable "ttl" {
+  type = number
+  default = null
+}
+
 variable "records" {
-  type = map(list(object({
-    name    = string
+  type = map(map(object({
+    name    = optional(string)
     type    = optional(string, "A")
-    rrdatas = optional(list, [])
-    geo     = optional(list(object({
-                location = string
-                rrdatas = list(string)
-              })))
-    wwr     = optional(list(object({
-                weight = number
-                rrdatas = list(string)
-              })))
+    rrdatas = optional(list(string))
+    ttl     = optional(string)
+    project_id = optional(string)
+    routing_policy = optional(object({
+      geo     = optional(list(object({
+        location = string
+        rrdatas = list(string)
+      })), [])
+      wrr     = optional(list(object({
+        weight = number
+        rrdatas = list(string)
+      })), [])
+    }), {})
   })))
   default = {}
 }
