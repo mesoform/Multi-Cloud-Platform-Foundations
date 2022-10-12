@@ -1,0 +1,46 @@
+components:
+  common:
+    project_id: project123456
+  specs:
+    private.example.com:
+      A_records:
+        - name:    #If null would be the A record for private.example.com
+          ttl: 300
+          routing_policy:
+            wwr:
+              - weight: 0.2
+                rrdatas:
+                  - 192.168.0.2
+              - weight: 0.8
+                rrdatas:
+                  - 192.168.0.3
+            geo:
+              - location: europe-west2
+                rrdatas:
+                  - 192.168.0.4
+      CNAME_records:
+        - name: private #would resolve to private.example.com
+          rrdatas:
+            - www.example.com
+    prod.example.com:
+      A_records:
+        name:
+        rrdatas: # Would default to using round-robin
+          - 198.51.100.3
+          - 198.51.100.4
+          - 198.51.100.5
+      c_name:
+        name: frontend.prod.example.com
+        rrdatas:
+          - frontend.example.com
+          - www.example.com
+    dev.example.com:
+      A_records:
+        name: dev.example.com
+        rrdatas:
+          - 198.51.100.103
+      c_name:
+        name: frontend.dev.example.com
+        rrdatas:
+          - frontend-dev.example.com
+          - dev.example.com
