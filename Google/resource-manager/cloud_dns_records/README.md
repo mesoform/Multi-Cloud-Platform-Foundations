@@ -50,7 +50,7 @@ components:
   specs:
     private-zone:
       A_records:
-        private.example.com:
+        - name: private.example.com
           ttl: 180
           routing_policy:
             wrr:
@@ -61,31 +61,31 @@ components:
                 rrdatas:
                   - 192.168.0.3
       CNAME_records:
-        www.example.com:
+        - name: www.example.com.
           rrdatas:
             - private.example.com.
     production-zone:
       project_id: project2345678
       A_records:
-        prod.example.com:
+        - name: prod.example.com
           rrdatas: 
             - 198.51.100.3
             - 198.51.100.4
             - 198.51.100.5
       CNAME_records:
-        frontend.prod.example.com:
+        - name: frontend.prod.example.com
           rrdatas:
             - frontend.example.com
             - www.example.com
-        www.example.com:
+        - name: www.example.com
           rrdatas:
             - frontend.prod.example.com
-        frontend.example.com:
+        - name: frontend.example.com
           rrdatas:
             - frontend.prod.example.com
     development-zone:
       A_records:
-        dev.example.com:
+        - name: dev.example.com
           rrdatas:
             - 198.51.100.103
           geo:
@@ -96,10 +96,10 @@ components:
               rrdatas:
                 - 198.51.100.104
       CNAME_records:
-        beta.example.com:
+        - name: beta.example.com
           rrdatas:
             - frontend.dev.example.com
-        dev-frontend.example.com:
+        - name: dev-frontend.example.com
           rrdatas:
             - frontend.dev.example.com
 
