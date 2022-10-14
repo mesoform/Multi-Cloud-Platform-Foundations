@@ -15,12 +15,11 @@ variable "ttl" {
 }
 
 variable "records" {
-  type = map(map(object({
+  type = map(list(object({
     name    = optional(string)
     type    = optional(string, "A")
     rrdatas = optional(list(string))
     ttl     = optional(string)
-    project_id = optional(string)
     routing_policy = optional(object({
       geo     = optional(list(object({
         location = string

@@ -1,1 +1,1 @@
-variable cloud_dns_yml {}
+variable cloud_dns_records_yml {}
