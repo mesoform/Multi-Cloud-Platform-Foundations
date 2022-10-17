@@ -11,11 +11,11 @@ resource google_dns_record_set A_records {
   ttl = each.value.ttl == null ? var.ttl : each.value.ttl
   project = var.project_id
   dynamic routing_policy {
-    for_each = each.value.rrdatas == null? { routing_policy = each.value.routing_policy } : {}
+    for_each = each.value.rrdatas == null ? { routing_policy = each.value.routing_policy } : {}
     content {
       //noinspection HILUnresolvedReference
-      dynamic geo{
-        for_each = routing_policy.value.geo == [] ? {} :  { for geo in routing_policy.value.geo : geo.location => geo} 
+      dynamic geo {
+        for_each = routing_policy.value.geo == [] ? {} :  { for geo in routing_policy.value.geo : geo.location => geo }
         //noinspection HILUnresolvedReference
         content {
           location = geo.value.location
@@ -24,7 +24,7 @@ resource google_dns_record_set A_records {
       }
       //noinspection HILUnresolvedReference
       dynamic wrr {
-        for_each = routing_policy.value.wrr == [] ? {} :  { for wrr in routing_policy.value.wrr : wrr.weight => wrr} 
+        for_each = routing_policy.value.wrr == [] ? {} :  { for wrr in routing_policy.value.wrr : wrr.weight => wrr }
         //noinspection HILUnresolvedReference
         content {
           weight = wrr.value.weight
@@ -40,15 +40,15 @@ resource google_dns_record_set AAAA_records {
   managed_zone = var.managed_zone
   name = endswith(each.key, ".") ? each.key : "${each.key}.${data.google_dns_managed_zone.zone.dns_name}"
   type = "AAAA"
-  rrdatas = each.value.rrdatas 
+  rrdatas = each.value.rrdatas
   ttl = each.value.ttl == null ? var.ttl : each.value.ttl
   project = var.project_id
   dynamic routing_policy {
-    for_each = each.value.rrdatas == null? { routing_policy = each.value.routing_policy } : {}
+    for_each = each.value.rrdatas == null ? { routing_policy = each.value.routing_policy } : {}
     content {
       //noinspection HILUnresolvedReference
-      dynamic geo{
-        for_each = routing_policy.value.geo == [] ? {} :  { for geo in routing_policy.value.geo : geo.location => geo} 
+      dynamic geo {
+        for_each = routing_policy.value.geo == [] ? {} :  { for geo in routing_policy.value.geo : geo.location => geo }
         //noinspection HILUnresolvedReference
         content {
           location = geo.value.location
@@ -57,7 +57,7 @@ resource google_dns_record_set AAAA_records {
       }
       //noinspection HILUnresolvedReference
       dynamic wrr {
-        for_each = routing_policy.value.wrr == [] ? {} :  { for wrr in routing_policy.value.wrr : wrr.weight => wrr} 
+        for_each = routing_policy.value.wrr == [] ? {} :  { for wrr in routing_policy.value.wrr : wrr.weight => wrr }
         //noinspection HILUnresolvedReference
         content {
           weight = wrr.value.weight
@@ -73,15 +73,15 @@ resource google_dns_record_set ALIAS_records {
   managed_zone = var.managed_zone
   name = endswith(each.key, ".") ? each.key : "${each.key}.${data.google_dns_managed_zone.zone.dns_name}"
   type = "ALIAS"
-  rrdatas = each.value.rrdatas 
+  rrdatas = each.value.rrdatas
   ttl = each.value.ttl == null ? var.ttl : each.value.ttl
   project = var.project_id
   dynamic routing_policy {
-    for_each = each.value.rrdatas == null? { routing_policy = each.value.routing_policy } : {}
+    for_each = each.value.rrdatas == null ? { routing_policy = each.value.routing_policy } : {}
     content {
       //noinspection HILUnresolvedReference
-      dynamic geo{
-        for_each = routing_policy.value.geo == [] ? {} :  { for geo in routing_policy.value.geo : geo.location => geo} 
+      dynamic geo {
+        for_each = routing_policy.value.geo == [] ? {} :  { for geo in routing_policy.value.geo : geo.location => geo }
         //noinspection HILUnresolvedReference
         content {
           location = geo.value.location
@@ -90,7 +90,7 @@ resource google_dns_record_set ALIAS_records {
       }
       //noinspection HILUnresolvedReference
       dynamic wrr {
-        for_each = routing_policy.value.wrr == [] ? {} :  { for wrr in routing_policy.value.wrr : wrr.weight => wrr} 
+        for_each = routing_policy.value.wrr == [] ? {} :  { for wrr in routing_policy.value.wrr : wrr.weight => wrr }
         //noinspection HILUnresolvedReference
         content {
           weight = wrr.value.weight
@@ -106,15 +106,15 @@ resource google_dns_record_set CAA_records {
   managed_zone = var.managed_zone
   name = endswith(each.key, ".") ? each.key : "${each.key}.${data.google_dns_managed_zone.zone.dns_name}"
   type = "CAA"
-  rrdatas = each.value.rrdatas 
+  rrdatas = each.value.rrdatas
   ttl = each.value.ttl == null ? var.ttl : each.value.ttl
   project = var.project_id
   dynamic routing_policy {
-    for_each = each.value.rrdatas == null? { routing_policy = each.value.routing_policy } : {}
+    for_each = each.value.rrdatas == null ? { routing_policy = each.value.routing_policy } : {}
     content {
       //noinspection HILUnresolvedReference
-      dynamic geo{
-        for_each = routing_policy.value.geo == [] ? {} :  { for geo in routing_policy.value.geo : geo.location => geo} 
+      dynamic geo {
+        for_each = routing_policy.value.geo == [] ? {} :  { for geo in routing_policy.value.geo : geo.location => geo }
         //noinspection HILUnresolvedReference
         content {
           location = geo.value.location
@@ -123,7 +123,7 @@ resource google_dns_record_set CAA_records {
       }
       //noinspection HILUnresolvedReference
       dynamic wrr {
-        for_each = routing_policy.value.wrr == [] ? {} :  { for wrr in routing_policy.value.wrr : wrr.weight => wrr} 
+        for_each = routing_policy.value.wrr == [] ? {} :  { for wrr in routing_policy.value.wrr : wrr.weight => wrr }
         //noinspection HILUnresolvedReference
         content {
           weight = wrr.value.weight
@@ -139,15 +139,15 @@ resource google_dns_record_set CNAME_records {
   managed_zone = var.managed_zone
   name = endswith(each.key, ".") ? each.key : "${each.key}.${data.google_dns_managed_zone.zone.dns_name}"
   type = "CNAME"
-  rrdatas = each.value.rrdatas 
+  rrdatas = each.value.rrdatas
   ttl = each.value.ttl == null ? var.ttl : each.value.ttl
   project = var.project_id
   dynamic routing_policy {
-    for_each = each.value.rrdatas == null? { routing_policy = each.value.routing_policy } : {}
+    for_each = each.value.rrdatas == null ? { routing_policy = each.value.routing_policy } : {}
     content {
       //noinspection HILUnresolvedReference
-      dynamic geo{
-        for_each = routing_policy.value.geo == [] ? {} :  { for geo in routing_policy.value.geo : geo.location => geo} 
+      dynamic geo {
+        for_each = routing_policy.value.geo == [] ? {} :  { for geo in routing_policy.value.geo : geo.location => geo }
         //noinspection HILUnresolvedReference
         content {
           location = geo.value.location
@@ -156,7 +156,7 @@ resource google_dns_record_set CNAME_records {
       }
       //noinspection HILUnresolvedReference
       dynamic wrr {
-        for_each = routing_policy.value.wrr == [] ? {} :  { for wrr in routing_policy.value.wrr : wrr.weight => wrr} 
+        for_each = routing_policy.value.wrr == [] ? {} :  { for wrr in routing_policy.value.wrr : wrr.weight => wrr }
         //noinspection HILUnresolvedReference
         content {
           weight = wrr.value.weight
@@ -172,15 +172,15 @@ resource google_dns_record_set DNSKEY_records {
   managed_zone = var.managed_zone
   name = endswith(each.key, ".") ? each.key : "${each.key}.${data.google_dns_managed_zone.zone.dns_name}"
   type = "DNSKEY"
-  rrdatas = each.value.rrdatas 
+  rrdatas = each.value.rrdatas
   ttl = each.value.ttl == null ? var.ttl : each.value.ttl
   project = var.project_id
   dynamic routing_policy {
-    for_each = each.value.rrdatas == null? { routing_policy = each.value.routing_policy } : {}
+    for_each = each.value.rrdatas == null ? { routing_policy = each.value.routing_policy } : {}
     content {
       //noinspection HILUnresolvedReference
-      dynamic geo{
-        for_each = routing_policy.value.geo == [] ? {} :  { for geo in routing_policy.value.geo : geo.location => geo} 
+      dynamic geo {
+        for_each = routing_policy.value.geo == [] ? {} :  { for geo in routing_policy.value.geo : geo.location => geo }
         //noinspection HILUnresolvedReference
         content {
           location = geo.value.location
@@ -189,7 +189,7 @@ resource google_dns_record_set DNSKEY_records {
       }
       //noinspection HILUnresolvedReference
       dynamic wrr {
-        for_each = routing_policy.value.wrr == [] ? {} :  { for wrr in routing_policy.value.wrr : wrr.weight => wrr} 
+        for_each = routing_policy.value.wrr == [] ? {} :  { for wrr in routing_policy.value.wrr : wrr.weight => wrr }
         //noinspection HILUnresolvedReference
         content {
           weight = wrr.value.weight
@@ -205,15 +205,15 @@ resource google_dns_record_set DS_records {
   managed_zone = var.managed_zone
   name = endswith(each.key, ".") ? each.key : "${each.key}.${data.google_dns_managed_zone.zone.dns_name}"
   type = "DS"
-  rrdatas = each.value.rrdatas 
+  rrdatas = each.value.rrdatas
   ttl = each.value.ttl == null ? var.ttl : each.value.ttl
   project = var.project_id
   dynamic routing_policy {
-    for_each = each.value.rrdatas == null? { routing_policy = each.value.routing_policy } : {}
+    for_each = each.value.rrdatas == null ? { routing_policy = each.value.routing_policy } : {}
     content {
       //noinspection HILUnresolvedReference
-      dynamic geo{
-        for_each = routing_policy.value.geo == [] ? {} :  { for geo in routing_policy.value.geo : geo.location => geo} 
+      dynamic geo {
+        for_each = routing_policy.value.geo == [] ? {} :  { for geo in routing_policy.value.geo : geo.location => geo }
         //noinspection HILUnresolvedReference
         content {
           location = geo.value.location
@@ -222,7 +222,7 @@ resource google_dns_record_set DS_records {
       }
       //noinspection HILUnresolvedReference
       dynamic wrr {
-        for_each = routing_policy.value.wrr == [] ? {} :  { for wrr in routing_policy.value.wrr : wrr.weight => wrr} 
+        for_each = routing_policy.value.wrr == [] ? {} :  { for wrr in routing_policy.value.wrr : wrr.weight => wrr }
         //noinspection HILUnresolvedReference
         content {
           weight = wrr.value.weight
@@ -238,15 +238,15 @@ resource google_dns_record_set HTTPS_records {
   managed_zone = var.managed_zone
   name = endswith(each.key, ".") ? each.key : "${each.key}.${data.google_dns_managed_zone.zone.dns_name}"
   type = "HTTPS"
-  rrdatas = each.value.rrdatas 
+  rrdatas = each.value.rrdatas
   ttl = each.value.ttl == null ? var.ttl : each.value.ttl
   project = var.project_id
   dynamic routing_policy {
-    for_each = each.value.rrdatas == null? { routing_policy = each.value.routing_policy } : {}
+    for_each = each.value.rrdatas == null ? { routing_policy = each.value.routing_policy } : {}
     content {
       //noinspection HILUnresolvedReference
-      dynamic geo{
-        for_each = routing_policy.value.geo == [] ? {} :  { for geo in routing_policy.value.geo : geo.location => geo} 
+      dynamic geo {
+        for_each = routing_policy.value.geo == [] ? {} :  { for geo in routing_policy.value.geo : geo.location => geo }
         //noinspection HILUnresolvedReference
         content {
           location = geo.value.location
@@ -255,7 +255,7 @@ resource google_dns_record_set HTTPS_records {
       }
       //noinspection HILUnresolvedReference
       dynamic wrr {
-        for_each = routing_policy.value.wrr == [] ? {} :  { for wrr in routing_policy.value.wrr : wrr.weight => wrr} 
+        for_each = routing_policy.value.wrr == [] ? {} :  { for wrr in routing_policy.value.wrr : wrr.weight => wrr }
         //noinspection HILUnresolvedReference
         content {
           weight = wrr.value.weight
@@ -271,15 +271,15 @@ resource google_dns_record_set IPSECKEY_records {
   managed_zone = var.managed_zone
   name = endswith(each.key, ".") ? each.key : "${each.key}.${data.google_dns_managed_zone.zone.dns_name}"
   type = "IPSECKEY"
-  rrdatas = each.value.rrdatas 
+  rrdatas = each.value.rrdatas
   ttl = each.value.ttl == null ? var.ttl : each.value.ttl
   project = var.project_id
   dynamic routing_policy {
-    for_each = each.value.rrdatas == null? { routing_policy = each.value.routing_policy } : {}
+    for_each = each.value.rrdatas == null ? { routing_policy = each.value.routing_policy } : {}
     content {
       //noinspection HILUnresolvedReference
-      dynamic geo{
-        for_each = routing_policy.value.geo == [] ? {} :  { for geo in routing_policy.value.geo : geo.location => geo} 
+      dynamic geo {
+        for_each = routing_policy.value.geo == [] ? {} :  { for geo in routing_policy.value.geo : geo.location => geo }
         //noinspection HILUnresolvedReference
         content {
           location = geo.value.location
@@ -288,7 +288,7 @@ resource google_dns_record_set IPSECKEY_records {
       }
       //noinspection HILUnresolvedReference
       dynamic wrr {
-        for_each = routing_policy.value.wrr == [] ? {} :  { for wrr in routing_policy.value.wrr : wrr.weight => wrr} 
+        for_each = routing_policy.value.wrr == [] ? {} :  { for wrr in routing_policy.value.wrr : wrr.weight => wrr }
         //noinspection HILUnresolvedReference
         content {
           weight = wrr.value.weight
@@ -304,15 +304,15 @@ resource google_dns_record_set MX_records {
   managed_zone = var.managed_zone
   name = endswith(each.key, ".") ? each.key : "${each.key}.${data.google_dns_managed_zone.zone.dns_name}"
   type = "MX"
-  rrdatas = each.value.rrdatas 
+  rrdatas = each.value.rrdatas
   ttl = each.value.ttl == null ? var.ttl : each.value.ttl
   project = var.project_id
   dynamic routing_policy {
-    for_each = each.value.rrdatas == null? { routing_policy = each.value.routing_policy } : {}
+    for_each = each.value.rrdatas == null ? { routing_policy = each.value.routing_policy } : {}
     content {
       //noinspection HILUnresolvedReference
-      dynamic geo{
-        for_each = routing_policy.value.geo == [] ? {} :  { for geo in routing_policy.value.geo : geo.location => geo} 
+      dynamic geo {
+        for_each = routing_policy.value.geo == [] ? {} :  { for geo in routing_policy.value.geo : geo.location => geo }
         //noinspection HILUnresolvedReference
         content {
           location = geo.value.location
@@ -321,7 +321,7 @@ resource google_dns_record_set MX_records {
       }
       //noinspection HILUnresolvedReference
       dynamic wrr {
-        for_each = routing_policy.value.wrr == [] ? {} :  { for wrr in routing_policy.value.wrr : wrr.weight => wrr} 
+        for_each = routing_policy.value.wrr == [] ? {} :  { for wrr in routing_policy.value.wrr : wrr.weight => wrr }
         //noinspection HILUnresolvedReference
         content {
           weight = wrr.value.weight
@@ -337,15 +337,15 @@ resource google_dns_record_set NAPTR_records {
   managed_zone = var.managed_zone
   name = endswith(each.key, ".") ? each.key : "${each.key}.${data.google_dns_managed_zone.zone.dns_name}"
   type = "NAPTR"
-  rrdatas = each.value.rrdatas 
+  rrdatas = each.value.rrdatas
   ttl = each.value.ttl == null ? var.ttl : each.value.ttl
   project = var.project_id
   dynamic routing_policy {
-    for_each = each.value.rrdatas == null? { routing_policy = each.value.routing_policy } : {}
+    for_each = each.value.rrdatas == null ? { routing_policy = each.value.routing_policy } : {}
     content {
       //noinspection HILUnresolvedReference
-      dynamic geo{
-        for_each = routing_policy.value.geo == [] ? {} :  { for geo in routing_policy.value.geo : geo.location => geo} 
+      dynamic geo {
+        for_each = routing_policy.value.geo == [] ? {} :  { for geo in routing_policy.value.geo : geo.location => geo }
         //noinspection HILUnresolvedReference
         content {
           location = geo.value.location
@@ -354,7 +354,7 @@ resource google_dns_record_set NAPTR_records {
       }
       //noinspection HILUnresolvedReference
       dynamic wrr {
-        for_each = routing_policy.value.wrr == [] ? {} :  { for wrr in routing_policy.value.wrr : wrr.weight => wrr} 
+        for_each = routing_policy.value.wrr == [] ? {} :  { for wrr in routing_policy.value.wrr : wrr.weight => wrr }
         //noinspection HILUnresolvedReference
         content {
           weight = wrr.value.weight
@@ -370,15 +370,15 @@ resource google_dns_record_set PTR_records {
   managed_zone = var.managed_zone
   name = endswith(each.key, ".") ? each.key : "${each.key}.${data.google_dns_managed_zone.zone.dns_name}"
   type = "PTR"
-  rrdatas = each.value.rrdatas 
+  rrdatas = each.value.rrdatas
   ttl = each.value.ttl == null ? var.ttl : each.value.ttl
   project = var.project_id
   dynamic routing_policy {
-    for_each = each.value.rrdatas == null? { routing_policy = each.value.routing_policy } : {}
+    for_each = each.value.rrdatas == null ? { routing_policy = each.value.routing_policy } : {}
     content {
       //noinspection HILUnresolvedReference
-      dynamic geo{
-        for_each = routing_policy.value.geo == [] ? {} :  { for geo in routing_policy.value.geo : geo.location => geo} 
+      dynamic geo {
+        for_each = routing_policy.value.geo == [] ? {} :  { for geo in routing_policy.value.geo : geo.location => geo }
         //noinspection HILUnresolvedReference
         content {
           location = geo.value.location
@@ -387,7 +387,7 @@ resource google_dns_record_set PTR_records {
       }
       //noinspection HILUnresolvedReference
       dynamic wrr {
-        for_each = routing_policy.value.wrr == [] ? {} :  { for wrr in routing_policy.value.wrr : wrr.weight => wrr} 
+        for_each = routing_policy.value.wrr == [] ? {} :  { for wrr in routing_policy.value.wrr : wrr.weight => wrr }
         //noinspection HILUnresolvedReference
         content {
           weight = wrr.value.weight
@@ -403,15 +403,15 @@ resource google_dns_record_set SOA_records {
   managed_zone = var.managed_zone
   name = endswith(each.key, ".") ? each.key : "${each.key}.${data.google_dns_managed_zone.zone.dns_name}"
   type = "SOA"
-  rrdatas = each.value.rrdatas 
+  rrdatas = each.value.rrdatas
   ttl = each.value.ttl == null ? var.ttl : each.value.ttl
   project = var.project_id
   dynamic routing_policy {
-    for_each = each.value.rrdatas == null? { routing_policy = each.value.routing_policy } : {}
+    for_each = each.value.rrdatas == null ? { routing_policy = each.value.routing_policy } : {}
     content {
       //noinspection HILUnresolvedReference
-      dynamic geo{
-        for_each = routing_policy.value.geo == [] ? {} :  { for geo in routing_policy.value.geo : geo.location => geo} 
+      dynamic geo {
+        for_each = routing_policy.value.geo == [] ? {} :  { for geo in routing_policy.value.geo : geo.location => geo }
         //noinspection HILUnresolvedReference
         content {
           location = geo.value.location
@@ -420,7 +420,7 @@ resource google_dns_record_set SOA_records {
       }
       //noinspection HILUnresolvedReference
       dynamic wrr {
-        for_each = routing_policy.value.wrr == [] ? {} :  { for wrr in routing_policy.value.wrr : wrr.weight => wrr} 
+        for_each = routing_policy.value.wrr == [] ? {} :  { for wrr in routing_policy.value.wrr : wrr.weight => wrr }
         //noinspection HILUnresolvedReference
         content {
           weight = wrr.value.weight
@@ -436,15 +436,15 @@ resource google_dns_record_set SPF_records {
   managed_zone = var.managed_zone
   name = endswith(each.key, ".") ? each.key : "${each.key}.${data.google_dns_managed_zone.zone.dns_name}"
   type = "SPF"
-  rrdatas = each.value.rrdatas 
+  rrdatas = each.value.rrdatas
   ttl = each.value.ttl == null ? var.ttl : each.value.ttl
   project = var.project_id
   dynamic routing_policy {
-    for_each = each.value.rrdatas == null? { routing_policy = each.value.routing_policy } : {}
+    for_each = each.value.rrdatas == null ? { routing_policy = each.value.routing_policy } : {}
     content {
       //noinspection HILUnresolvedReference
-      dynamic geo{
-        for_each = routing_policy.value.geo == [] ? {} :  { for geo in routing_policy.value.geo : geo.location => geo} 
+      dynamic geo {
+        for_each = routing_policy.value.geo == [] ? {} :  { for geo in routing_policy.value.geo : geo.location => geo }
         //noinspection HILUnresolvedReference
         content {
           location = geo.value.location
@@ -453,7 +453,7 @@ resource google_dns_record_set SPF_records {
       }
       //noinspection HILUnresolvedReference
       dynamic wrr {
-        for_each = routing_policy.value.wrr == [] ? {} :  { for wrr in routing_policy.value.wrr : wrr.weight => wrr} 
+        for_each = routing_policy.value.wrr == [] ? {} :  { for wrr in routing_policy.value.wrr : wrr.weight => wrr }
         //noinspection HILUnresolvedReference
         content {
           weight = wrr.value.weight
@@ -469,15 +469,15 @@ resource google_dns_record_set SRV_records {
   managed_zone = var.managed_zone
   name = endswith(each.key, ".") ? each.key : "${each.key}.${data.google_dns_managed_zone.zone.dns_name}"
   type = "SRV"
-  rrdatas = each.value.rrdatas 
+  rrdatas = each.value.rrdatas
   ttl = each.value.ttl == null ? var.ttl : each.value.ttl
   project = var.project_id
   dynamic routing_policy {
-    for_each = each.value.rrdatas == null? { routing_policy = each.value.routing_policy } : {}
+    for_each = each.value.rrdatas == null ? { routing_policy = each.value.routing_policy } : {}
     content {
       //noinspection HILUnresolvedReference
-      dynamic geo{
-        for_each = routing_policy.value.geo == [] ? {} :  { for geo in routing_policy.value.geo : geo.location => geo} 
+      dynamic geo {
+        for_each = routing_policy.value.geo == [] ? {} :  { for geo in routing_policy.value.geo : geo.location => geo }
         //noinspection HILUnresolvedReference
         content {
           location = geo.value.location
@@ -486,7 +486,7 @@ resource google_dns_record_set SRV_records {
       }
       //noinspection HILUnresolvedReference
       dynamic wrr {
-        for_each = routing_policy.value.wrr == [] ? {} :  { for wrr in routing_policy.value.wrr : wrr.weight => wrr} 
+        for_each = routing_policy.value.wrr == [] ? {} :  { for wrr in routing_policy.value.wrr : wrr.weight => wrr }
         //noinspection HILUnresolvedReference
         content {
           weight = wrr.value.weight
@@ -502,15 +502,15 @@ resource google_dns_record_set SSHFP_records {
   managed_zone = var.managed_zone
   name = endswith(each.key, ".") ? each.key : "${each.key}.${data.google_dns_managed_zone.zone.dns_name}"
   type = "SSHFP"
-  rrdatas = each.value.rrdatas 
+  rrdatas = each.value.rrdatas
   ttl = each.value.ttl == null ? var.ttl : each.value.ttl
   project = var.project_id
   dynamic routing_policy {
-    for_each = each.value.rrdatas == null? { routing_policy = each.value.routing_policy } : {}
+    for_each = each.value.rrdatas == null ? { routing_policy = each.value.routing_policy } : {}
     content {
       //noinspection HILUnresolvedReference
-      dynamic geo{
-        for_each = routing_policy.value.geo == [] ? {} :  { for geo in routing_policy.value.geo : geo.location => geo} 
+      dynamic geo {
+        for_each = routing_policy.value.geo == [] ? {} :  { for geo in routing_policy.value.geo : geo.location => geo }
         //noinspection HILUnresolvedReference
         content {
           location = geo.value.location
@@ -519,7 +519,7 @@ resource google_dns_record_set SSHFP_records {
       }
       //noinspection HILUnresolvedReference
       dynamic wrr {
-        for_each = routing_policy.value.wrr == [] ? {} :  { for wrr in routing_policy.value.wrr : wrr.weight => wrr} 
+        for_each = routing_policy.value.wrr == [] ? {} :  { for wrr in routing_policy.value.wrr : wrr.weight => wrr }
         //noinspection HILUnresolvedReference
         content {
           weight = wrr.value.weight
@@ -535,15 +535,15 @@ resource google_dns_record_set SVCB_records {
   managed_zone = var.managed_zone
   name = endswith(each.key, ".") ? each.key : "${each.key}.${data.google_dns_managed_zone.zone.dns_name}"
   type = "SVCB"
-  rrdatas = each.value.rrdatas 
+  rrdatas = each.value.rrdatas
   ttl = each.value.ttl == null ? var.ttl : each.value.ttl
   project = var.project_id
   dynamic routing_policy {
-    for_each = each.value.rrdatas == null? { routing_policy = each.value.routing_policy } : {}
+    for_each = each.value.rrdatas == null ? { routing_policy = each.value.routing_policy } : {}
     content {
       //noinspection HILUnresolvedReference
-      dynamic geo{
-        for_each = routing_policy.value.geo == [] ? {} :  { for geo in routing_policy.value.geo : geo.location => geo} 
+      dynamic geo {
+        for_each = routing_policy.value.geo == [] ? {} :  { for geo in routing_policy.value.geo : geo.location => geo }
         //noinspection HILUnresolvedReference
         content {
           location = geo.value.location
@@ -552,7 +552,7 @@ resource google_dns_record_set SVCB_records {
       }
       //noinspection HILUnresolvedReference
       dynamic wrr {
-        for_each = routing_policy.value.wrr == [] ? {} :  { for wrr in routing_policy.value.wrr : wrr.weight => wrr} 
+        for_each = routing_policy.value.wrr == [] ? {} :  { for wrr in routing_policy.value.wrr : wrr.weight => wrr }
         //noinspection HILUnresolvedReference
         content {
           weight = wrr.value.weight
@@ -568,15 +568,15 @@ resource google_dns_record_set TLSA_records {
   managed_zone = var.managed_zone
   name = endswith(each.key, ".") ? each.key : "${each.key}.${data.google_dns_managed_zone.zone.dns_name}"
   type = "TLSA"
-  rrdatas = each.value.rrdatas 
+  rrdatas = each.value.rrdatas
   ttl = each.value.ttl == null ? var.ttl : each.value.ttl
   project = var.project_id
   dynamic routing_policy {
-    for_each = each.value.rrdatas == null? { routing_policy = each.value.routing_policy } : {}
+    for_each = each.value.rrdatas == null ? { routing_policy = each.value.routing_policy } : {}
     content {
       //noinspection HILUnresolvedReference
-      dynamic geo{
-        for_each = routing_policy.value.geo == [] ? {} :  { for geo in routing_policy.value.geo : geo.location => geo} 
+      dynamic geo {
+        for_each = routing_policy.value.geo == [] ? {} :  { for geo in routing_policy.value.geo : geo.location => geo }
         //noinspection HILUnresolvedReference
         content {
           location = geo.value.location
@@ -585,7 +585,7 @@ resource google_dns_record_set TLSA_records {
       }
       //noinspection HILUnresolvedReference
       dynamic wrr {
-        for_each = routing_policy.value.wrr == [] ? {} :  { for wrr in routing_policy.value.wrr : wrr.weight => wrr} 
+        for_each = routing_policy.value.wrr == [] ? {} :  { for wrr in routing_policy.value.wrr : wrr.weight => wrr }
         //noinspection HILUnresolvedReference
         content {
           weight = wrr.value.weight
@@ -601,15 +601,15 @@ resource google_dns_record_set TXT_records {
   managed_zone = var.managed_zone
   name = endswith(each.key, ".") ? each.key : "${each.key}.${data.google_dns_managed_zone.zone.dns_name}"
   type = "TXT"
-  rrdatas = each.value.rrdatas 
+  rrdatas = each.value.rrdatas
   ttl = each.value.ttl == null ? var.ttl : each.value.ttl
   project = var.project_id
   dynamic routing_policy {
-    for_each = each.value.rrdatas == null? { routing_policy = each.value.routing_policy } : {}
+    for_each = each.value.rrdatas == null ? { routing_policy = each.value.routing_policy } : {}
     content {
       //noinspection HILUnresolvedReference
-      dynamic geo{
-        for_each = routing_policy.value.geo == [] ? {} :  { for geo in routing_policy.value.geo : geo.location => geo} 
+      dynamic geo {
+        for_each = routing_policy.value.geo == [] ? {} :  { for geo in routing_policy.value.geo : geo.location => geo } 
         //noinspection HILUnresolvedReference
         content {
           location = geo.value.location
@@ -618,7 +618,7 @@ resource google_dns_record_set TXT_records {
       }
       //noinspection HILUnresolvedReference
       dynamic wrr {
-        for_each = routing_policy.value.wrr == [] ? {} :  { for wrr in routing_policy.value.wrr : wrr.weight => wrr} 
+        for_each = routing_policy.value.wrr == [] ? {} :  { for wrr in routing_policy.value.wrr : wrr.weight => wrr } 
         //noinspection HILUnresolvedReference
         content {
           weight = wrr.value.weight
