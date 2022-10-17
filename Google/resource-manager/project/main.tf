@@ -4,7 +4,7 @@ resource "google_project" "self" {
   name                = lookup(each.value, "name", each.key)
   project_id          = each.value.project_id
   org_id              = local.parent_folder == null ? lookup(each.value, "org_id", null) : null
-  folder_id           = local.parent_folder
+  folder_id           = local.parent_folder == null ? lookup(each.value, "folder_id", null) : local.parent_folder
   billing_account     = lookup(each.value, "billing_account", null)
   skip_delete         = lookup(each.value, "skip_delete", null)
   labels              = local.projects_labels[each.key]

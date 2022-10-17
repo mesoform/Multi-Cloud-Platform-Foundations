@@ -5,12 +5,12 @@ locals {
   projects_components_specs  = lookup(local.projects_components, "specs", {})
   projects_components_common = lookup(local.projects_components, "common", {})
 
-  parent_folder = var.parent_folder == null ? lookup(local.projects_components_common, "folder_id", null) : var.parent_folder
-
   projects_specs = {
     for project, config in local.projects_components_specs :
         project => merge(local.projects_components_common, config)
   }
+
+  parent_folder = var.parent_folder == null ? lookup(local.projects_components_common, "folder_id", null) : var.parent_folder
 
   projects_iam_merged = {
     for project, specs in local.projects_specs : project => concat(lookup(local.projects_components_common, "project_iam", []), lookup(specs, "project_iam", []))
