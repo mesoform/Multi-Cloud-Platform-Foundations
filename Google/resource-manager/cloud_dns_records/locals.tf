@@ -1,17 +1,17 @@
 locals {
-  cloud_dns_records_yml = fileexists(var.cloud_dns_records_yml) ? file(var.cloud_dns_records_yml) : null
-  cloud_dns_records = try(yamldecode(local.cloud_dns_records_yml), {})
-  cloud_dns_records_components        = lookup(local.cloud_dns_records, "components", {})
-  cloud_dns_records_components_specs  = lookup(local.cloud_dns_records_components, "specs", {})
-  cloud_dns_records_components_common = lookup(local.cloud_dns_records_components, "common", {})
+  cloud_dns_zones_yml = fileexists(var.cloud_dns_records_yml) ? file(var.cloud_dns_records_yml) : null
+  cloud_dns_zones = try(yamldecode(local.cloud_dns_zones_yml), {})
+  cloud_dns_zone_components        = lookup(local.cloud_dns_zones, "components", {})
+  cloud_dns_zone_components_specs  = lookup(local.cloud_dns_zone_components, "specs", {})
+  cloud_dns_zone_components_common = lookup(local.cloud_dns_zone_components, "common", {})
 
-  cloud_dns_records_specs = {
-    for zone, record_type in local.cloud_dns_records_components_specs :
-      zone => merge(local.cloud_dns_records_components_common, record_type)
+  cloud_dns_zone_specs = {
+    for zone, record_type in local.cloud_dns_zone_components_specs :
+      zone => merge(local.cloud_dns_zone_components_common, record_type)
   }
 
-  cloud_dns_record_sets = {
-    for zone, record_type in local.cloud_dns_records_components_specs: zone => {
+  cloud_dns_zone_records = {
+    for zone, record_type in local.cloud_dns_zone_components_specs: zone => {
       A_records = lookup(record_type, "A_records", [])
       AAAA_records = lookup(record_type, "AAAA_records", [])
       ALIAS_records = lookup(record_type, "ALIAS_records", [])
