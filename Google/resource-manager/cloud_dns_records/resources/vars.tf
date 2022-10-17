@@ -17,7 +17,6 @@ variable "ttl" {
 variable "records" {
   type = map(list(object({
     name    = optional(string)
-    type    = optional(string)
     rrdatas = optional(list(string))
     ttl     = optional(string)
     routing_policy = optional(object({
