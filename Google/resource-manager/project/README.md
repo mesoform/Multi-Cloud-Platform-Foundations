@@ -14,7 +14,7 @@ module dev_projects {
 The `components.common` block contains attributes common across all projects. It can contain
 * One of `org_id` or `folder_id` -  ID of folder or organization the project will be created in, either just the ID or in the form `folders/<folder-id>` or `organizations/<organization-id>`. 
 Alternatively the `parent_folder` or `parent_org` variable can be set in the module definition.
-These can also be set in `components.specs` but it is recommended to have a separate module for each parent. See below for more details of use
+These can also be set in `components.specs` but it is recommended to have a separate module for each parent. See [below](#parent-configuration) for more details of use.
 * Any of the attributes available to the `components.specs` block.
 The `components.specs` block contains maps of project configuration, with the following attributes:
 
