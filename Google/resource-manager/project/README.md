@@ -13,6 +13,7 @@ module dev_projects {
 ## Google Project basic configuration
 The `components.common` block contains attributes common across all projects. It can contain
 * One of `org_id` or `folder_id` -  Parent organisation or folder for the project to be in. Alternatively the `parent_folder` or `parent_org` variable can be set in the module definition.
+These can also be set in `components.specs` but it is recommended to have a different have a separate module for each parent
 * Any of the attributes available to the `components.specs` block.
 The `components.specs` block contains maps of project configuration, with the following attributes:
 
