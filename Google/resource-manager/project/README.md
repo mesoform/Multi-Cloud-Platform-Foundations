@@ -6,13 +6,14 @@ e.g. `main.tf`:
 module dev_projects {
   source      = "github.com/mesoform/Multi-Cloud-Platform-Foundations//Google/resource-manager/project"
   projects_yml = "./dev_projects.yaml"
-  #parent_folder = folder/<dev-folder-id>   (optional) 
+  #parent = folder/<dev-folder-id>   (optional) 
 }
 ```
 
 ## Google Project basic configuration
 The `components.common` block contains attributes common across all projects. It can contain
-* One of `org_id` or `folder_id` -  Parent organisation or folder for the project to be in. `parent_folder` can also be set using terraform variable in the module definition.
+* One of `org_id` or `folder_id` -  Parent organisation or folder for the project to be in. 
+The `parent` variable can also be set in the module definition, defining either the folder or project ID, e.g. `parent=folders/1234567` or `parent=organizations/1234567`.
 * Any of the attributes available to the `components.specs` block.
 The `components.specs` block contains maps of project configuration, with the following attributes:
 
