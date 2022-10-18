@@ -5,3 +5,7 @@ variable "projects_yml" {
 variable "parent_folder" {
   default = null
 }
+
+variable "parent_org" {
+  default = null
+}
