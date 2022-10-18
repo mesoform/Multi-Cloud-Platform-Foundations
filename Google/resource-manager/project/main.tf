@@ -5,8 +5,6 @@ resource "google_project" "self" {
   project_id          = each.value.project_id
   org_id              = local.projects_parent[each.key].parent_org == null ? null : trimprefix(local.projects_parent[each.key].parent_org, "organizations/")
   folder_id           = local.projects_parent[each.key].parent_folder == null ? null : trimprefix(local.projects_parent[each.key].parent_folder, "folders/")
-#  org_id              = lookup(local.parent_org[each.key], "parent_org", null) == null ? null : trimprefix(local.parent_org[each.key].parent_org, "organizations/")
-#  folder_id           = lookup(local.parent_folder[each.key], "parent_folder", null) == null ? null : trimprefix(local.parent_folder[each.key].parent_folder, "folders/")
   billing_account     = lookup(each.value, "billing_account", null)
   skip_delete         = lookup(each.value, "skip_delete", null)
   labels              = local.projects_labels[each.key]
