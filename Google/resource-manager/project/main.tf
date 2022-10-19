@@ -3,8 +3,8 @@ resource "google_project" "self" {
   for_each            = local.projects_specs
   name                = lookup(each.value, "name", each.key)
   project_id          = each.value.project_id
-  org_id              = local.parent_folder == null ? lookup(each.value, "org_id", null) : null
-  folder_id           = local.parent_folder
+  org_id              = local.projects_parent[each.key].parent_org == null ? null : trimprefix(local.projects_parent[each.key].parent_org, "organizations/")
+  folder_id           = local.projects_parent[each.key].parent_folder == null ? null : trimprefix(local.projects_parent[each.key].parent_folder, "folders/")
   billing_account     = lookup(each.value, "billing_account", null)
   skip_delete         = lookup(each.value, "skip_delete", null)
   labels              = local.projects_labels[each.key]
@@ -13,7 +13,7 @@ resource "google_project" "self" {
 
 resource "google_project_iam_policy" "self" {
   for_each    = local.projects_iam
-  project     = google_project.self[each.key].name
+  project     = google_project.self[each.key].id
   policy_data = data.google_iam_policy.self[each.key].policy_data
 }
 

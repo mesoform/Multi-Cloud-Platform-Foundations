@@ -24,3 +24,15 @@ output labels {
   value = data.external.test_labels.result
 }
 
+data external test_parent {
+  query   = {
+    parent_folder = local.projects_parent["staging-sandbox"].parent_folder == null ? "null" : local.projects_parent["staging-sandbox"].parent_folder
+    parent_org = local.projects_parent["staging-sandbox"].parent_org == null ? "null" : local.projects_parent["staging-sandbox"].parent_org
+  }
+  program = ["python", "${path.module}/test_parent.py"]
+}
+
+output test_parents {
+  value = data.external.test_parent.result
+}
+
