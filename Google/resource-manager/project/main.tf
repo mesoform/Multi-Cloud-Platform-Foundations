@@ -13,7 +13,7 @@ resource "google_project" "self" {
 
 resource "google_project_iam_policy" "self" {
   for_each    = local.projects_iam
-  project     = google_project.self[each.key].name
+  project     = google_project.self[each.key].id
   policy_data = data.google_iam_policy.self[each.key].policy_data
 }
 
