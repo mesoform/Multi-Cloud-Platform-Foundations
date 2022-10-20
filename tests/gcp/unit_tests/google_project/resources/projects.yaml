@@ -18,6 +18,7 @@ components:
       name: Staging Sandbox
       project_id: project-id-123456
       skip_delete: true
+      folder_id: 987654321
       labels:
         key-1: overwrite-value
         key-2: value-2

@@ -1,4 +1,4 @@
-# Google Project Module
+# Google Project Module  
 This module can be used to deploy Google Projects in a specified folder or organisation.
 This is created by defining a terraform `module` which references a `yaml` configuration file (see [configuration](#google-project-basic-configuration)).
 e.g. `main.tf`:
@@ -6,13 +6,15 @@ e.g. `main.tf`:
 module dev_projects {
   source      = "github.com/mesoform/Multi-Cloud-Platform-Foundations//Google/resource-manager/project"
   projects_yml = "./dev_projects.yaml"
-  #parent_folder = folder/<dev-folder-id>   (optional) 
+  #parent_folder = <dev-folder-id>   (optional) 
 }
 ```
 
-## Google Project basic configuration
+## Google Project basic configuration  
 The `components.common` block contains attributes common across all projects. It can contain
-* One of `org_id` or `folder_id` -  Parent organisation or folder for the project to be in. `parent_folder` can also be set using terraform variable in the module definition.
+* One of `org_id` or `folder_id` -  ID of folder or organization the project will be created in, either just the ID or in the form `folders/<folder-id>` or `organizations/<organization-id>`. 
+Alternatively the `parent_folder` or `parent_org` variable can be set in the module definition.
+These can also be set in `components.specs` but it is recommended to have a separate module for each parent. See [below](#parent-configuration) for more details of use.
 * Any of the attributes available to the `components.specs` block.
 The `components.specs` block contains maps of project configuration, with the following attributes:
 
@@ -26,7 +28,59 @@ The `components.specs` block contains maps of project configuration, with the fo
 | `auto_create_network` | boolean |  false   | automatically create a default network in the Google project                                            |                   none                    |
 | `project_iam`         |  list   |  false   | List of IAM role bindings used to create IAM policy for the project (see details [below](#project-iam)) |                   none                    |
 
-### Project IAM
+### Parent configuration  
+The parent of the project must be either a folder or an organization, and can be configured by the `parent_folder`/`parent_org` variables, as well as in the MCCF file.  
+If these values are set in multiple places, the order of priority is:
+1. Variables set in module block. The `parent_folder` or `parent_org` variable will take priority over any MCCF configuration,
+   and will apply to all the projects configured in the MCCF file.   
+   This means that setting the parents for individual projects (i.e. priority 2) cannot be done when using variables to configure parent. 
+2. MCCF file: `components.specs.<project>`. If `folder_id` or `org_id` is set in the configuration for the project, 
+    that project will ignore any parent configuration configured in `components.common`
+3. MCCF file: `components.common`. The `folder_id` or `org_id` configured here will apply to all projects in the MCCF file,
+    provided there is no configuration from 1 or 2.
+
+> **NOTE**: At each priority level (i.e. 1, 2 or 3) there should only be configuration for **either** folder **OR** organization.  
+
+#### Examples:  
+##### 1. Passing the parent ID from a variable in the module  
+```terraform
+module folders {
+  source      = "github.com/mesoform/Multi-Cloud-Platform-Foundations//Google/resource-manager/folder"
+  projects_yml = "../folders.yaml"
+}
+
+module projects {
+  source      = "github.com/mesoform/Multi-Cloud-Platform-Foundations//Google/resource-manager/project"
+  projects_yml  = "../projects.yaml"
+  parent_folder = module.core_folders.folder_names["development"]
+}
+```  
+
+##### 2. Different parent for specific project  
+```yaml
+components:
+  common:
+    skip_delete: false
+    auto_create_network: false
+    folder_id: folders/12345678910 
+  specs:
+    org-project:
+      name: "Organization level project"
+      project_id: some-project-id1
+      org_id: organizations/12345678910
+    folder-project1:
+      name: "test-project1"
+      project_id: some-project-id2
+    folder-project2:
+      name: "test-project2"
+      project_id: some-project-id-3
+      folder_id: folders/10987654321
+```
+In this example the `org-project` project will be located in the organization, 
+the `folder-project1` project will be in the `folders/12345678910` folder specified in `components_common`, 
+and the `folder-project2` project will be in the `folders/10987654321`
+
+### Project IAM  
 The IAM policy for each defined project can be set in the `project_iam`.
 > **NOTE**: This policy is authoritative and replaces any existing policy already attached.
 > Omit the `project_iam` key if terraform shouldn't override an existing policy
@@ -35,12 +89,13 @@ The IAM policy for each defined project can be set in the `project_iam`.
 * `members` (required): Identities who the role is granted to (see [documentation](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/google_project_iam#member/members) for format)
 * `condition` (optional): IAM condition for role assignment (see [documentation](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/google_project_iam#nested_condition) for configuration)
 
-### Example
+
+
+### Example  
 ```yaml
 components:
   common:
     org_id: 12345678901
-    #folder_id: 12345678
     billing_account: 12345-12345-12345
     skip_delete: true
     labels: 
@@ -69,5 +124,6 @@ components:
             expression: "request.time < timestamp(\"2020-01-01T00:00:00Z\")"
     test-project:
       project_id: test-project-123
+      folder_id: folders/12345678910
 
 ```
