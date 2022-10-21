@@ -18,14 +18,14 @@ locals {
   }
 
   #Remove duplicate bindings from folder_iam_merged and ensure all IAM binding fields are present
-  #If folder_iam in components.specs doesn't exist the ones from components.copied will be copied into the config in
-  #both the definition of both local.folder_specs and local.folder_iam_merged
+  #If folder_iam in components.specs doesn't exist the ones from components.common will be copied into the config in
+  #both the definition of local.folder_specs and local.folder_iam_merged
   folders_iam = { for folder, policy in local.folders_iam_merged : folder =>
     distinct([
       for binding in policy : {
         role = lookup(binding, "role", null)
         members = lookup(binding, "members", null)
-        condition = lookup(binding, "condition", { condition = null })
+        condition = lookup(binding, "condition", {})
       }
     ])
   }
