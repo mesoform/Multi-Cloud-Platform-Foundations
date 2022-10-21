@@ -23,14 +23,14 @@ locals {
   }
 
   #Remove duplicate bindings from project_iam_merged and ensure all IAM binding fields are present
-  #If project_iam in components.specs doesn't exist the ones from components.copied will be copied into the config in
-  #both the definition of both local.projects_specs and local.project_iam_merged
+  #If project_iam in components.specs doesn't exist the ones from components.common will be copied into the config in
+  #both the definition of local.projects_specs and local.project_iam_merged
   projects_iam = { for project, policy in local.projects_iam_merged : project =>
     distinct([
       for binding in policy : {
         role = lookup(binding, "role", null)
         members = lookup(binding, "members", null)
-        condition = lookup(binding, "condition", {condition = null})
+        condition = lookup(binding, "condition", {})
       }
     ])
   }
