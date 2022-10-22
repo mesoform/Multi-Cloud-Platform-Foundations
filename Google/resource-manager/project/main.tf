@@ -26,7 +26,7 @@ data "google_iam_policy" "self" {
       members = lookup(binding.value, "members", null)
       //noinspection HILUnresolvedReference
       dynamic "condition" {
-      for_each = lookup(binding.value, "condition", { condition = null }) == { condition = null } ? {} : { condition : binding.value.condition }
+        for_each = length(lookup(binding.value, "condition", {})) == 0 ? {} : { condition : binding.value.condition }
         content {
           title       = lookup(condition.value, "title", null)
           description = lookup(condition.value, "description", null)
