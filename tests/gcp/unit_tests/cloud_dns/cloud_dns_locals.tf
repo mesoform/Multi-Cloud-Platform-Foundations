@@ -1,0 +1,1 @@
+../../../../Google/cloud_dns/record_set/locals.tf

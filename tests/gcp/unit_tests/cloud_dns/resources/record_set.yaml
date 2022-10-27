@@ -1,0 +1,68 @@
+components:
+  common:
+    project_id: project123456
+    ttl: 300
+  specs:
+    private-zone:
+      A_records:
+        - name: private.example.com
+          ttl: 180
+          routing_policy:
+            wrr:
+              - weight: 0.2
+                rrdatas:
+                  - 192.168.0.2
+              - weight: 0.8
+                rrdatas:
+                  - 192.168.0.3
+      CNAME_records:
+        - name: www.example.com.
+          rrdatas:
+            - private.example.com.
+    production-zone:
+      project_id: project2345678
+      A_records:
+        - name: prod.example.com
+          rrdatas:
+            - 198.51.100.3
+            - 198.51.100.4
+            - 198.51.100.5
+      CNAME_records:
+        - name: frontend.prod.example.com.
+          rrdatas:
+            - frontend.example.com
+            - www.example.com
+        - name: www.example.com.
+          rrdatas:
+            - frontend.prod.example.com
+        - name: frontend.example.com.
+          rrdatas:
+            - frontend.prod.example.com
+      MX_records:
+        - name: prod.example.com.
+          ttl: 86400
+          rrdatas:
+            - 1 aspmx.l.google.com.
+            - 5 alt1.aspmx.l.google.com.
+            - 5 alt2.aspmx.l.google.com.
+            - 10 alt3.aspmx.l.google.com.
+            - 10 alt4.aspmx.l.google.com.
+    development-zone:
+      A_records:
+        - name: dev.example.com
+          rrdatas:
+            - 198.51.100.103
+          geo:
+            - location: europe-west2
+              rrdatas:
+                - 198.51.100.103
+            - location: us-east1
+              rrdatas:
+                - 198.51.100.104
+      CNAME_records:
+        - name: beta.example.com
+          rrdatas:
+            - frontend.dev.example.com
+        - name: dev-frontend.example.com
+          rrdatas:
+            - frontend.dev.example.com
