@@ -1,6 +1,6 @@
 module records {
   for_each = local.cloud_dns_zone_records
-  source = "resources"
+  source = "./resources"
   managed_zone = each.key
   records = each.value
   project_id = lookup(local.cloud_dns_zone_specs[each.key], "project_id", null)
