@@ -1,6 +1,6 @@
 //noinspection ConflictingProperties,HILUnresolvedReference
 resource google_service_account self {
-  for_each = local.service_accounts_specs
+  for_each = local.service_accounts
   account_id = lookup(each.value, "account_id", each.key)
   display_name = lookup(each.value, "display_name", null)
   description = lookup(each.value, "description", null)
