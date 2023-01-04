@@ -36,3 +36,14 @@ data "google_iam_policy" "self" {
     }
   }
 }
+
+//noinspection HILUnresolvedReference
+resource "google_project_service" "self" {
+  depends_on = [google_project.self]
+  for_each = local.projects_services
+
+  project = each.value.project
+  service = each.value.service
+  disable_on_destroy = each.value.disable_on_destroy
+  disable_dependent_services = each.value.disable_dependent_services
+}

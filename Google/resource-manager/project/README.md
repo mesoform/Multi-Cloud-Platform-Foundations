@@ -1,6 +1,6 @@
 # Google Project Module  
 This module can be used to deploy Google Projects in a specified folder or organisation.
-This is created by defining a terraform `module` which references a `yaml` configuration file (see [configuration](#google-project-basic-configuration)).
+This is created by defining a Terraform `module` which references a `yaml` configuration file (see [configuration](#google-project-basic-configuration)).
 e.g. `main.tf`:
 ```terraform
 module dev_projects {
@@ -27,6 +27,7 @@ The `components.specs` block contains maps of project configuration, with the fo
 | `labels`              |   map   |  false   | Key Value pairs of labels for project                                                                   |                   none                    |
 | `auto_create_network` | boolean |  false   | automatically create a default network in the Google project                                            |                   none                    |
 | `project_iam`         |  list   |  false   | List of IAM role bindings used to create IAM policy for the project (see details [below](#project-iam)) |                   none                    |
+| `services`            |  list   |  false   | List of services to enable in the project (see details [below](#project-services)                       |                   none                    |
 
 ### Parent configuration  
 The parent of the project must be either a folder or an organization, and can be configured by the `parent_folder`/`parent_org` variables, as well as in the MCCF file.  
@@ -89,7 +90,20 @@ The IAM policy for each defined project can be set in the `project_iam`.
 * `members` (required): Identities who the role is granted to (see [documentation](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/google_project_iam#member/members) for format)
 * `condition` (optional): IAM condition for role assignment (see [documentation](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/google_project_iam#nested_condition) for configuration)
 
-
+### Project services
+A list of services to be enabled in the created project can be set using the `services` key.
+By default, a service is disabled when the service resource is destroyed (i.e. removed from yaml file), 
+but disabling can be prevented by adding setting `disable_on_destroy` to `false`.  
+If a service is disabled when the resource is destroyed, it can also be set to disable any services dependent on it by setting the value
+`disable_dependent_services` to `true` (defaults to `false`)
+```yaml
+    services:
+      - service: compute.googleapis.com
+        disable_dependent_services: true
+      - service: container.googleapis.com
+        disable_on_destroy: false
+      - service: recommender.googleapis.com
+```
 
 ### Example  
 ```yaml
@@ -101,7 +115,9 @@ components:
     labels: 
       key-1: value-1
     auto_create_network: false
-
+    services: 
+      - service: compute.googleapis.com
+      - service: recommender.googleapis.com
   specs: 
     staging-sandbox:
       name: Staging Sandbox
@@ -111,6 +127,9 @@ components:
         key-1: overwrite-value
         key-2: value-2
       auto_create_network: true
+      services:
+        - service: compute.googleapis.com
+          disable_on_destroy: false
       project_iam:
         - role: "roles/viewer"
           members:
