@@ -53,5 +53,6 @@ locals {
   ]...)
   projects_services = zipmap([for service in local.projects_services_merged: replace("${service.project}_${split(".", service.service)[0]}", "-", "_")], local.projects_services_merged)
 
+  enable_service_delay = length(local.projects_services) == 0 ? null : length(local.projects_iam) == 0 ? "0m" : lookup(local.projects_components_common, "enable_service_delay", "2m")
 }
 

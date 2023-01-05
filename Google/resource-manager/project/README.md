@@ -10,24 +10,36 @@ module dev_projects {
 }
 ```
 
+### Required Permissions
+The account used for creating the project will need to have the following roles in the relevant folder/organization:
+ * `roles/resourcemanager.projectCreator` for creating projects
+ * `roles/resourcemanager.projectDeletor` for deleting projects
+
+And optionally:
+ * `roles/resourcemanager.projectMover` for moving projects
+ * `roles/resourcemanager.projectIamAdmin` for managing the projects IAM policy
+ * `roles/serviceusage.serviceUsageAdmin` for enabling services in the projects. 
+  This role can be assigned at the project level if necessary. 
+
 ## Google Project basic configuration  
 The `components.common` block contains attributes common across all projects. It can contain
 * One of `org_id` or `folder_id` -  ID of folder or organization the project will be created in, either just the ID or in the form `folders/<folder-id>` or `organizations/<organization-id>`. 
 Alternatively the `parent_folder` or `parent_org` variable can be set in the module definition.
 These can also be set in `components.specs` but it is recommended to have a separate module for each parent. See [below](#parent-configuration) for more details of use.
+* `enable_service_delay` - A string specifying the delay between IAM policy to creation, and enabling services in the project. This defaults to `"2m"`. 
 * Any of the attributes available to the `components.specs` block.
 The `components.specs` block contains maps of project configuration, with the following attributes:
 
-| Key                   |  Type   | Required | Description                                                                                             |                  Default                  |
-|:----------------------|:-------:|:--------:|:--------------------------------------------------------------------------------------------------------|:-----------------------------------------:|
-| `name`                | string  |  false   | Display name for the Google Project, which will also be the Project ID                                  | project key, from `component.specs.<key>` |
-| `project_id`          | string  |   true   | Project ID for the Google Project                                                                       |                   none                    |
-| `billing_account`     | string  |  false   | The alphanumeric ID of the billing account this project belongs to.                                     |                   none                    |
-| `skip_delete`         | string  |  false   | If true, the Terraform resource can be deleted without deleting the Project via the Google API.         |                   none                    |
-| `labels`              |   map   |  false   | Key Value pairs of labels for project                                                                   |                   none                    |
-| `auto_create_network` | boolean |  false   | automatically create a default network in the Google project                                            |                   none                    |
-| `project_iam`         |  list   |  false   | List of IAM role bindings used to create IAM policy for the project (see details [below](#project-iam)) |                   none                    |
-| `services`            |  list   |  false   | List of services to enable in the project (see details [below](#project-services)                       |                   none                    |
+| Key                    |  Type   | Required | Description                                                                                             |                  Default                  |
+|:-----------------------|:-------:|:--------:|:--------------------------------------------------------------------------------------------------------|:-----------------------------------------:|
+| `name`                 | string  |  false   | Display name for the Google Project, which will also be the Project ID                                  | project key, from `component.specs.<key>` |
+| `project_id`           | string  |   true   | Project ID for the Google Project                                                                       |                   none                    |
+| `billing_account`      | string  |  false   | The alphanumeric ID of the billing account this project belongs to.                                     |                   none                    |
+| `skip_delete`          | string  |  false   | If true, the Terraform resource can be deleted without deleting the Project via the Google API.         |                   none                    |
+| `labels`               |   map   |  false   | Key Value pairs of labels for project                                                                   |                   none                    |
+| `auto_create_network`  | boolean |  false   | automatically create a default network in the Google project                                            |                   none                    |
+| `project_iam`          |  list   |  false   | List of IAM role bindings used to create IAM policy for the project (see details [below](#project-iam)) |                   none                    |
+| `services`             |  list   |  false   | List of services to enable in the project (see details [below](#project-services)                       |                   none                    |
 
 ### Parent configuration  
 The parent of the project must be either a folder or an organization, and can be configured by the `parent_folder`/`parent_org` variables, as well as in the MCCF file.  
@@ -91,11 +103,14 @@ The IAM policy for each defined project can be set in the `project_iam`.
 * `condition` (optional): IAM condition for role assignment (see [documentation](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/google_project_iam#nested_condition) for configuration)
 
 ### Project services
-A list of services to be enabled in the created project can be set using the `services` key.
+A list of services to be enabled in the created project can be set using the `services` key.  
+> **NOTE**: The account used for deployment would need a role with the `serviceusage.services.enable` permission (e.g. `roles/serviceUsageAdmin`)  
+
 By default, a service is disabled when the service resource is destroyed (i.e. removed from yaml file), 
 but disabling can be prevented by adding setting `disable_on_destroy` to `false`.  
 If a service is disabled when the resource is destroyed, it can also be set to disable any services dependent on it by setting the value
-`disable_dependent_services` to `true` (defaults to `false`)
+`disable_dependent_services` to `true` (defaults to `false`).  
+E.g:
 ```yaml
     services:
       - service: compute.googleapis.com
@@ -104,6 +119,10 @@ If a service is disabled when the resource is destroyed, it can also be set to d
         disable_on_destroy: false
       - service: recommender.googleapis.com
 ```
+
+If a role required for enabling services is set in the projects IAM policy during deployment, 
+a default delay of 2 minutes is set, allowing for propagation of permissions.   
+This delay can be updated using the `enable_service_delay` attribute in the `components.commons` section.
 
 ### Example  
 ```yaml
@@ -115,6 +134,7 @@ components:
     labels: 
       key-1: value-1
     auto_create_network: false
+    enable_service_delay: 90s
     services: 
       - service: compute.googleapis.com
       - service: recommender.googleapis.com
@@ -134,7 +154,7 @@ components:
         - role: "roles/viewer"
           members:
             - "user:info@kvit.pub"
-        - role: "roles/viewer"
+        - role: "roles/serviceusage.serviceUsageAdmin"
           members:
             - "user:user@kvit.pub"
           condition:
