@@ -8,18 +8,28 @@ resource google_service_account self {
   disabled = lookup(each.value, "disabled", false)
 }
 
-resource google_project_iam_member self {
-  for_each = { for idx, binding in local.flatten_iam_list : idx => binding }
-  project = each.value.project
-  member = "serviceAccount:${google_service_account.self["${each.value.service_account}"].email}"
-  role = each.value.role
+resource google_service_account_iam_policy self {
+  for_each    = local.service_accounts_binding
+  service_account_id = google_service_account.self[each.key].id
+  policy_data = data.google_iam_policy.self[each.key].policy_data
+}
 
-#  dynamic "condition" {
-#     for_each = length(lookup(binding.value, "condition", {})) == 0 ? {} : { condition : binding.value.condition }
-#     content {
-#       title       = lookup(condition.value, "title", null)
-#       description = lookup(condition.value, "description", null)
-#       expression  = lookup(condition.value, "expression", null)
-#     }
-#  }
+data google_iam_policy self {
+  for_each = local.service_accounts_binding
+  dynamic binding {
+    for_each = each.value
+    content {
+      role    = lookup(binding.value, "role", null)
+      members = lookup(binding.value, "members", null)
+      //noinspection HILUnresolvedReference
+      dynamic "condition" {
+        for_each = length(lookup(binding.value, "condition", {})) == 0 ? {} : { condition : binding.value.condition }
+        content {
+          title       = lookup(condition.value, "title", null)
+          description = lookup(condition.value, "description", null)
+          expression  = lookup(condition.value, "expression", null)
+        }
+      }
+    }
+  }
 }

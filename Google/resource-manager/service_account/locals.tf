@@ -1,22 +1,20 @@
 locals {
-  service_accounts_yml              = fileexists(var.service_accounts_yml) ? file(var.service_accounts_yml) : null
-  service_accounts                  = try(yamldecode(local.service_accounts_yml), {})
-
-  service_accounts_config = {
-    for service_account, config in local.service_accounts :
-    service_account => config
-  }
+  service_accounts_yml = fileexists(var.service_accounts_yml) ? file(var.service_accounts_yml) : null
+  service_accounts     = try(yamldecode(local.service_accounts_yml), {})
 
   service_accounts_iam = {
-    for service_account, specs in local.service_accounts_config : service_account => lookup(specs, "iam_bindings", {})
-    if lookup(specs, "iam_bindings", null) != null
+    for service_account, specs in local.service_accounts : service_account => lookup(specs, "service_account_iam", {})
+    if lookup(specs, "service_account_iam", null) != null
   }
 
-  flatten_iam_list = flatten([for service_account, bindings in local.service_accounts_iam :
-          flatten([for binding in bindings :{
-                  "service_account" = service_account
-                  "role" = lookup(binding, "role")
-                  "project" = lookup(binding, "project")}
-                 ])
-          ])
+  service_accounts_binding = {
+    for project, policy in local.service_accounts_iam : project =>
+    distinct([
+      for binding in policy : {
+        role      = lookup(binding, "role", null)
+        members   = lookup(binding, "members", null)
+        condition = lookup(binding, "condition", {})
+      }
+    ])
+  }
 }
