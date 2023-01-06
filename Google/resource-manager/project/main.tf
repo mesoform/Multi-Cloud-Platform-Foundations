@@ -1,5 +1,5 @@
 //noinspection ConflictingProperties,HILUnresolvedReference
-resource "google_project" "self" {
+resource google_project self {
   for_each            = local.projects_specs
   name                = lookup(each.value, "name", each.key)
   project_id          = each.value.project_id
@@ -11,13 +11,13 @@ resource "google_project" "self" {
   auto_create_network = lookup(each.value, "auto_create_network", null)
 }
 
-resource "google_project_iam_policy" "self" {
+resource google_project_iam_policy self {
   for_each    = local.projects_iam
   project     = google_project.self[each.key].id
   policy_data = data.google_iam_policy.self[each.key].policy_data
 }
 
-data "google_iam_policy" "self" {
+data google_iam_policy self {
   for_each = local.projects_iam
   dynamic binding {
     for_each = each.value
@@ -35,4 +35,21 @@ data "google_iam_policy" "self" {
       }
     }
   }
+}
+
+resource time_sleep self {
+  count = local.enable_service_delay == null ? 0 : 1
+  depends_on = [google_project_iam_policy.self]
+  create_duration = local.enable_service_delay
+}
+
+//noinspection HILUnresolvedReference
+resource google_project_service self {
+  for_each = local.projects_services
+  depends_on = [time_sleep.self]
+
+  project = google_project.self[each.value.project].id
+  service = each.value.service
+  disable_on_destroy = each.value.disable_on_destroy
+  disable_dependent_services = each.value.disable_dependent_services
 }
