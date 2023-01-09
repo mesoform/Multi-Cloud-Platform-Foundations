@@ -9,18 +9,21 @@ module dev_service_accounts {
   
 }
 ```
+## Google Service Account basic configuration
 
-## Google Service Account basic configuration  
-Each service account block contains maps of service account configuration, with the following attributes:
+| Key          |  Type   | Required | Description                                                        | Default |
+|:-------------|:-------:|:--------:|:-------------------------------------------------------------------|:-------:|
+| `project_id` | string  |  false   | The ID of the project that the service accounts will be created in |  none   |
 
-| Key                   |  Type   | Required | Description                                                                                                     |            Default             |
-|:----------------------|:-------:|:--------:|:----------------------------------------------------------------------------------------------------------------|:------------------------------:|
-| `account_id`          | string  |   true   | The account id that is used to generate the service account email address and a stable unique id                |              none              |
-| `display_name`        | string  |  false   | The display name for the service account                                                                        |              none              |
-| `project`             | string  |  false   | The ID of the project that the service account will be created in                                               | provider project configuration |
-| `description`         | string  |  false   | A text description of the service account                                                                       |              none              |
-| `disabled`            | boolean |  false   | Whether a service account is disabled or not                                                                    |             false              |
-| `service_account_iam` |  list   |  false   | List of IAM role bindings used to create IAM policy for the project (see details [below](#service-account-iam)) |              none              |
+The `components.specs` block contains maps of service account configuration, with the following attributes:
+
+| Key                   |  Type   | Required | Description                                                                                                     | Default |
+|:----------------------|:-------:|:--------:|:----------------------------------------------------------------------------------------------------------------|:-------:|
+| `account_id`          | string  |   true   | The account id that is used to generate the service account email address and a stable unique id                |  none   |
+| `display_name`        | string  |  false   | The display name for the service account                                                                        |  none   |
+| `description`         | string  |  false   | A text description of the service account                                                                       |  none   |
+| `disabled`            | boolean |  false   | Whether a service account is disabled or not                                                                    |  false  |
+| `service_account_iam` |  list   |  false   | List of IAM role bindings used to create IAM policy for the project (see details [below](#service-account-iam)) |  none   |
 
 
 ### Service Account IAM  
@@ -35,30 +38,31 @@ The IAM policy for each defined service account can be set in the `service_accou
 
 ### Example  
 ```yaml
-test-account:
-  account_id: test-account
-  display_name: test-account
-  project: test-project
-  description: Test account
-  disabled: false
-  service_account_iam:
-    - role: "roles/iam.serviceAccountUser"
-      members:
-        - "user:info@kvit.pub"
-test-account2:
-  account_id: test-account2
-  display_name: test-account2
-  project: test-project
-  description: Test account2
-  disabled: false
-  service_account_iam:
-    - role: "roles/iam.serviceAccountUser"
-      members:
-        - "user:user@kvit.pub"
-        - "group:engineers@kvit.pub"
-      condition:
-        title: "expires_after_2019_12_31"
-        description: "Expiring at midnight of 2019-12-31"
-        expression: "request.time < timestamp(\"2020-01-01T00:00:00Z\")"
+project_id: project-test
+components:
+  specs:
+    test-account:
+      account_id: test-account
+      display_name: test-account
+      description: Test account
+      disabled: false
+      service_account_iam:
+        - role: "roles/iam.serviceAccountUser"
+          members:
+            - "user:user@kvit.pub"
+    test-account2:
+      account_id: test-account2
+      display_name: test-account2
+      description: Test account2
+      disabled: false
+      service_account_iam:
+        - role: "roles/iam.serviceAccountUser"
+          members:
+            - "user:user@kvit.pub"
+            - "group:engineers@kvit.pub"
+          condition:
+            title: "expires_after_2019_12_31"
+            description: "Expiring at midnight of 2019-12-31"
+            expression: "request.time < timestamp(\"2020-01-01T00:00:00Z\")"
 
 ```
