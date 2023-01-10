@@ -5,6 +5,7 @@ data external test_skip_delete {
 output "skip_delete" {
   value = data.external.test_skip_delete.result
 }
+
 data external test_iam_bindings_count {
   query   = {
     staging_sandbox_count = length(local.projects_iam["staging-sandbox"])
@@ -12,9 +13,11 @@ data external test_iam_bindings_count {
   }
   program = ["python", "${path.module}/test_iam_bindings_count.py"]
 }
+
 output "iam_bindings_count" {
-  value = data.external.test_skip_delete.result
+  value = data.external.test_iam_bindings_count.result
 }
+
 data external test_labels {
   query = local.projects_labels["staging-sandbox"]
   program = ["python", "${path.module}/test_labels.py"]
@@ -35,4 +38,3 @@ data external test_parent {
 output test_parents {
   value = data.external.test_parent.result
 }
-

@@ -15,8 +15,8 @@ except Exception as e:
 """
 
 expected_data = {
-    "staging_sandbox_count" : '3',
-    "test_project_count" : '1'
+    'test_account_count' : '1',
+    'test_account2_count' : '1'
 }
 
 if __name__ == '__main__':
