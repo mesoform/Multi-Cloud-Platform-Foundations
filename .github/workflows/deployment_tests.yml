@@ -13,7 +13,7 @@ jobs:
 
     env:
       working-directory: ./tests/gcp/deployment
-      
+
     defaults:
       run:
         shell: bash
@@ -47,8 +47,8 @@ jobs:
           SERVICE_ACCOUNT=$(echo $GOOGLE_CREDENTIALS | jq -r '.client_email')
           sed -i "s/<service_account>/$SERVICE_ACCOUNT/"  folders.yaml
           cat folders.yaml
-          
-      - name: Deploy Google folder 
+
+      - name: Deploy Google folder
         run: |
           cd google_folder
           terraform init
@@ -69,8 +69,8 @@ jobs:
           SERVICE_ACCOUNT=$(echo $GOOGLE_CREDENTIALS | jq -r '.client_email')
           sed -i "s/<service_account>/$SERVICE_ACCOUNT"  projects.yaml
           cat projects.yaml
-          
-      - name: Deploy Google folder 
+
+      - name: Deploy Google project
         run: |
           cd google_project
           terraform init
@@ -79,4 +79,21 @@ jobs:
           terraform plan -destroy -out="./destroy.tfplan"
           terraform apply destroy.tfplan
 
-     
+      # Deploy google service accounts
+      - name: Add IDs to GCP Service Accounts File
+        env:
+          GOOGLE_CREDENTIALS: ${{secrets.GCP_SA_KEY}}
+        run: |
+          cd google_service_account/resource
+          sed -i "s/<project_id>/${{secrets.GCP_PROJECT_ID}}/" service_accounts.yaml
+          sed -i "s/<user_email>/${{secrets.GCP_USER}}/" service_accounts.yaml
+          cat service_accounts.yaml
+
+      - name: Deploy Google service accounts
+        run: |
+          cd google_service_account
+          terraform init
+          terraform plan -out="./plan.tfplan"
+          terraform apply plan.tfplan
+          terraform plan -destroy -out="./destroy.tfplan"
+          terraform apply destroy.tfplan
