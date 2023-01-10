@@ -38,3 +38,13 @@ data external test_parent {
 output test_parents {
   value = data.external.test_parent.result
 }
+
+data external test_services {
+  query   = { for service, map in local.projects_services: service => map.disable_on_destroy
+  }
+  program = ["python", "${path.module}/test_services.py"]
+}
+
+output test_services {
+  value = data.external.test_services.result
+}
