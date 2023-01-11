@@ -15,7 +15,9 @@ except Exception as e:
 """
 
 expected_data = {
-    "disabled": "false"
+    "disabled": "false",
+    "disabled": "false",
+    "disabled": "true"
 }
 
 if __name__ == '__main__':
