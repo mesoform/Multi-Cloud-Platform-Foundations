@@ -1,0 +1,10 @@
+project_id: ${project_id}
+components:
+  common:
+    location: europe-west2
+#    project_id:
+  specs:
+    manual:
+      cluster_id: something
+      backup_schedule:
+        cron_schedule: "0 3 * * *"

@@ -5,15 +5,117 @@ on:
     branches:
       - main
       - develop
+  pull_request:
+    branches:
+      - develop
 
 jobs:
-  ############################# Deployment Tests for GCP modules #####################################################
-  MCP-tests:
+  deployment-test-plans:
     runs-on: ubuntu-latest
-
+    name: Deployment Test Plans
+    if: github.event_name != 'push'
     env:
       working-directory: ./tests/gcp/deployment
-      DATE: $(date +%y%m%d%H%M)
+      DATE: $(date +%m%d%H%M)
+
+    defaults:
+      run:
+        shell: bash
+        working-directory: ${{env.working-directory}}
+
+    steps:
+      # Checkout the repository to the GitHub Actions runner
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      # Install the latest version of Terraform CLI
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v1
+#        with:
+#          terraform_wrapper: false
+
+      # Install gcloud sdk and set the service account
+      - id: 'auth'
+        uses: 'google-github-actions/auth@v1'
+        with:
+          credentials_json: ${{secrets.GCP_SA_KEY}}
+
+      - name: 'Set up Cloud SDK'
+        uses: 'google-github-actions/setup-gcloud@v1'
+
+      - name: Set constant variables
+        id: vars
+        run: echo "::set-output name=DATE::${{ env.DATE }}"
+
+      # Deploy google folders
+      - name: Add IDs to GCP Folder Files
+        env:
+          GOOGLE_CREDENTIALS: ${{secrets.GCP_SA_KEY}}
+        run: |
+          cd google_folder/resource
+          sed -i "s/<folder_id>/folders\/${{secrets.GCP_FOLDER_ID}}/" folders.yaml
+          SERVICE_ACCOUNT=$(echo $GOOGLE_CREDENTIALS | jq -r '.client_email')
+          sed -i "s/<service_account>/$SERVICE_ACCOUNT/"  folders.yaml
+          cat folders.yaml
+
+      - name: Add IDs to GCP Project Files
+        env:
+          GOOGLE_CREDENTIALS: ${{secrets.GCP_SA_KEY}}
+        run: |
+          cd google_project/resource
+          sed -i "s/<project_date>/${{ steps.vars.outputs.DATE }}/g" projects.yaml
+          sed -i "s/<folder_id>/folders\/${{secrets.GCP_FOLDER_ID}}/" projects.yaml
+          sed -i "s/<billing_account>/${{secrets.GCP_BILLING_ACCOUNT}}/" projects.yaml
+          SERVICE_ACCOUNT=$(echo $GOOGLE_CREDENTIALS | jq -r '.client_email')
+          sed -i "s/<service_account>/$SERVICE_ACCOUNT/"  projects.yaml
+          cat projects.yaml
+
+      # Deploy google service accounts
+      - name: Add IDs to GCP Service Accounts File
+        env:
+          GOOGLE_CREDENTIALS: ${{secrets.GCP_SA_KEY}}
+        run: |
+          cd google_service_account/resource
+          sed -i "s/<project_id>/mcp-test-project-${{ steps.vars.outputs.DATE }}/" service_accounts.yaml
+          sed -i "s/<user_email>/${{secrets.GCP_USER}}/" service_accounts.yaml
+          cat service_accounts.yaml
+
+
+      - name: Google folder terraform plan
+        run: |
+          cd google_folder
+          terraform init
+          terraform plan 
+
+
+      - name: Google project terraform plan
+        run: |
+          cd google_project
+          terraform init
+          terraform plan 
+
+      - name: Google service accounts terraform plan
+        run: |
+          cd google_service_account
+          terraform init
+          terraform plan 
+
+      - name: Deploy GKE clusters
+        env:
+          TF_VAR_project_id: mcp-test-project-${{ steps.vars.outputs.DATE }}
+        run: |
+          cd gke
+          terraform init
+          terraform plan 
+
+  ############################# Deployment Tests for GCP modules #####################################################
+  deployment-tests:
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push'
+    name: Deployment Tests
+    env:
+      working-directory: ./tests/gcp/deployment
+      DATE: $(date +%m%d%H%M)
 
     defaults:
       run:
@@ -32,11 +134,17 @@ jobs:
           terraform_wrapper: false
 
       # Install gcloud sdk and set the service account
-      - name: Setup Cloud SDK
-        uses: google-github-actions/setup-gcloud@v0
+      - id: 'auth'
+        uses: 'google-github-actions/auth@v1'
         with:
-          service_account_key: ${{secrets.GCP_SA_KEY}}
-          export_default_credentials: true
+          credentials_json: ${{secrets.GCP_SA_KEY}}
+
+      - name: 'Set up Cloud SDK'
+        uses: 'google-github-actions/setup-gcloud@v1'
+
+      - name: Set constant variables
+        id: vars
+        run: echo "::set-output name=DATE::${{ env.DATE }}"
 
       # Deploy google folders
       - name: Add IDs to GCP Folder Files
@@ -70,11 +178,11 @@ jobs:
           GOOGLE_CREDENTIALS: ${{secrets.GCP_SA_KEY}}
         run: |
           cd google_project/resource
-          sed -i "s/<project_date>/$DATE/g" projects.yaml
+          sed -i "s/<project_date>/${{ steps.vars.outputs.DATE }}/g" projects.yaml
           sed -i "s/<folder_id>/folders\/${{secrets.GCP_FOLDER_ID}}/" projects.yaml
           sed -i "s/<billing_account>/${{secrets.GCP_BILLING_ACCOUNT}}/" projects.yaml
           SERVICE_ACCOUNT=$(echo $GOOGLE_CREDENTIALS | jq -r '.client_email')
-          sed -i "s/<service_account>/$SERVICE_ACCOUNT"  projects.yaml
+          sed -i "s/<service_account>/$SERVICE_ACCOUNT/"  projects.yaml
           cat projects.yaml
 
       - name: Deploy Google project
@@ -91,9 +199,10 @@ jobs:
           GOOGLE_CREDENTIALS: ${{secrets.GCP_SA_KEY}}
         run: |
           cd google_service_account/resource
-          sed -i "s/<project_id>/mcp-test-project-${DATE}/" service_accounts.yaml
+          sed -i "s/<project_id>/mcp-test-project-${{ steps.vars.outputs.DATE }}/" service_accounts.yaml
           sed -i "s/<user_email>/${{secrets.GCP_USER}}/" service_accounts.yaml
           cat service_accounts.yaml
+          
 
       - name: Deploy Google service accounts
         id: deploy-GSAs
@@ -102,6 +211,22 @@ jobs:
           terraform init
           terraform plan -out="./plan.tfplan"
           terraform apply plan.tfplan
+
+      - name: Deploy GKE clusters
+        id : deploy-gke
+        env:
+          TF_VAR_project_id: mcp-test-project-${{ steps.vars.outputs.DATE }}
+        run: |
+          cd gke
+          terraform init
+          terraform plan -out="./plan.tfplan"
+          terraform apply plan.tfplan
+
+      - name: Destroy GKE clusters
+        if: steps.deploy-gke.outcome != 'skipped
+        run: |
+          cd gke
+          terraform destroy -auto-approve
 
       - name: Destroy Google Service Accounts
         if: steps.deploy-GSAs.outcome != 'skipped'

@@ -1,0 +1,48 @@
+components:
+  common:
+    location: europe-west2
+  specs:
+    autopilot:
+      addons_config:
+        gke_backup_agent_config: true
+      gke_backups:
+        hourly:
+          retention_policy:
+            backup_delete_lock_days: 0
+            backup_retain_days: 1
+          backup_config:
+            include_volume_data: true
+            include_secrets: false
+            all_namespaces: true
+          backup_schedule:
+            cron_schedule: "0 3 * * *"
+    manual:
+      autopilot: false
+      addons_config:
+        http_load_balancing: true
+        network_policy_config: false
+        gke_backup_agent_config: true
+      cluster_autoscaling:
+        enabled: true
+        resource_limits:
+          cpu:
+            maximum: 2
+          memory:
+            maximum: 4
+        auto_provisioning_defaults:
+          disk_type: pd-balanced
+          upgrade_settings:
+            strategy: BLUE_GREEN
+            blue_green_settings:
+              standard_rollout_policy:
+                batch_percentage: 0.7
+          management:
+            auto_upgrade: true
+            upgrade_options:
+              strategy: BLUE_GREEN
+      node_pools:
+        default:
+          node_locations:
+          - "europe-west2-a"
+          node_count: 1
+          mesh_certificates: false
