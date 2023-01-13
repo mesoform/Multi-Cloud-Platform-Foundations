@@ -1,0 +1,1 @@
+../../../../Google/resource-manager/service_account/locals.tf
