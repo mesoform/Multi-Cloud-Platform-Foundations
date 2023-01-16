@@ -92,8 +92,7 @@ jobs:
       runs-on: ubuntu-latest
       if: github.event_name == 'pull_request' ||  github.event.inputs.resource == 'projects'
       env:
-        working-directory: ./tests/gcp/deployment/google_folder
-        TF_VAR_sub_folder_parent: staging
+        working-directory: ./tests/gcp/deployment/google_project
 
       defaults:
         run:
