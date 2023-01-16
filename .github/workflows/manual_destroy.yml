@@ -17,7 +17,6 @@ on:
         default: 'projects'
 
 jobs:
-  ############################# Deployment Tests for GCP modules #####################################################
   destroy-folders:
     name: "Destroy folder"
     runs-on: ubuntu-latest
@@ -55,7 +54,7 @@ jobs:
         uses: actions/setup-python@v4
         with:
           python-version: '3.9'
-          cache: 'pip' # caching pip dependencies
+          cache: 'pip'
 
       - run: pip install pyyaml
 
@@ -88,8 +87,8 @@ jobs:
           terraform init
           terraform destroy -auto-approve
 
-    Delete-projects:
-      name: "Destroy projects"
+    delete-projects:
+      name: "Delete projects"
       runs-on: ubuntu-latest
       if: github.event_name == 'pull_request' ||  github.event.inputs.resource == 'projects'
       env:
@@ -102,7 +101,6 @@ jobs:
           working-directory: ${{env.working-directory}}
 
       steps:
-        # Checkout the repository to the GitHub Actions runner
         - name: Checkout
           uses: actions/checkout@v2
 
@@ -119,10 +117,9 @@ jobs:
           uses: actions/setup-python@v4
           with:
             python-version: '3.9'
-            cache: 'pip' # caching pip dependencies
+            cache: 'pip'
 
         - run: pip install pyyaml
-
 
         - name: Delete projects
           env:
