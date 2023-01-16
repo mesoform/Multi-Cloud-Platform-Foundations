@@ -6,5 +6,5 @@ module folders{
 module "sub_folders" {
   source = "../../../../Google/resource-manager/folder"
   folders_yml = "resource/sub-folders.yaml"
-  parent_folder = module.folders.folder_names["staging"]
+  parent_folder = module.folders.folder_names[var.sub_folder_parent]
 }

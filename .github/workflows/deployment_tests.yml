@@ -13,6 +13,7 @@ jobs:
 
     env:
       working-directory: ./tests/gcp/deployment
+      DATE: $(date +%y%m%d%H%M)
 
     defaults:
       run:
@@ -49,13 +50,19 @@ jobs:
           cat folders.yaml
 
       - name: Deploy Google folder
+        id: deploy-folders
         run: |
           cd google_folder
           terraform init
           terraform plan -out="./plan.tfplan"
           terraform apply plan.tfplan
-          terraform plan -destroy -out="./destroy.tfplan"
-          terraform apply destroy.tfplan
+
+      - name: Destroy Google Folders
+        if: steps.deploy-folders.outcome != 'skipped'
+        run: |
+          cd google_folder
+          terraform destroy -auto-approve
+      
 
       # Deploy google projects
       - name: Add IDs to GCP Project Files
@@ -63,7 +70,7 @@ jobs:
           GOOGLE_CREDENTIALS: ${{secrets.GCP_SA_KEY}}
         run: |
           cd google_project/resource
-          sed -i "s/<project_id>/${{secrets.GCP_PROJECT_ID}}-$(date +%y%m%d%H%M)//" projects.yaml
+          sed -i "s/<project_date>/$DATE/g" projects.yaml
           sed -i "s/<folder_id>/folders\/${{secrets.GCP_FOLDER_ID}}/" projects.yaml
           sed -i "s/<billing_account>/${{secrets.GCP_BILLING_ACCOUNT}}/" projects.yaml
           SERVICE_ACCOUNT=$(echo $GOOGLE_CREDENTIALS | jq -r '.client_email')
@@ -71,13 +78,12 @@ jobs:
           cat projects.yaml
 
       - name: Deploy Google project
+        id: deploy-projects
         run: |
           cd google_project
           terraform init
           terraform plan -out="./plan.tfplan"
           terraform apply plan.tfplan
-          terraform plan -destroy -out="./destroy.tfplan"
-          terraform apply destroy.tfplan
 
       # Deploy google service accounts
       - name: Add IDs to GCP Service Accounts File
@@ -85,15 +91,26 @@ jobs:
           GOOGLE_CREDENTIALS: ${{secrets.GCP_SA_KEY}}
         run: |
           cd google_service_account/resource
-          sed -i "s/<project_id>/${{secrets.GCP_PROJECT_ID}}/" service_accounts.yaml
+          sed -i "s/<project_id>/mcp-test-project-${DATE}/" service_accounts.yaml
           sed -i "s/<user_email>/${{secrets.GCP_USER}}/" service_accounts.yaml
           cat service_accounts.yaml
 
       - name: Deploy Google service accounts
+        id: deploy-GSAs
         run: |
           cd google_service_account
           terraform init
           terraform plan -out="./plan.tfplan"
           terraform apply plan.tfplan
-          terraform plan -destroy -out="./destroy.tfplan"
-          terraform apply destroy.tfplan
+
+      - name: Destroy Google Service Accounts
+        if: steps.deploy-GSAs.outcome != 'skipped'
+        run: |
+          cd google_service_account
+          terraform destroy -auto-approve
+
+      - name: Destroy Google Projects
+        if: steps.deploy-projects.outcome != 'skipped'
+        run: |
+          cd google_project
+          terraform destroy -auto-approve
