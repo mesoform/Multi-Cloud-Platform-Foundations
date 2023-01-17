@@ -71,21 +71,12 @@ jobs:
       - name: Import Folders to terraform state
         env:
           GOOGLE_CREDENTIALS: ${{secrets.GCP_SA_KEY}}
-          IMPORT_FILE: ./deployment_test_imports.sh
-        run: |
-          echo "generating folder import script"
-          ./generate_folder_import_script.sh
-          echo "Import script:"
-          cat $IMPORT_FILE
-          chmod +x $IMPORT_FILE
-          $IMPORT_FILE
+        run: ./folder_import_script.sh
 
       - name: Destroy folders
         env:
           GOOGLE_CREDENTIALS: ${{secrets.GCP_SA_KEY}}
-        run: |
-          terraform init
-          terraform destroy -auto-approve
+        run: terraform destroy -auto-approve
 
     delete-projects:
       name: "Delete projects"
