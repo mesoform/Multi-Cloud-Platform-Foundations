@@ -79,40 +79,40 @@ jobs:
           GOOGLE_CREDENTIALS: ${{secrets.GCP_SA_KEY}}
         run: terraform destroy -auto-approve
 
-    delete-projects:
-      name: "Delete projects"
-      runs-on: ubuntu-latest
-      if: github.event_name == 'pull_request' ||  github.event.inputs.resource == 'projects'
-      env:
-        working-directory: ./tests/gcp/deployment/google_project
+  delete-projects:
+    name: "Delete projects"
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request' ||  github.event.inputs.resource == 'projects'
+    env:
+      working-directory: ./tests/gcp/deployment/google_project
 
-      defaults:
-        run:
-          shell: bash
-          working-directory: ${{env.working-directory}}
+    defaults:
+      run:
+        shell: bash
+        working-directory: ${{env.working-directory}}
 
-      steps:
-        - name: Checkout
-          uses: actions/checkout@v2
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
 
-        - id: 'auth'
-          uses: 'google-github-actions/auth@v1'
-          with:
-            credentials_json: ${{secrets.GCP_SA_KEY}}
+      - id: 'auth'
+        uses: 'google-github-actions/auth@v1'
+        with:
+          credentials_json: ${{secrets.GCP_SA_KEY}}
 
-        - name: 'Set up Cloud SDK'
-          uses: 'google-github-actions/setup-gcloud@v1'
+      - name: 'Set up Cloud SDK'
+        uses: 'google-github-actions/setup-gcloud@v1'
 
-        # Install python and required pip package
-        - name: Setup python
-          uses: actions/setup-python@v4
-          with:
-            python-version: '3.9'
-            cache: 'pip'
+      # Install python and required pip package
+      - name: Setup python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+          cache: 'pip'
 
-        - run: pip install pyyaml
+      - run: pip install pyyaml
 
-        - name: Delete projects
-          env:
-            GOOGLE_CREDENTIALS: ${{secrets.GCP_SA_KEY}}
-          run: ./delete_projects.sh
+      - name: Delete projects
+        env:
+          GOOGLE_CREDENTIALS: ${{secrets.GCP_SA_KEY}}
+        run: ./delete_projects.sh
