@@ -1,0 +1,118 @@
+name: 'Delete Deployment Test Resources'
+
+on:
+  pull_request:
+    branches:
+      - main
+    types: [opened]
+  workflow_dispatch:
+    inputs:
+      resource:
+        description: "Resource from deployment tests to destroy"
+        required: true
+        type: choice
+        options:
+          - projects
+          - folders
+        default: 'projects'
+
+jobs:
+  destroy-folders:
+    name: "Destroy folder"
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request' ||  github.event.inputs.resource == 'folders'
+    env:
+      working-directory: ./tests/gcp/deployment/google_folder
+      TF_VAR_sub_folder_parent: staging
+
+    defaults:
+      run:
+        shell: bash
+        working-directory: ${{env.working-directory}}
+
+    steps:
+      # Checkout the repository to the GitHub Actions runner
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      # Install the latest version of Terraform CLI
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v1
+        with:
+          terraform_wrapper: false
+
+      - id: 'auth'
+        uses: 'google-github-actions/auth@v1'
+        with:
+          credentials_json: ${{secrets.GCP_SA_KEY}}
+
+      - name: 'Set up Cloud SDK'
+        uses: 'google-github-actions/setup-gcloud@v1'
+
+      # Install python and required pip package
+      - name: Setup python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+          cache: 'pip'
+
+      - run: pip install pyyaml
+
+      - name: Add IDs to GCP Folder Files
+        env:
+          GOOGLE_CREDENTIALS: ${{secrets.GCP_SA_KEY}}
+        run: |
+          cd resource
+          sed -i "s/<folder_id>/folders\/${{secrets.GCP_FOLDER_ID}}/" folders.yaml
+          SERVICE_ACCOUNT=$(echo $GOOGLE_CREDENTIALS | jq -r '.client_email')
+          sed -i "s/<service_account>/$SERVICE_ACCOUNT/"  folders.yaml
+          cat folders.yaml
+
+      - name: Import Folders to terraform state
+        env:
+          GOOGLE_CREDENTIALS: ${{secrets.GCP_SA_KEY}}
+          GCP_FOLDER_ID: ${{secrets.GCP_FOLDER_ID}}
+        run: ./folder_import_script.sh
+
+      - name: Destroy folders
+        env:
+          GOOGLE_CREDENTIALS: ${{secrets.GCP_SA_KEY}}
+        run: terraform destroy -auto-approve
+
+    delete-projects:
+      name: "Delete projects"
+      runs-on: ubuntu-latest
+      if: github.event_name == 'pull_request' ||  github.event.inputs.resource == 'projects'
+      env:
+        working-directory: ./tests/gcp/deployment/google_project
+
+      defaults:
+        run:
+          shell: bash
+          working-directory: ${{env.working-directory}}
+
+      steps:
+        - name: Checkout
+          uses: actions/checkout@v2
+
+        - id: 'auth'
+          uses: 'google-github-actions/auth@v1'
+          with:
+            credentials_json: ${{secrets.GCP_SA_KEY}}
+
+        - name: 'Set up Cloud SDK'
+          uses: 'google-github-actions/setup-gcloud@v1'
+
+        # Install python and required pip package
+        - name: Setup python
+          uses: actions/setup-python@v4
+          with:
+            python-version: '3.9'
+            cache: 'pip'
+
+        - run: pip install pyyaml
+
+        - name: Delete projects
+          env:
+            GOOGLE_CREDENTIALS: ${{secrets.GCP_SA_KEY}}
+          run: ./delete_projects.sh

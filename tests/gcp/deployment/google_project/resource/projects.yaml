@@ -2,7 +2,7 @@ components:
   common:
     folder_id: <folder_id>
     billing_account: <billing_account>
-    skip_delete: true
+    skip_delete: false
     auto_create_network: false
     labels:
       default: value
@@ -14,11 +14,11 @@ components:
   specs:
     staging-sandbox:
       name: Staging Sandbox
-      project_id: mcp-staging-sandbox
+      project_id: mcp-staging-sandbox-<project_date>
       skip_delete: false
       labels:
         key-1: overwrite-value
         key-2: value-2
       auto_create_network: true
     test-project:
-      project_id: mcp-test-project-<project-id>
+      project_id: mcp-test-project-<project_date>
