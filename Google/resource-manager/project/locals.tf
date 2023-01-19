@@ -39,5 +39,20 @@ locals {
     for project, specs in local.projects_specs :
         project => merge(lookup(local.projects_components_common, "labels", {}), lookup(specs, "labels", {}))
   }
+
+# Transforms a list of services into a maps of format { <project_id>_<service_name> = {project = <project_id>, service = <service>}
+  projects_services_merged = concat([
+    for project, specs in local.projects_specs : [
+      for service in concat(lookup(local.projects_components_common, "services", []), lookup(specs, "services", [])): {
+        project = project
+        service = service.service
+        disable_on_destroy = lookup(service, "disable_on_destroy", true)
+        disable_dependent_services = lookup(service, "disable_dependent_services", false)
+      }
+    ]
+  ]...)
+  projects_services = zipmap([for service in local.projects_services_merged: replace("${service.project}_${split(".", service.service)[0]}", "-", "_")], local.projects_services_merged)
+
+  enable_service_delay = length(local.projects_services) == 0 ? null : length(local.projects_iam) == 0 ? "0m" : lookup(local.projects_components_common, "enable_service_delay", "2m")
 }
 

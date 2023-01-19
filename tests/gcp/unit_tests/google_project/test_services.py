@@ -11,12 +11,13 @@ except Exception as e:
 
 
 """
-    Checks the data specified in the required metadata
+    Tests whether the keys for the service maps and the `disable_on_destroy` value for the services are configured correctly
 """
 
 expected_data = {
-    "staging_sandbox_count" : '3',
-    "test_project_count" : '1'
+    "staging_sandbox_recommender": "true",
+    "staging_sandbox_compute": "true",
+    "test_project_recommender": "false"
 }
 
 if __name__ == '__main__':

@@ -8,6 +8,8 @@ components:
     labels:
       default: value
       key-1: value-1
+    services:
+      - service: recommender.googleapis.com
     project_iam:
       - role: "roles/owner"
         members:
@@ -23,6 +25,8 @@ components:
         key-1: overwrite-value
         key-2: value-2
       auto_create_network: true
+      services:
+        - service: compute.googleapis.com
       project_iam:
         - role: "roles/viewer"
           members:
@@ -36,3 +40,7 @@ components:
             expression: "request.time < timestamp(\"2020-01-01T00:00:00Z\")"
     test-project:
       project_id: test-project-123
+      services:
+        - service: recommender.googleapis.com
+          disable_on_destroy: false
+

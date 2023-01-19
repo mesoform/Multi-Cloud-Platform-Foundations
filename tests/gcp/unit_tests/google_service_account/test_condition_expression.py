@@ -15,8 +15,7 @@ except Exception as e:
 """
 
 expected_data = {
-    "staging_sandbox_count" : '3',
-    "test_project_count" : '1'
+    "expression": "request.time < timestamp(\"2020-01-01T00:00:00Z\")"
 }
 
 if __name__ == '__main__':
