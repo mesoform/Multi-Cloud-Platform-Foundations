@@ -113,4 +113,5 @@ jobs:
       - name: Delete projects
         env:
           GOOGLE_CREDENTIALS: ${{secrets.GCP_SA_KEY}}
+          GCP_FOLDER_ID: ${{secrets.GCP_FOLDER_ID}}
         run: ./delete_projects.sh
