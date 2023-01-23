@@ -1,3 +1,7 @@
 variable "clusters_yml" {
-  default = "resources/clusters.yaml"
+  default = "resources/gke_clusters.yaml"
+}
+
+variable "project_id" {
+  default = null
 }

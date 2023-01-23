@@ -1,12 +1,18 @@
+project_id: some-id
 components:
   common:
     location: europe-west2
+    gke_backups:
+      daily:
+        backup_schedule:
+          cron_schedule: "0 3 * * *"
+
   specs:
     autopilot:
       addons_config:
         gke_backup_agent_config: true
       gke_backups:
-        daily:
+        hourly:
           retention_policy:
             backup_delete_lock_days: 0
             backup_retain_days: 1
@@ -15,7 +21,7 @@ components:
             include_secrets: false
             all_namespaces: true
           backup_schedule:
-            cron_schedule: "0 3 * * *"
+            cron_schedule: "0 * * * *"
     standard:
       autopilot: false
       addons_config:
@@ -43,6 +49,6 @@ components:
       node_pools:
         default:
           node_locations:
-          - "europe-west2-a"
+            - "europe-west2-a"
           node_count: 1
           mesh_certificates: false

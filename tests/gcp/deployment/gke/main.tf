@@ -13,6 +13,6 @@ module gke_clusters {
 module gke_backup_separate {
   source = "../../../../Google/gke/backup"
   gke_backup = local.gke_backup
-  cluster_id = module.gke_clusters.cluster_ids["manual"]
+  cluster_id = module.gke_clusters.cluster_ids["standard"]
 }
 
