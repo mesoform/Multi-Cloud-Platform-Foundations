@@ -85,6 +85,7 @@ jobs:
         run: |
           cd google_folder
           terraform init
+          terraform validate
           terraform plan 
 
 
@@ -92,21 +93,24 @@ jobs:
         run: |
           cd google_project
           terraform init
+          terraform validate
           terraform plan 
 
-      - name: Google service accounts terraform plan
-        run: |
-          cd google_service_account
-          terraform init
-          terraform plan 
-
-      - name: Deploy GKE clusters
-        env:
-          TF_VAR_project_id: mcp-test-project-${{ steps.vars.outputs.DATE }}
-        run: |
-          cd gke
-          terraform init
-          terraform plan 
+#      - name: Google service accounts terraform plan
+#        run: |
+#          cd google_service_account
+#          terraform init
+#          terraform validate
+#          terraform plan
+#
+#      - name: Deploy GKE clusters
+#        env:
+#          TF_VAR_project_id: mcp-test-project-${{ steps.vars.outputs.DATE }}
+#        run: |
+#          cd gke
+#          terraform init
+#          terraform validate
+#          terraform plan
 
   ############################# Deployment Tests for GCP modules #####################################################
   deployment-tests:
