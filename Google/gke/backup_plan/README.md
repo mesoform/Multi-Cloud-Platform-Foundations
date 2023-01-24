@@ -14,6 +14,29 @@ gcloud container clusters update $CLUSTER_NAME \
 
 ## Configuration
 
+`project_id` must be specified in as a top level key in the mccf configuration file or in the terraform `project_id` variable.
+
+Attributes included in `components.specs` includes:
+
+| Key                                        |       Type        | Required | Description                                                                                                    |          Default          |
+|:-------------------------------------------|:-----------------:|:--------:|:---------------------------------------------------------------------------------------------------------------|:-------------------------:|
+| `location`                                 |      string       |   true   | Location for the backup plan                                                                                   |           none            |
+| `cluster_id`                               |      string       |   true   | Cluster backup plan is to perform backups on                                                                   |           none            |
+| `name`                                     |      string       |  false   | Name of the backup plan                                                                                        | Key in `components.specs` |
+| `backup_config`                            |        map        |   true   | configuration of backup plan                                                                                   |           none            |
+| `backup_config.all_namespaces`             |       bool        |  false   | Whether to backup all namespaces                                                                               |           true            |
+| `backup_config.include_secrets`            |       bool        |  false   | Whether to backup secrets                                                                                      |           true            |
+| `backup_config.include_volume_data`        |       bool        |  false   | Whether to backup persistent volume data                                                                       |           true            |
+| `backup_config.selected_namespaces`        |   list(string)    |  false   | Namespaces to backup (if all_namespaces is `false`)                                                            |           false           |
+| `backup_config.selected_application`       | list(map(string)) |  false   | Applications to backup (if all_namespaces is `false`). Specifies the `name` and `namespace` of the application |           false           |
+| `backup_schedule.cron_schedule`            |      string       |  false   | Cron schedule for a scheduled backup plan                                                                      |           none            |
+| `backup_schedule.paused`                   |       bool        |  false   | Whether to pause scheduled backup plan                                                                         |           false           |
+| `retention_policy.backup_delete_lock_days` |      number       |  false   | Minimum age for backup before deletion                                                                         |           none            |
+| `retention_policy.backup_retain_days`      |      number       |  false   | How long to retain backups                                                                                     |             1             |
+| `retention_policy.locked`                  |      number       |  false   | If retention policy can be updated (if set to `true` cannot be unlocked)                                       |           false           |
+
+
+
 ### Recommended Deployment Patterns
 If deploying a cluster with a backup plan, it is recommended to use the MCP cluster module
 and specify a `backup_plan` block for your clusters, rather than managing separately ([see documentation](../cluster/README.md#backup-plans)). 
@@ -24,9 +47,10 @@ If managing just the backup_plans one of the following patterns should be used
 Configure all the backup plans for a cluster using the following format
 e.g. cluster_1_backups.yaml:
 ```yaml
+project_id: project
 components:
   common:
-    cluster_id:
+    cluster_id: cluster
   specs:
     daily_ns_1:
       backup_config:
@@ -55,6 +79,7 @@ This is the method used when creating a backup plan alongside with mcp `cluster`
 Configure a backup plan that is used on multiple clusters
 e.g. weekly_backups.yaml
 ```yaml
+project_id: project
 components:
   common:
     backup_config:
@@ -172,3 +197,5 @@ Example restore plans:
       --cluster-resource-conflict-policy=use-backup-version
       --cluster-resources-restore-scope=group/kind
   ```
+  
+For details on how to restore a backup, see [google documentation](https://cloud.google.com/kubernetes-engine/docs/add-on/backup-for-gke/how-to/restore) 
