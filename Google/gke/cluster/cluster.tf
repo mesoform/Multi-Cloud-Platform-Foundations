@@ -339,7 +339,7 @@ resource google_container_cluster self {
 
 
 module gke_backup {
-  source = "../backup"
+  source = "../backup_plan"
   for_each = local.clusters_gke_backups
   gke_backup_specs = {for backup, config in each.value: backup => merge({cluster_id = google_container_cluster.self[each.key].id}, config)}
   project_id = data.google_project.self.project_id
