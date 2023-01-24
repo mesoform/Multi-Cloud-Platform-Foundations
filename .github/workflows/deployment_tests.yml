@@ -70,7 +70,7 @@ jobs:
           GOOGLE_CREDENTIALS: ${{secrets.GCP_SA_KEY}}
         run: |
           cd google_project/resource
-          sed -i "s/<project_date>/$DATE/g" projects.yaml
+          sed -i "s/<project_date>/${DATE}/g" projects.yaml
           sed -i "s/<folder_id>/folders\/${{secrets.GCP_FOLDER_ID}}/" projects.yaml
           sed -i "s/<billing_account>/${{secrets.GCP_BILLING_ACCOUNT}}/" projects.yaml
           SERVICE_ACCOUNT=$(echo $GOOGLE_CREDENTIALS | jq -r '.client_email')
