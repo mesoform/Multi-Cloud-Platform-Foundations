@@ -223,7 +223,7 @@ jobs:
           terraform apply plan.tfplan
 
       - name: Destroy GKE clusters
-        if: steps.deploy-gke.outcome != 'skipped
+        if: steps.deploy-gke.outcome != 'skipped'
         run: |
           cd gke
           terraform destroy -auto-approve
