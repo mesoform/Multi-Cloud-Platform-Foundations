@@ -6,7 +6,7 @@ components:
       addons_config:
         gke_backup_agent_config: true
       backup_plans:
-        daily:
+        default_daily_backup_plan:
           retention_policy:
             backup_delete_lock_days: 0
             backup_retain_days: 1

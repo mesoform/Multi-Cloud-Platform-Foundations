@@ -19,6 +19,8 @@ variable project_id {
   default = null
 }
 
+# This variable should be used when creating a backup plan for a cluster that has been created through terraform
+# therefore using the cluster_id from creating that resource as the input for the cluster_id in this module
 variable cluster_id {
   type = string
   default = null

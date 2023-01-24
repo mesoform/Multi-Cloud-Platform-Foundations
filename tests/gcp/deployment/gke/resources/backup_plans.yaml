@@ -4,6 +4,6 @@ components:
     location: europe-west2
 #    project_id:
   specs:
-    daily:
+    daily_backup_plan:
       backup_schedule:
         cron_schedule: "0 3 * * *"

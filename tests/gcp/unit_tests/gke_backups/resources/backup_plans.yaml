@@ -5,13 +5,13 @@ components:
     cluster_id: some-cluster
 #    project_id:
   specs:
-    daily:
+    test_daily_backup:
       backup_schedule:
         cron_schedule: "0 3 * * *"
-    hourly:
+    test_hourly:
       backup_schedule:
         cron_schedule: "0 * * * *"
-    weekly:
+    test_weekly:
       cluster_id: another-cluster
       backup_schedule:
         cron_schedule: "0 3 * * 7"
