@@ -15,9 +15,9 @@ except Exception as e:
 """
 
 expected_data = {
-    "daily": 'some-cluster',
-    "hourly": 'some-cluster',
-    "weekly": 'another-cluster'
+    "test_daily_backup": 'some-cluster',
+    "test_hourly": 'some-cluster',
+    "test_weekly": 'another-cluster'
 }
 
 if __name__ == '__main__':
