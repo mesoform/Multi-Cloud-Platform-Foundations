@@ -23,13 +23,13 @@ locals {
 
   clusters_node_pools = {for map in flatten([for cluster, node_pools in local.clusters_node_pools_merged: [for node_pool, specs in node_pools: merge(specs, {cluster=cluster, name=node_pool})]]): replace("${map.cluster}_${map.name}", "-","_") => map}
 
-  clusters_gke_backups = {
-    for cluster, specs in local.clusters_components_specs: cluster => merge(lookup(local.clusters_components_common, "gke_backups", {}), {
-        for backup, config in lookup(specs, "gke_backups", {}): backup => merge({
+  clusters_backup_plans = {
+    for cluster, specs in local.clusters_components_specs: cluster => merge(lookup(local.clusters_components_common, "backup_plans", {}), {
+        for backup, config in lookup(specs, "backup_plans", {}): backup => merge({
             location = local.clusters_specs[cluster].location
             project_id = local.clusters_specs[cluster].project_id
         }, config)
     })
-    if lookup(specs, "gke_backups", null) != null || lookup(local.clusters_components_common, "gke_backups", null) != null
+    if lookup(specs, "backup_plans", null) != null || lookup(local.clusters_components_common, "backup_plans", null) != null
   }
 }

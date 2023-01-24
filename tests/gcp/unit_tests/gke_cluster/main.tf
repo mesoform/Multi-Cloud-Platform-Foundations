@@ -26,7 +26,7 @@ output test_node_pool {
 }
 
 data external gke_backups {
-  query   = { for cluster, specs in local.clusters_specs: cluster => length(lookup(local.clusters_gke_backups, cluster, {}))}
+  query   = { for cluster, specs in local.clusters_specs: cluster => length(lookup(local.clusters_backup_plans, cluster, {}))}
   program = ["python", "${path.module}/test_gke_backups.py"]
 }
 output test_gke_backups {

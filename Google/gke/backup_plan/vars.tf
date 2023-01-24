@@ -1,14 +1,17 @@
-variable gke_backup_yml {
+variable backup_plans_yml {
+  description = "Path to MCCF configuration file"
   default = "./gke_backup.yaml"
 }
 
-variable gke_backup {
+variable backup_plans {
+  description = "backup_plan configuration object decoded from file (i.e. yamldecode(file(somefile)))"
   type = any
-  default = {}
+  default = null
 }
 
-variable gke_backup_specs {
-  default = {}
+variable backup_plans_specs {
+  description = "specs of backup plans in same format of local.backup_plans_specs. Only for use with clusters module"
+  default = null
 }
 
 variable project_id {

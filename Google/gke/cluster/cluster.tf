@@ -30,13 +30,13 @@ resource google_container_cluster self {
   logging_service = lookup(each.value, "logging_service", null)
   min_master_version = lookup(each.value, "min_master_vesrion", null)
   monitoring_service = lookup(each.value, "monitoring_service", null)
+  network = lookup(each.value, "network", null)
   networking_mode = each.value.autopilot ? null : lookup(each.value, "networking_mode", "ROUTES")
   node_version = lookup(each.value, "node_version", null)
   private_ipv6_google_access = lookup(each.value, "private_ipv6_google_access", null)
+  subnetwork = lookup(each.value, "private_ipv6_google_access", null)
   remove_default_node_pool = each.value.autopilot ? null : try(length(lookup(each.value, "node_pools", {} )) <= 0, true) ? false : lookup(each.value, "remove_default_node_pool", true)
-#  remove_default_node_pool = each.value.autopilot ? null : lookup(each.value, "node_pools", {} ) == null || length(lookup(each.value, "node_pools", {} )) <= 0 ? false : lookup(each.value, "remove_default_node_pool", true)
   initial_node_count = each.value.autopilot ? null : lookup(each.value, "remove_default_node_pool", true) || try(length(lookup(each.value, "node_pools", {} )) >= 0, false) ? 1 : lookup(each.value, "initial_node_count", null )
-#  ip_allocation_policy {}
   //noinspection HILUnresolvedReference
   dynamic addons_config {
     for_each = lookup(each.value, "addons_config", null) == null ? {} : {addons_config = each.value.addons_config}
@@ -340,8 +340,8 @@ resource google_container_cluster self {
 
 module gke_backup {
   source = "../backup_plan"
-  for_each = local.clusters_gke_backups
-  gke_backup_specs = {for backup, config in each.value: backup => merge({cluster_id = google_container_cluster.self[each.key].id}, config)}
+  for_each = local.clusters_backup_plans
+  backup_plans_specs = {for backup, config in each.value: backup => merge({cluster_id = google_container_cluster.self[each.key].id}, config)}
   project_id = data.google_project.self.project_id
 #  gke_backup_specs = merge(each.value, {cluster_id = google_container_cluster.self[each.key].id})
 }

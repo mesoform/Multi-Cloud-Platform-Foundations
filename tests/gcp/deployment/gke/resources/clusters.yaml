@@ -5,7 +5,7 @@ components:
     autopilot:
       addons_config:
         gke_backup_agent_config: true
-      gke_backups:
+      backup_plans:
         daily:
           retention_policy:
             backup_delete_lock_days: 0

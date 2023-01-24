@@ -1,7 +1,7 @@
 locals {
-  clusters_yaml_path = "resources/gke_clusters.yaml"
+  clusters_yaml_path = "resources/clusters.yaml"
   clusters_yml = templatefile(local.clusters_yaml_path, {project_id = var.project_id})
-  gke_backup = yamldecode(templatefile("resources/gke_backups.yaml", { project_id = var.project_id}))
+  backup_plans = yamldecode(templatefile("resources/backup_plans.yaml", { project_id = var.project_id}))
 }
 
 module gke_clusters {
@@ -12,7 +12,7 @@ module gke_clusters {
 
 module gke_backup_separate {
   source = "../../../../Google/gke/backup_plan"
-  gke_backup = local.gke_backup
+  backup_plans = local.backup_plans
   cluster_id = module.gke_clusters.cluster_ids["standard"]
 }
 

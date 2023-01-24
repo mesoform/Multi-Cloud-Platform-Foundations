@@ -2,7 +2,7 @@ project_id: some-id
 components:
   common:
     location: europe-west2
-    gke_backups:
+    backup_plans:
       daily:
         backup_schedule:
           cron_schedule: "0 3 * * *"
@@ -11,7 +11,7 @@ components:
     autopilot:
       addons_config:
         gke_backup_agent_config: true
-      gke_backups:
+      backup_plans:
         hourly:
           retention_policy:
             backup_delete_lock_days: 0

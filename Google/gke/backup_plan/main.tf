@@ -1,10 +1,10 @@
 data google_project self {
-  project_id = var.project_id == null ? local.gke_backup.project_id : var.project_id
+  project_id = var.project_id == null ? local.backup_plans.project_id : var.project_id
 }
 
 resource google_gke_backup_backup_plan self {
   provider = google-beta
-  for_each = local.gke_backup_specs
+  for_each = local.backup_plans_specs
   project = data.google_project.self.project_id
   cluster = var.cluster_id == null ? each.value.cluster_id : var.cluster_id
   name = lookup(each.value, "name", each.key)

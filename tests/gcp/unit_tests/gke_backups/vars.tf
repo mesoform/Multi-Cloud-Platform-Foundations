@@ -1,13 +1,13 @@
-variable gke_backup_yml {
-  default = "resources/gke_backups.yaml"
+variable backup_plans_yml {
+  default = "resources/backup_plans.yaml"
 }
 
-variable gke_backup {
+variable backup_plans {
   type = any
-  default = {}
+  default = null
 }
 
-variable gke_backup_specs {
+variable backup_plans_specs {
   default = null
 }
 
