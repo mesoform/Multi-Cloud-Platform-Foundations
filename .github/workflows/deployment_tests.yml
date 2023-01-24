@@ -13,7 +13,6 @@ jobs:
 
     env:
       working-directory: ./tests/gcp/deployment
-      DATE: $(date +%y%m%d%H%M)
 
     defaults:
       run:
@@ -21,6 +20,9 @@ jobs:
         working-directory: ${{env.working-directory}}
 
     steps:
+      - name: Set current date as env variable
+        run: echo "DATE=$(date +%y%m%d%H%M)" >> $GITHUB_ENV
+
       # Checkout the repository to the GitHub Actions runner
       - name: Checkout
         uses: actions/checkout@v2
