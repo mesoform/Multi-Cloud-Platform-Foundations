@@ -20,9 +20,6 @@ jobs:
         working-directory: ${{env.working-directory}}
 
     steps:
-      - name: Set current date as env variable
-        run: echo "DATE=$(date +%y%m%d%H%M)" >> $GITHUB_ENV
-
       # Checkout the repository to the GitHub Actions runner
       - name: Checkout
         uses: actions/checkout@v2
@@ -39,6 +36,10 @@ jobs:
         with:
           service_account_key: ${{secrets.GCP_SA_KEY}}
           export_default_credentials: true
+
+      # Set current date
+      - name: Set current date as env variable
+        run: echo "DATE=$(date +%y%m%d%H%M)" >> $GITHUB_ENV
 
       # Deploy google folders
       - name: Add IDs to GCP Folder Files
