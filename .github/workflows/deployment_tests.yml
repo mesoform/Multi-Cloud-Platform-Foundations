@@ -150,6 +150,10 @@ jobs:
         id: vars
         run: echo "::set-output name=DATE::${{ env.DATE }}"
 
+      # Set current date
+      - name: Set current date as env variable
+        run: echo "DATE=$(date +%y%m%d%H%M)" >> $GITHUB_ENV
+
       # Deploy google folders
       - name: Add IDs to GCP Folder Files
         env:
