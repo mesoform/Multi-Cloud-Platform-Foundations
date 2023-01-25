@@ -13,7 +13,6 @@ jobs:
 
     env:
       working-directory: ./tests/gcp/deployment
-      DATE: $(date +%y%m%d%H%M)
 
     defaults:
       run:
@@ -37,6 +36,10 @@ jobs:
         with:
           service_account_key: ${{secrets.GCP_SA_KEY}}
           export_default_credentials: true
+
+      # Set current date
+      - name: Set current date as env variable
+        run: echo "DATE=$(date +%y%m%d%H%M)" >> $GITHUB_ENV
 
       # Deploy google folders
       - name: Add IDs to GCP Folder Files
@@ -74,7 +77,7 @@ jobs:
           sed -i "s/<folder_id>/folders\/${{secrets.GCP_FOLDER_ID}}/" projects.yaml
           sed -i "s/<billing_account>/${{secrets.GCP_BILLING_ACCOUNT}}/" projects.yaml
           SERVICE_ACCOUNT=$(echo $GOOGLE_CREDENTIALS | jq -r '.client_email')
-          sed -i "s/<service_account>/$SERVICE_ACCOUNT"  projects.yaml
+          sed -i "s/<service_account>/$SERVICE_ACCOUNT/"  projects.yaml
           cat projects.yaml
 
       - name: Deploy Google project

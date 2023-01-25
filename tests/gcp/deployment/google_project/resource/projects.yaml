@@ -22,3 +22,4 @@ components:
       auto_create_network: true
     test-project:
       project_id: mcp-test-project-<project_date>
+      auto_create_network: true
