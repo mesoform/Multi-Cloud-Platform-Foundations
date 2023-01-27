@@ -174,11 +174,10 @@ jobs:
           terraform apply plan.tfplan
 
       - name: Destroy Google Folders
-        if: steps.deploy-folders.outcome != 'skipped'
+        if: ${{ always() }}
         run: |
           cd google_folder
           terraform destroy -auto-approve
-      
 
       # Deploy google projects
       - name: Add IDs to GCP Project Files
@@ -231,19 +230,19 @@ jobs:
           terraform apply plan.tfplan
 
       - name: Destroy GKE clusters
-        if: steps.deploy-gke.outcome != 'skipped'
+        if: ${{ always() }}
         run: |
           cd gke
           terraform destroy -auto-approve
 
       - name: Destroy Google Service Accounts
-        if: steps.deploy-GSAs.outcome != 'skipped'
+        if: ${{ always() }}
         run: |
           cd google_service_account
           terraform destroy -auto-approve
 
       - name: Destroy Google Projects
-        if: steps.deploy-projects.outcome != 'skipped'
+        if: ${{ always() }}
         run: |
           cd google_project
           terraform destroy -auto-approve
