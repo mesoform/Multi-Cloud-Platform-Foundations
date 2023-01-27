@@ -1,0 +1,9 @@
+project_id: ${project_id}
+components:
+  common:
+    location: europe-west2
+#    project_id:
+  specs:
+    daily:
+      backup_schedule:
+        cron_schedule: "0 3 * * *"

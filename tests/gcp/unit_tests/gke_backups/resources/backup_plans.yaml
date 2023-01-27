@@ -1,0 +1,17 @@
+project_id: some-project
+components:
+  common:
+    location: europe-west2
+    cluster_id: some-cluster
+#    project_id:
+  specs:
+    test_daily_backup:
+      backup_schedule:
+        cron_schedule: "0 3 * * *"
+    test_hourly:
+      backup_schedule:
+        cron_schedule: "0 * * * *"
+    test_weekly:
+      cluster_id: another-cluster
+      backup_schedule:
+        cron_schedule: "0 3 * * 7"
