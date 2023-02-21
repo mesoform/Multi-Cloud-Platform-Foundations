@@ -5,6 +5,9 @@ components:
       - role: "roles/owner"
         members:
           - "user:owner@example.com"
+    essential_contacts:
+      contacts:
+        user@foo.com: ["ALL"]
   specs:
     staging:
       folder_iam:

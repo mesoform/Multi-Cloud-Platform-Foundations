@@ -46,7 +46,33 @@ The IAM policy for each defined project can be set in the `folder_iam`.
 * `members` (required): Identities who the role is granted to (see [documentation](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/google_project_iam#member/members) for format)
 * `condition` (optional): IAM condition for role assignment (see [documentation](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/google_project_iam#nested_condition) for configuration)
 
-### Example
+### Advisory Notifications
+[Advisory notifications](https://cloud.google.com/advisory-notifications/docs/overview) provide communications about
+security events on Google Cloud Platform to configured essential contacts.
+Essential contacts to receive these notifications for a folder can be configured using an `essential_contacts` block.  
+The `essential_contacts` block has the following attributes:
+* `language_tag` - Language the notifications should be sent in (defaults to en-GB)
+* `contacts` - A map of contacts and a list of the notification categories they should receive
+
+Full notification types can be found in the [google documentation](https://cloud.google.com/resource-manager/docs/managing-notification-contacts).  
+Example `essential_contacts` block:
+```yaml
+essential_contacts:
+  language_tag: en-GB
+  contacts:
+    admin-team@company.com: ["ALL"]
+    business-team@company.com: 
+      - BILLING
+      - LEGAL
+    security-team@company.com: 
+      - SECURITY
+      - TECHNICAL
+    platform-team@company.com:
+      - TECHNICAL
+```
+
+
+### Full Example
 ```yaml
 components:
   common:
@@ -60,6 +86,11 @@ components:
         - role: "roles/viewer"
           members:
             - "user:info@example.com"
+      essential_contacts:
+        contacts:
+          security-team@company.com:
+            - SECURITY
+            - TECHNICAL
     department-2:
       display_name: "Department-Bob"
       folder_iam:

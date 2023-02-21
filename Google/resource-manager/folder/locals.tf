@@ -29,4 +29,9 @@ locals {
       }
     ])
   }
+
+  folders_essential_contacts = {
+    for folder, specs in local.folders_specs: folder => specs.essential_contacts
+    if lookup(specs, "essential_contacts", null) != null
+  }
 }

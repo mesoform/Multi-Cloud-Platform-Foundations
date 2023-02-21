@@ -29,3 +29,11 @@ data "google_iam_policy" "self" {
     }
   }
 }
+
+module essential_contacts {
+  source = "../sub_modules/essential_contacts"
+  for_each = local.folders_essential_contacts
+  parent_id = google_folder.self[each.key].name
+  language_tag = lookup(each.value, "language_tag", "en-GB")
+  essential_contacts = lookup(each.value, "contacts", {})
+}
