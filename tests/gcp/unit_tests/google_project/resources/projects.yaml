@@ -38,9 +38,18 @@ components:
             title: "expires_after_2019_12_31"
             description: "Expiring at midnight of 2019-12-31"
             expression: "request.time < timestamp(\"2020-01-01T00:00:00Z\")"
+      essential_contacts:
+        language_tag: "en-US"
+        contacts:
+          user@foo.com:
+            - TECHNICAL
+            - SECURITY
     test-project:
       project_id: test-project-123
       services:
         - service: recommender.googleapis.com
           disable_on_destroy: false
+      essential_contacts:
+        contacts:
+          user@bar.com: ["ALL"]
 

@@ -48,3 +48,15 @@ data external test_services {
 output test_services {
   value = data.external.test_services.result
 }
+
+
+data external test_essential_contacts{
+  query = {
+    for project, essential_contacts in local.projects_essential_contacts: project => keys(lookup(essential_contacts, "contacts", {}))[0]
+  }
+  program = ["python", "${path.module}/test_essential_contacts.py"]
+}
+
+output test_essential_contacts {
+  value = data.external.test_essential_contacts.result
+}

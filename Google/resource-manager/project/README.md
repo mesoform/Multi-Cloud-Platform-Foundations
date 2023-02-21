@@ -124,7 +124,33 @@ If a role required for enabling services is set in the projects IAM policy durin
 a default delay of 2 minutes is set, allowing for propagation of permissions.   
 This delay can be updated using the `enable_service_delay` attribute in the `components.commons` section.
 
-### Example  
+### Advisory Notifications
+[Advisory notifications](https://cloud.google.com/advisory-notifications/docs/overview) provide communications about 
+security events on Google Cloud Platform to configured essential contacts.
+Essential contacts to receive these notifications for a project can be configured using an `essential_contacts` block.  
+The `essential_contacts` block has the following attributes:
+* `language_tag` - Language the notifications should be sent in (defaults to en-GB)
+* `contacts` - A map of contacts and a list of the notification categories they should receive
+
+Full notification types can be found in the [google documentation](https://cloud.google.com/resource-manager/docs/managing-notification-contacts)
+
+Example `essential_contacts` block:
+```yaml
+essential_contacts:
+  language_tag: en-GB
+  contacts:
+    admin-team@company.com: ["ALL"]
+    business-team@company.com: 
+      - BILLING
+      - LEGAL
+    security-team@company.com: 
+      - SECURITY
+      - TECHNICAL
+    platform-team@company.com:
+      - TECHNICAL
+```
+
+### Full Example  
 ```yaml
 components:
   common:
