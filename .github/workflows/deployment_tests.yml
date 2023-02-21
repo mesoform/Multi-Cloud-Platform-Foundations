@@ -220,6 +220,7 @@ jobs:
           terraform plan -out="./plan.tfplan"
           terraform apply plan.tfplan
 
+# TODO: re-enable steps when billing is configured
 #      - name: Deploy GKE clusters
 #        id : deploy-gke
 #        env:
