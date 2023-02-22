@@ -220,21 +220,22 @@ jobs:
           terraform plan -out="./plan.tfplan"
           terraform apply plan.tfplan
 
-      - name: Deploy GKE clusters
-        id : deploy-gke
-        env:
-          TF_VAR_project_id: mcp-test-project-${{ steps.vars.outputs.DATE }}
-        run: |
-          cd gke
-          terraform init
-          terraform plan -out="./plan.tfplan"
-          terraform apply plan.tfplan
-
-      - name: Destroy GKE clusters
-        if: steps.deploy-gke.outcome != 'skipped'
-        run: |
-          cd gke
-          terraform destroy -auto-approve
+# TODO: re-enable steps when billing is configured
+#      - name: Deploy GKE clusters
+#        id : deploy-gke
+#        env:
+#          TF_VAR_project_id: mcp-test-project-${{ steps.vars.outputs.DATE }}
+#        run: |
+#          cd gke
+#          terraform init
+#          terraform plan -out="./plan.tfplan"
+#          terraform apply plan.tfplan
+#
+#      - name: Destroy GKE clusters
+#        if: steps.deploy-gke.outcome != 'skipped'
+#        run: |
+#          cd gke
+#          terraform destroy -auto-approve
 
       - name: Destroy Google Service Accounts
         if: steps.deploy-GSAs.outcome != 'skipped'
