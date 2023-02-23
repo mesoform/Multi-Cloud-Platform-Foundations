@@ -56,6 +56,7 @@ resource google_project_service self {
 
 module essential_contacts {
   source = "../sub_modules/essential_contacts"
+  depends_on = [google_project_service.self]
   for_each = local.projects_essential_contacts
   parent_id = google_project.self[each.key].id
   language_tag = lookup(each.value, "language_tag", "en-GB")
