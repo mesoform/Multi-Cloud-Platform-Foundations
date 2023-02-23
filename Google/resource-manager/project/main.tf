@@ -53,3 +53,12 @@ resource google_project_service self {
   disable_on_destroy = each.value.disable_on_destroy
   disable_dependent_services = each.value.disable_dependent_services
 }
+
+module essential_contacts {
+  source = "../sub_modules/essential_contacts"
+  depends_on = [google_project_service.self]
+  for_each = local.projects_essential_contacts
+  parent_id = google_project.self[each.key].id
+  language_tag = lookup(each.value, "language_tag", "en-GB")
+  essential_contacts = lookup(each.value, "contacts", {})
+}

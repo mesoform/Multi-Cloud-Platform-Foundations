@@ -29,3 +29,18 @@ data "google_iam_policy" "self" {
     }
   }
 }
+
+resource time_sleep self {
+  count = length(local.folders_essential_contacts) > 0 ? 1 : 0
+  depends_on = [google_folder_iam_policy.self]
+  create_duration = "2m"
+}
+
+module essential_contacts {
+  depends_on = [time_sleep.self]
+  source = "../sub_modules/essential_contacts"
+  for_each = local.folders_essential_contacts
+  parent_id = google_folder.self[each.key].name
+  language_tag = lookup(each.value, "language_tag", "en-GB")
+  essential_contacts = lookup(each.value, "contacts", {})
+}
