@@ -1,6 +1,6 @@
 locals  {
 
-
+  // Transforms Identity pool providers into a list
   identity_pool_providers_transformed = concat([
     for pool, specs in var.workload_identity_pool : [
       for provider, provider_specs in lookup(specs, "providers", null): merge({

@@ -1,1 +1,1 @@
-../../../../Google/resource-manager/sub_modules/workload_identity_federation/vars.tf
+../../../../Google/workload_identity_federation/module/vars.tf

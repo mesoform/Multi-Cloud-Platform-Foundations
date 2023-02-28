@@ -1,1 +1,1 @@
-../../../../Google/resource-manager/sub_modules/workload_identity_federation/trusted_issuers.tf
+../../../../Google/workload_identity_federation/module/trusted_issuers.tf

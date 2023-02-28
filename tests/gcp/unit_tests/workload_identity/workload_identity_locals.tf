@@ -1,1 +1,1 @@
-../../../../Google/resource-manager/sub_modules/workload_identity_federation/locals.tf
+../../../../Google/workload_identity_federation/module/locals.tf
