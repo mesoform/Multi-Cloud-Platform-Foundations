@@ -1,0 +1,1 @@
+../../../../Google/workload_identity_federation/workload_identity_pool/vars.tf

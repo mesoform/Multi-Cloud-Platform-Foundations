@@ -15,12 +15,12 @@ except Exception as e:
 """
 
 expected_data = {
-    "bitbucket": "https://api.bitbucket.org/2.0/workspaces/companyWorkspace/pipelines-config/identity/oidc",
-    "circleci": "https://oidc.circleci.com/org/company",
-    "github": "https://token.actions.githubusercontent.com",
-    "gitlab": "https://gitlab.com/",
-    "terraform-cloud": "https://app.terraform.io",
-    "unknown": "https://unknown.issuer"
+    "bitbucket": "assertion.sub",
+    "circleci": "assertion.sub",
+    "github": "overwrite.sub",
+    "gitlab": "assertion.sub",
+    "terraform-cloud": "assertion.sub",
+    "unknown": "assertion.other"
 }
 
 if __name__ == '__main__':

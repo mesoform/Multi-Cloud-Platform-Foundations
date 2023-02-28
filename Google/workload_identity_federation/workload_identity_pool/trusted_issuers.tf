@@ -15,7 +15,7 @@ locals {
     }
     bitbucket = {
       issuer = "https://api.bitbucket.org/2.0/workspaces/%s/pipelines-config/identity/oidc"
-      allowed_audience = ["ari:cloud:bitbucket::workspace/%s"]
+      allowed_audiences = ["ari:cloud:bitbucket::workspace/%s"]
       attributes = {
         "google.subject" = "assertion.sub"
         "attribute.workspace_uuid" = "assertion.workspaceUuid"
@@ -24,7 +24,7 @@ locals {
       }
       condition = "assertion.workspaceUuid=='%s'"
     }
-    cirlceci = {
+    circleci = {
       issuer = "https://oidc.circleci.com/org/%s"
       attributes = {
         "google.subject" = "assertion.sub"
@@ -32,6 +32,7 @@ locals {
         "attribute.org_id" = "assertion.aud"
       }
       allowed_audiences = ["%s"]
+      condition = "assertion.aud=='%s'"
     }
     github = {
       issuer = "https://token.actions.githubusercontent.com"
@@ -46,13 +47,13 @@ locals {
     }
     gitlab = {
       issuer = "https://gitlab.com/"
-      allowed_audience = ["https://gitlab.com"]
+      allowed_audiences = ["https://gitlab.com"]
       attributes = {
         "google.subject" = "assertion.sub"
         "attribute.namespace" = "assertion.namespace_path"
         "attribute.project_id" = "assertion.project_id"
       }
-      condition = "assertion.namespace_id == '%s'"
+      condition = "assertion.namespace_id=='%s'"
     }
     terraform-cloud = {
       issuer = "https://app.terraform.io"
@@ -62,6 +63,7 @@ locals {
         "attribute.workspace_id" = "assertion.terraform_workspace_id"
         "attribute.workspace_name" = "assertion.terraform_workspace_name"
       }
+      condition = "assertion.terraform_organization_id=='%s'"
     }
 
   }

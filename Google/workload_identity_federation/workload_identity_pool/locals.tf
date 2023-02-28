@@ -1,23 +1,8 @@
 locals  {
-
-#  // Transforms Identity pool providers into a list
-#  identity_pool_providers_transformed = concat([
-#    for pool, specs in var.workload_identity_pool : [
-#      for provider, provider_specs in lookup(specs, "providers", null): merge({
-#        pool = pool
-#        provider = provider
-#      }, provider_specs)
-#      if lookup(specs, "providers", null) != null
-#    ]
-#  ]...)
-
-
-
   identity_pool_providers_map_trusted = {
     for provider, specs in var.workload_identity_pool.providers: provider =>
       contains(keys(local.trusted_issuer_templates), try(specs.oidc.issuer, "null")) ? local.trusted_issuer_templates[specs.oidc.issuer]: null
   }
-
   identity_pool_providers = {
     for provider, specs in var.workload_identity_pool.providers: provider => {
       project = var.project_id
@@ -37,7 +22,7 @@ locals  {
           format(local.identity_pool_providers_map_trusted[provider].issuer, specs.owner), local.identity_pool_providers_map_trusted[provider].issuer
         )
         allowed_audiences = concat(
-          [for item in try(local.identity_pool_providers_map_trusted[provider].allowed_audience, []) : try(format(item, specs.owner), item)],
+          [for item in try(local.identity_pool_providers_map_trusted[provider].allowed_audiences, []) : try(format(item, specs.owner), item)],
           try(distinct(specs.oidc.allowed_audiences), [])
         )
       }

@@ -15,10 +15,12 @@ except Exception as e:
 """
 
 expected_data = {
-    "cicd_github": "",
-    "cicd_bitbucket": "ari:cloud:bitbucket::workspace/companyWorkspace",
-    "cicd_unknown": "https://unknown.issuer",
-    "azure_app_1": "https://sts.windows.net/tenantID"
+    "bitbucket": "ari:cloud:bitbucket::workspace/companyWorkspace",
+    "circleci": "company",
+    "github": "",
+    "gitlab": "https://gitlab.com",
+    "terraform-cloud": "",
+    "unknown": "audience1, audience2"
 }
 
 if __name__ == '__main__':
