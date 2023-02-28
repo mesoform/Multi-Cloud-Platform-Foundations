@@ -1,30 +1,28 @@
 locals  {
 
-  // Transforms Identity pool providers into a list
-  identity_pool_providers_transformed = concat([
-    for pool, specs in var.workload_identity_pool : [
-      for provider, provider_specs in lookup(specs, "providers", null): merge({
-        pool = pool
-        provider = provider
-      }, provider_specs)
-      if lookup(specs, "providers", null) != null
-    ]
-  ]...)
+#  // Transforms Identity pool providers into a list
+#  identity_pool_providers_transformed = concat([
+#    for pool, specs in var.workload_identity_pool : [
+#      for provider, provider_specs in lookup(specs, "providers", null): merge({
+#        pool = pool
+#        provider = provider
+#      }, provider_specs)
+#      if lookup(specs, "providers", null) != null
+#    ]
+#  ]...)
 
 
-  identity_pool_providers_raw = zipmap([for provider in local.identity_pool_providers_transformed: "${provider.pool}_${provider.provider}"], local.identity_pool_providers_transformed )
 
   identity_pool_providers_map_trusted = {
-    for provider, specs in local.identity_pool_providers_raw: provider =>
+    for provider, specs in var.workload_identity_pool.providers: provider =>
       contains(keys(local.trusted_issuer_templates), try(specs.oidc.issuer, "null")) ? local.trusted_issuer_templates[specs.oidc.issuer]: null
   }
 
   identity_pool_providers = {
-    for provider, specs in local.identity_pool_providers_raw: provider => {
+    for provider, specs in var.workload_identity_pool.providers: provider => {
       project = var.project_id
-      provider_id = specs.provider
-      pool= specs.pool
-      display_name = lookup(specs, "display_name", specs.pool)
+      provider_id = provider
+      display_name = lookup(specs, "display_name", provider)
       description = lookup(specs, "description", null)
       disabled = lookup(specs, "disabled", false)
       attribute_mapping = merge(

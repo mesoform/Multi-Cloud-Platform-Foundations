@@ -2,8 +2,10 @@ variable project_id {
   type = string
 }
 
+
 variable workload_identity_pool {
-  type = map(object({
+  type = object({
+    pool_id = string
     display_name = optional(string, null)
     description = optional(string, "")
     disabled = optional(bool, false)
@@ -20,6 +22,6 @@ variable workload_identity_pool {
       }))
       owner = optional(string)
     })))
-  }))
+  })
 }
 

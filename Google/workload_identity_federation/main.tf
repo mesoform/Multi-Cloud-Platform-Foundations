@@ -3,8 +3,8 @@ data google_project self {
 }
 
 module workload_identity_pools {
-  source = "./module"
-#  for_each = local.workload_identity_pools_specs
+  source = "./workload_identity_pool"
+  for_each = local.workload_identity_pools_specs
   project_id = data.google_project.self.id
-  workload_identity_pool = local.workload_identity_pools_specs
+  workload_identity_pool = each.value
 }
