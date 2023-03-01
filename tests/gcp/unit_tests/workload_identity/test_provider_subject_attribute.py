@@ -11,7 +11,7 @@ except Exception as e:
 
 
 """
-    Tests whether default issuer from templates are assigned correctly for each identity pool provider
+    Tests whether a google.sub attribute explicitly set by user will override ones in default template 
 """
 
 expected_data = {

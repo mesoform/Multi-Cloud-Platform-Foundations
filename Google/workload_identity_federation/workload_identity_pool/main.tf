@@ -6,7 +6,7 @@ resource google_iam_workload_identity_pool self {
   disabled = var.workload_identity_pool.disabled
 }
 
-
+//noinspection HILUnresolvedReference
 resource google_iam_workload_identity_pool_provider self {
   for_each = local.identity_pool_providers
   project = each.value.project
@@ -17,14 +17,18 @@ resource google_iam_workload_identity_pool_provider self {
   disabled = each.value.disabled
   attribute_mapping = each.value.attribute_mapping
   attribute_condition = each.value.attribute_condition
+  //noinspection HILUnresolvedReference
   dynamic "aws" {
     for_each = lookup(each.value, "aws", null) == null ? {} : { aws = each.value.aws}
+    //noinspection HILUnresolvedReference
     content {
       account_id = aws.value.account_id
     }
   }
+  //noinspection HILUnresolvedReference
   dynamic "oidc" {
     for_each = lookup(each.value, "oidc", null) == null ? {} : { oidc = each.value.oidc }
+    //noinspection HILUnresolvedReference
     content {
       issuer_uri = oidc.value.issuer
       allowed_audiences = lookup(oidc.value, "allowed_audiences", []) == [] ? null : oidc.value.allowed_audiences

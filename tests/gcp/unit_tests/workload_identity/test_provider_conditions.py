@@ -11,11 +11,11 @@ except Exception as e:
 
 
 """
-    Tests whether default issuer from templates are assigned correctly for each identity pool provider
+    Tests whether the default conditions for each provider are configured to use the 'owner'
 """
 
 expected_data = {
-    "bitbucket": "assertion.workspaceUuid=='companyWorkspace'",
+    "bitbucket": "assertion.workspaceUuid=='{company-unique-id}'",
     "circleci": "assertion.aud=='company'",
     "github": "assertion.repository_owner=='companyOrg' && assertion.ref=='refs/head/main'",
     "gitlab": "assertion.namespace_id=='companyGroup'",

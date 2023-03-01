@@ -9,6 +9,7 @@ workload_identity_pool = {
         "attribute.tid"  = "assertion.tid"
       }
       owner = "companyWorkspace"
+      workspace_uuid = "{company-unique-id}"
       oidc  = {
         issuer = "bitbucket"
       }

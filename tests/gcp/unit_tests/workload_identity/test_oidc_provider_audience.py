@@ -11,11 +11,11 @@ except Exception as e:
 
 
 """
-    Tests whether default issuer from templates are assigned correctly for each identity pool provider
+    Tests whether default audience from template are configured, and custom audiences set when specified.
 """
 
 expected_data = {
-    "bitbucket": "ari:cloud:bitbucket::workspace/companyWorkspace",
+    "bitbucket": "ari:cloud:bitbucket::workspace/{company-unique-id}",
     "circleci": "company",
     "github": "",
     "gitlab": "https://gitlab.com",

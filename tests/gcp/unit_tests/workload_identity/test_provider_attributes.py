@@ -11,7 +11,8 @@ except Exception as e:
 
 
 """
-    Tests whether default issuer from templates are assigned correctly for each identity pool provider
+    Tests whether the attributes for the bitbucket provider include the default attributes from template, 
+    as well as ones explicitly set
 """
 
 expected_data = {

@@ -2,7 +2,6 @@ variable project_id {
   type = string
 }
 
-
 variable workload_identity_pool {
   type = object({
     pool_id = string
@@ -21,6 +20,7 @@ variable workload_identity_pool {
         allowed_audiences = optional(list(string))
       }))
       owner = optional(string)
+      workspace_uuid = optional(string)
     })))
   })
 }
