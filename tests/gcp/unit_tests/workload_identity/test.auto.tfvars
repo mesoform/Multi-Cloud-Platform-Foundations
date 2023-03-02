@@ -11,7 +11,7 @@ workload_identity_pool = {
       owner = "companyWorkspace"
       workspace_uuid = "{company-unique-id}"
       oidc  = {
-        issuer = "bitbucket"
+        issuer = "bitbucket-pipelines"
       }
     }
     circleci = {
@@ -29,7 +29,7 @@ workload_identity_pool = {
       }
       owner = "companyOrg"
       oidc  = {
-        issuer = "github"
+        issuer = "github-actions"
       }
     }
     gitlab = {

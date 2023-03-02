@@ -1,5 +1,14 @@
+data google_project self {
+  project_id = var.project_id
+
+}
+
+locals {
+  default_audience = "https://iam.googleapis.com/projects/${data.google_project.self.number}/locations/global/workloadIdentityPools/${google_iam_workload_identity_pool.self.id}/providers/%s"
+}
+
 resource google_iam_workload_identity_pool self {
-  project = var.project_id
+  project = data.google_project.self.project_id
   workload_identity_pool_id = replace(var.workload_identity_pool.pool_id, "_", "-")
   display_name = var.workload_identity_pool.display_name == null ?  var.workload_identity_pool.pool_id : var.workload_identity_pool.display_name
   description = var.workload_identity_pool.description
@@ -31,7 +40,9 @@ resource google_iam_workload_identity_pool_provider self {
     //noinspection HILUnresolvedReference
     content {
       issuer_uri = oidc.value.issuer
-      allowed_audiences = lookup(oidc.value, "allowed_audiences", []) == [] ? null : oidc.value.allowed_audiences
+      allowed_audiences = [ for audience in lookup(oidc.value, "allowed_audiences", []):
+        (audience == "default" ? format(local.default_audience, replace(each.value.provider_id, "_", "-")) : audience)
+      ]
     }
   }
 }

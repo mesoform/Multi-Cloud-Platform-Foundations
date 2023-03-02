@@ -17,11 +17,11 @@ variable workload_identity_pool {
       aws = optional(map(string))
       oidc = optional(object({
         issuer = string
-        allowed_audiences = optional(list(string))
+        allowed_audiences = optional(list(string),[])
       }))
-      owner = optional(string)
-      workspace_uuid = optional(string)
-    })))
+      owner = optional(string, "")
+      workspace_uuid = optional(string, "")
+    })), {})
   })
 }
 

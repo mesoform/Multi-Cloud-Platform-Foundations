@@ -18,7 +18,7 @@ expected_data = {
     "bitbucket": "assertion.workspaceUuid=='{company-unique-id}'",
     "circleci": "assertion.aud=='company'",
     "github": "assertion.repository_owner=='companyOrg' && assertion.ref=='refs/head/main'",
-    "gitlab": "assertion.namespace_id=='companyGroup'",
+    "gitlab": "assertion.namespace_path=='companyGroup'",
     "terraform-cloud": "assertion.terraform_organization_id=='organization'",
     "unknown": "none"
 }
