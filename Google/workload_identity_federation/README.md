@@ -189,4 +189,6 @@ components:
 
 ## Using standard HCL
 This module can also be used with standard HCL, either in the format of a decoded MCCF file by setting the `workload_identity_pools` 
-variable, or the `specs` section by setting the `workload_identity_pools_specs` variable.
+variable, or the `specs` section by setting the `workload_identity_pools_specs` variable.  
+
+The workload identity pool child module can also be called directly, see the [Readme](workload_identity_pool/README.md) for information
