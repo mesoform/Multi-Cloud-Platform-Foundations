@@ -122,9 +122,7 @@ components:
             "attribute.aws_ec2_instance": "assertion.arn.extract('assumed-role/ROLE_AND_SESSION').extract('/SESSION')"
           aws:
             account_id: "accountid"
-          condition: "assertion.arn.startsWith('arn:aws:sts::accountid:assumed-role/')"
-        
-
+          attribute_condition: "assertion.arn.startsWith('arn:aws:sts::accountid:assumed-role/')"
 ```
 
 ### Preconfigured defaults
