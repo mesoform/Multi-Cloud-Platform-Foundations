@@ -8,7 +8,22 @@ locals {
 
   workload_identity_pools_specs_unmerged = var.workload_identity_pools_specs == null ? local.workload_identity_pools_components_specs : var.workload_identity_pools_specs
 
-  workload_identity_pools_specs = { for workload_identity_pool, config in local.workload_identity_pools_specs_unmerged :
-    workload_identity_pool => merge({pool_id = workload_identity_pool},local.workload_identity_pools_components_common == null ? {} : local.workload_identity_pools_components_common, config)
+  workload_identity_pools_providers_specs = {
+    for pool, specs in local.workload_identity_pools_specs_unmerged: pool => {
+      for provider, provider_specs in lookup(specs, "providers", {}): provider => merge(
+        lookup(local.workload_identity_pools_components_common, "providers", {}),
+        provider_specs
+      )
+    }
   }
+
+  workload_identity_pools_specs = { for pool, config in local.workload_identity_pools_specs_unmerged :
+    pool => merge(
+      {pool_id = pool},
+      local.workload_identity_pools_components_common == null ? {} : local.workload_identity_pools_components_common,
+      config,
+      lookup(local.workload_identity_pools_providers_specs, pool, null) == null ? {} : {providers = local.workload_identity_pools_providers_specs[pool]}
+    )
+  }
+
 }
