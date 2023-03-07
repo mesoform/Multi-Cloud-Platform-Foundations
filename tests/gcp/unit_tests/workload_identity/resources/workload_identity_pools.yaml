@@ -1,11 +1,13 @@
 components:
   common:
-    owner: mesoform
+    providers:
+      owner: mesoform
   specs:
     cicd:
       display_name: CI/CD Workloads
       providers:
         bitbucket:
+          workspace_uuid: '{some-bitbucket-workspace-uuid}'
           oidc:
             issuer: bitbucket
         github:

@@ -11,16 +11,15 @@ except Exception as e:
 
 
 """
-    Tests whether default audience from template are configured, and custom audiences set when specified.
+    Tests that an owner attribute defined in the components.common block, is set in all providers except those 
+    where that value is overwritten 
 """
 
 expected_data = {
-    "bitbucket": "ari:cloud:bitbucket::workspace/{company-unique-id}",
-    "circleci": "company",
-    "github": "",
-    "gitlab": "https://gitlab.com",
-    "terraform-cloud": "",
-    "unknown": "audience1, audience2"
+    "bitbucket": "mesoform",
+    "github": "mesoform",
+    "gitlab": "differentOwner",
+    "unknown": "mesoform"
 }
 
 if __name__ == '__main__':

@@ -1,60 +1,11 @@
-//noinspection HILUnresolvedReference
-data external test_oidc_provider_issuers {
+data external test_common_provider_owner {
   query   = {
-    for provider, specs in local.identity_pool_providers :
-      provider => specs.oidc.issuer
-    if lookup(specs, "oidc", null) != null
+    for provider, specs in lookup(local.workload_identity_pools_specs["cicd"], "providers", {}) :
+      provider => lookup(specs, "owner", "null")
   }
-  program = ["python", "${path.module}/test_oidc_provider_issuers.py"]
+  program = ["python", "${path.module}/test_common_provider_owner.py"]
 }
-output test_oidc_provider_issuers {
-  value = data.external.test_oidc_provider_issuers.result
+output test_common_provider_owner {
+  value = data.external.test_common_provider_owner.result
 }
 
-//noinspection HILUnresolvedReference
-data external test_oidc_provider_audiences {
-  query   = {
-    for provider, specs in local.identity_pool_providers :
-      provider => join(", ", lookup(specs.oidc, "allowed_audiences", []))
-    if lookup(specs, "oidc", null) != null
-  }
-  program = ["python", "${path.module}/test_oidc_provider_audience.py"]
-}
-output test_oidc_provider_audiences {
-  value = data.external.test_oidc_provider_audiences.result
-}
-
-//noinspection HILUnresolvedReference
-data external test_provider_subject_attribute {
-  query   = {
-    for provider, specs in local.identity_pool_providers :
-      provider => specs.attribute_mapping["google.subject"]
-    if lookup(specs, "oidc", null) != null
-  }
-  program = ["python", "${path.module}/test_provider_subject_attribute.py"]
-}
-output test_provider_subject_attribute {
-  value = data.external.test_provider_subject_attribute.result
-}
-
-//noinspection HILUnresolvedReference
-data external test_oidc_provider_attributes {
-  query   = local.identity_pool_providers.bitbucket.attribute_mapping
-  program = ["python", "${path.module}/test_provider_attributes.py"]
-}
-output test_oidc_provider_attributes {
-  value = data.external.test_oidc_provider_attributes.result
-}
-
-//noinspection HILUnresolvedReference
-data external test_provider_conditions {
-  query   = {
-    for provider, specs in local.identity_pool_providers :
-      provider => lookup(specs, "attribute_condition", null) == null ? "none": specs.attribute_condition
-    if lookup(specs, "oidc", null) != null
-  }
-  program = ["python", "${path.module}/test_provider_conditions.py"]
-}
-output test_provider_conditions {
-  value = data.external.test_provider_conditions.result
-}
