@@ -1,7 +1,8 @@
 # Workload Identity Federation
-This module deploys Workload Identity Pools and their Workload Identity Pool Providers (IDPs), for Workload Identity Federation, using MCCF format. 
+This module is an MCCF adapter for the [Terraform-Infrastructure-Modules (TIM) Workload Identity Federation module](https://github.com/mesoform/terraform-infrastructure-modules/tree/06fd7e1879a9d968a74f2f278af1232644228fe2/gcp/iam/workload_identity_federation)
+which deploys Workload Identity Pools and their Workload Identity Pool Providers (IDPs).  
 [Workload Identity Federation](https://cloud.google.com/iam/docs/workload-identity-federation) allows external entities 
-to access Google Cloud resources without using service account keys.
+to access Google Cloud resources without needing to use service account keys.
 
 This module implements templated configurations for commonly used external entities that use OIDC, including:
 * Azure
@@ -12,8 +13,6 @@ This module implements templated configurations for commonly used external entit
 * Terraform Cloud
 
 See the [configuration](#configuration) section for implementation details.
-
-This module can also be implemented in standard terraform format, see '[Using standard HCL](#using-standard-hcl)' section for more details 
 
 ### Prerequisites
 The project where the resources will be deployed, must have Billing and the following 
@@ -51,11 +50,11 @@ The providers for each pool can be configured under the `providers` attribute in
 
 This module can be used to configure AWS or OIDC providers. This module has preconfigured settings for some
 common clients. To use the preconfigured settings set `oidc.issuer` to one of: `azure`, `bitbucket-pipelines`, `circleci`, 
-`github-actions`, `gitlab` or `terraform-cloud`. See details of defaults for each of these in the 
-[preconfigured defaults](#preconfigured-defaults) section.  
+`github-actions`, `gitlab` or `terraform-cloud`.   
+See the [preconfigured defaults](#preconfigured-defaults) section  for details on configuration.
 
 Some defaults can be overwritten by configuring any of the attributes shown in the table below, 
-but to replace the `attribute_mappings` rather than add to them, you will need to configure all the values in the table.
+but to replace the `attribute_mappings` rather than add to to the defaults, you will need to configure all the values in the table.
 #### Provider Attributes
 | Key                      |     Type     | Required | Description                                                                                                                             |                                                           Default                                                           |
 |:-------------------------|:------------:|:--------:|:----------------------------------------------------------------------------------------------------------------------------------------|:---------------------------------------------------------------------------------------------------------------------------:|
@@ -126,10 +125,11 @@ components:
 ```
 
 ### Preconfigured defaults
-This module has preconfigured Identity Provider settings for commonly used clients, referred to as "trusted issuers", 
+The TIM module has preconfigured Identity Provider (IDP) settings for commonly used clients, referred to as "trusted issuers", 
 which can be used by setting `oidc.issuer` to one of the issuers from the table below, as well as setting required MCCF attributes. 
 
-Full defaults for preconfigured IDP can be found in the [`trusted_issuers.tf`](./workload_identity_pool/trusted_issuers.yaml) file.
+Further details on the defaults can be found in the [TIM module documentation](https://github.com/mesoform/terraform-infrastructure-modules/tree/06fd7e1879a9d968a74f2f278af1232644228fe2/gcp/iam/workload_identity_federation#preconfigured-defaults),
+with the defaults set in the [`trusted_issuers.tf`](https://github.com/mesoform/terraform-infrastructure-modules/tree/06fd7e1879a9d968a74f2f278af1232644228fe2/gcp/iam/workload_identity_federation/trusted_issuers.yaml) file.
 
 #### Trusted issuers
 | Issuer                | Required MCCF attributes                                                              |
@@ -141,14 +141,7 @@ Full defaults for preconfigured IDP can be found in the [`trusted_issuers.tf`](.
 | `gitlab`              | - `owner`: Unique group ID                                                            |
 | `terraform-cloud`     | - `owner`: Terraform Cloud Organization ID                                            |
 
-Each of the providers have a condition configured based on the `owner`/`workspace_uuid` attributes. 
-To make a custom condition configure set the `attribute_condition` to a [valid condition](https://cloud.google.com/iam/docs/workload-identity-federation#conditions).
-
-Some of these issuers have a configured default audience different to the Google default 
-(i.e. `https://iam.googleapis.com/projects/PROJECT_NUMBER/locations/global/workloadIdentityPools/POOL_ID/providers/PROVIDER_ID`). 
-If this Google default audience should be included in the `allowed_audiences` as well as the preconfigured default, 
-add `"default"` to the list in `oidc.allowed_audiences`.   
-e.g.
+#### Example using preconfigured default:
 ```yaml
 components:
   specs:
@@ -161,32 +154,4 @@ components:
             issuer: bitbucket-pipelines
             allowed_audiences:
               - 'default'
-```  
-
-If the Google default audience is the only audience that should be the only allowed audience, 
-but the truster issuer has a preconfigured default audience, the provider must be configured manually.
-e.g.
-```yaml
-components:
-  specs:
-    cicd:
-      providers:
-        bitbucket:
-          attributes:
-            "google.subject": "assertion.sub"
-            "attribute.workspace_uuid": "assertion.workspaceUuid"
-            "attribute.repository": "assertion.repositoryUuid"
-            "attribute.git_ref": "assertion.branchName"
-          oidc:
-            issuer: "https://api.bitbucket.org/2.0/workspaceName/goup/pipelines-config/identity/oidc"
-            allowed_audiences:
-              - 'default' # (or don't define the block)
-          attribute_condition: "assertion.workspaceUuid=='${some-uuid}'"
-          
 ```
-
-## Using standard HCL
-This module can also be used with standard HCL, either in the format of a decoded MCCF file by setting the `workload_identity_pools` 
-variable, or the `specs` section by setting the `workload_identity_pools_specs` variable.  
-
-The workload identity pool child module can also be called directly, see the [Readme](workload_identity_pool/README.md) for information

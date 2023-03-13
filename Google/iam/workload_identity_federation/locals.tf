@@ -11,7 +11,7 @@ locals {
   workload_identity_pools_providers_specs = {
     for pool, specs in local.workload_identity_pools_specs_unmerged: pool => {
       for provider, provider_specs in lookup(specs, "providers", {}): provider => merge(
-        lookup(local.workload_identity_pools_components_common, "providers", {}),
+        try(lookup(local.workload_identity_pools_components_common, "providers", {}), {}),
         provider_specs
       )
     }
