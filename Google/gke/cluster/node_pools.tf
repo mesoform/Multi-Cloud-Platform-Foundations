@@ -13,8 +13,8 @@ resource google_container_node_pool self {
   dynamic management {
     for_each = lookup(each.value, "management", null) == null ? {} : {management = each.value.management}
     content {
-      auto_upgrade = lookup(management.value, "auto_upgrade", null)
-      auto_repair = lookup(management.value, "auto_repair", null)
+      auto_upgrade = lookup(management.value, "auto_upgrade", true)
+      auto_repair = lookup(management.value, "auto_repair", true)
     }
   }
   dynamic node_config {
