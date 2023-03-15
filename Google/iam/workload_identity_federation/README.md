@@ -57,7 +57,7 @@ Some defaults can be overwritten by configuring any of the attributes shown in t
 but to replace the `attribute_mappings` rather than add to the defaults, you will need to configure all the values in the table.
 
 The `owner` attribute can also be configured at the `components.common` level if it would be the same for multiple providers (see [trusted_issuers](#trusted-issuers)),
-this can be overwritten by specifying the `owner` in `components.specs.*.providers.*`
+this can be overwritten by specifying the `owner` in `components.specs.*.providers.*`. This also applies to the other top level provider attributes.
 #### Provider Attributes
 | Key                      |     Type     | Required | Description                                                                                                                             |                                                           Default                                                           |
 |:-------------------------|:------------:|:--------:|:----------------------------------------------------------------------------------------------------------------------------------------|:---------------------------------------------------------------------------------------------------------------------------:|
