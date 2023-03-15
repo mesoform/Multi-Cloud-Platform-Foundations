@@ -1,0 +1,38 @@
+project_id: something
+components:
+  common:
+    providers:
+      owner: mesoform
+  specs:
+    cicd:
+      display_name: CI/CD Workloads
+      providers:
+        bitbucket:
+          workspace_uuid: '{some-bitbucket-workspace-uuid}'
+          oidc:
+            issuer: bitbucket
+        github:
+          attribute_condition: "assertion.repository_owner=='companyOrg' && assertion.ref=='refs/head/main'"
+          attribute_mapping:
+            "google.subject": "overwrite.sub"
+          oidc:
+            issuer: github
+        gitlab:
+          owner: differentOwner
+          oidc:
+            issuer: gitlab
+        unknown:
+          attribute_mapping:
+            "google.subject": "assertion.sub"
+            "attribute.tid": "assertion.tid"
+          oidc:
+            issuer: "https://unknown.issuer"
+    azure:
+      display_name: Azure
+      providers:
+        app_1:
+          owner: tenantID
+          oidc:
+            issuer: azure
+            allowed_audiences:
+              - "api://applicationID"
