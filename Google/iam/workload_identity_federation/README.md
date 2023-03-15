@@ -1,5 +1,5 @@
 # Workload Identity Federation
-This module is an MCCF adapter for the [Terraform-Infrastructure-Modules (TIM) Workload Identity Federation module](https://github.com/mesoform/terraform-infrastructure-modules/tree/06fd7e1879a9d968a74f2f278af1232644228fe2/gcp/iam/workload_identity_federation)
+This module is an MCCF adapter for the [Terraform-Infrastructure-Modules (TIM) Workload Identity Federation module](https://github.com/mesoform/terraform-infrastructure-modules/tree/v2.2.0/gcp/iam/workload_identity_federation)
 which deploys Workload Identity Pools and their Workload Identity Pool Providers (IDPs).  
 [Workload Identity Federation](https://cloud.google.com/iam/docs/workload-identity-federation) allows external entities 
 to access Google Cloud resources without needing to use service account keys.
@@ -54,7 +54,7 @@ common clients. To use the preconfigured settings set `oidc.issuer` to one of: `
 See the [preconfigured defaults](#preconfigured-defaults) section  for details on configuration.
 
 Some defaults can be overwritten by configuring any of the attributes shown in the table below, 
-but to replace the `attribute_mappings` rather than add to to the defaults, you will need to configure all the values in the table.
+but to replace the `attribute_mappings` rather than add to the defaults, you will need to configure all the values in the table.
 #### Provider Attributes
 | Key                      |     Type     | Required | Description                                                                                                                             |                                                           Default                                                           |
 |:-------------------------|:------------:|:--------:|:----------------------------------------------------------------------------------------------------------------------------------------|:---------------------------------------------------------------------------------------------------------------------------:|
@@ -129,7 +129,7 @@ The TIM module has preconfigured Identity Provider (IDP) settings for commonly u
 which can be used by setting `oidc.issuer` to one of the issuers from the table below, as well as setting required MCCF attributes. 
 
 Further details on the defaults can be found in the [TIM module documentation](https://github.com/mesoform/terraform-infrastructure-modules/tree/06fd7e1879a9d968a74f2f278af1232644228fe2/gcp/iam/workload_identity_federation#preconfigured-defaults),
-with the defaults set in the [`trusted_issuers.tf`](https://github.com/mesoform/terraform-infrastructure-modules/tree/06fd7e1879a9d968a74f2f278af1232644228fe2/gcp/iam/workload_identity_federation/trusted_issuers.yaml) file.
+with the defaults set in the [`trusted_issuers.tf`](https://github.com/mesoform/terraform-infrastructure-modules/tree/v2.2.0/gcp/iam/workload_identity_federation/trusted_issuers.yaml) file.
 
 #### Trusted issuers
 | Issuer                | Required MCCF attributes                                                              |
