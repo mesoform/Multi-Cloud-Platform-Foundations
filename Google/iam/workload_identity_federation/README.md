@@ -55,6 +55,9 @@ See the [preconfigured defaults](#preconfigured-defaults) section  for details o
 
 Some defaults can be overwritten by configuring any of the attributes shown in the table below, 
 but to replace the `attribute_mappings` rather than add to the defaults, you will need to configure all the values in the table.
+
+The `owner` attribute can also be configured at the `components.common` level if it would be the same for multiple providers (see [trusted_issuers](#trusted-issuers)),
+this can be overwritten by specifying the `owner` in `components.specs.*.providers.*`
 #### Provider Attributes
 | Key                      |     Type     | Required | Description                                                                                                                             |                                                           Default                                                           |
 |:-------------------------|:------------:|:--------:|:----------------------------------------------------------------------------------------------------------------------------------------|:---------------------------------------------------------------------------------------------------------------------------:|
@@ -140,6 +143,8 @@ with the defaults set in the [`trusted_issuers.tf`](https://github.com/mesoform/
 | `github-actions`      | - `owner`: Repository owner (i.e. Username/Organization)                              |
 | `gitlab`              | - `owner`: Unique group ID                                                            |
 | `terraform-cloud`     | - `owner`: Terraform Cloud Organization ID                                            |
+
+
 
 #### Example using preconfigured default:
 ```yaml
