@@ -1,0 +1,1 @@
+../../../../Google/iam/workload_identity_federation/locals.tf
