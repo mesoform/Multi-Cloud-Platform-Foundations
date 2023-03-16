@@ -34,7 +34,7 @@ components:
       TXT_records: # TXT configuration
 ```
 Each record type has a set of records with the following attributes
-* `name`: The DNS name this record set will apply to
+* `name`: The DNS name this record set will apply to (any references to use `@` for name, use the main domain name as `@` is just a shorthand for this. E.g. instead of `name: @` use `name: example.com`)
 * `rrdatas` or one of `geo.rrdatas`/`wrr.rrdatas`: The string data for the records in this record set whose meaning depends on the DNS type.  
 Optional attributes include:
 * `ttl`: Time-to-live for record
