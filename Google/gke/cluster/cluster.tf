@@ -12,7 +12,7 @@ data google_container_engine_versions self {
 }
 
 
-//noinspection HILUnresolvedReference
+//noinspection HILUnresolvedReference,ConflictingProperties
 resource google_container_cluster self {
   for_each = local.clusters_specs
   name = replace(each.key, "_", "-")
@@ -27,6 +27,7 @@ resource google_container_cluster self {
   enable_l4_ilb_subsetting = lookup(each.value, "enable_l4_ilb_subsetting", false)
   enable_legacy_abac = lookup(each.value, "enable_legacy_abac", false)
   enable_shielded_nodes = each.value.autopilot ? null : lookup(each.value, "enable_shielded_nodes", true )
+
   logging_service = lookup(each.value, "logging_service", null)
   min_master_version = lookup(each.value, "min_master_vesrion", null)
   monitoring_service = lookup(each.value, "monitoring_service", null)
@@ -34,6 +35,7 @@ resource google_container_cluster self {
   networking_mode = each.value.autopilot ? null : lookup(each.value, "networking_mode", "ROUTES")
   node_version = lookup(each.value, "node_version", null)
   private_ipv6_google_access = lookup(each.value, "private_ipv6_google_access", null)
+  resource_labels = lookup(each.value, "resource_labels", {})
   subnetwork = lookup(each.value, "private_ipv6_google_access", null)
   remove_default_node_pool = each.value.autopilot ? null : try(length(lookup(each.value, "node_pools", {} )) <= 0, true) ? false : lookup(each.value, "remove_default_node_pool", true)
   initial_node_count = each.value.autopilot ? null : lookup(each.value, "remove_default_node_pool", true) || try(length(lookup(each.value, "node_pools", {} )) >= 0, false) ? 1 : lookup(each.value, "initial_node_count", null )
@@ -120,7 +122,7 @@ resource google_container_cluster self {
     }
   }
 
-  //noinspection HILUnresolvedReference
+  //noinspection HILUnresolvedReference,ConflictingProperties
   dynamic cluster_autoscaling {
     for_each = lookup(each.value, "cluster_autoscaling", null) == null ? {} : {cluster_autoscaling = each.value.cluster_autoscaling}
     //noinspection HILUnresolvedReference
@@ -137,6 +139,7 @@ resource google_container_cluster self {
           min_cpu_platform = lookup(auto_provisioning_defaults.value, "min_cpu_platform", null)
           oauth_scopes = lookup(auto_provisioning_defaults.value, "oauth_scopes", null)
           service_account = lookup(auto_provisioning_defaults.value, "service_account", null)
+
           //noinspection HILUnresolvedReference
           dynamic management {
             for_each = lookup(auto_provisioning_defaults.value, "management", null) == null ? {} : {management = auto_provisioning_defaults.value.management}
@@ -233,6 +236,7 @@ resource google_container_cluster self {
   }
 #
 #  //noinspection HILUnresolvedReference
+  //noinspection ConflictingProperties
   dynamic ip_allocation_policy {
     for_each = lookup(each.value, "autopilot", true) ? {ip_allocation_policy = {}} : lookup(each.value, "ip_allocation_policy", null) == null ? {} : {ip_allocation_policy = each.value.ip_allocation_policy}
     content {
@@ -250,12 +254,9 @@ resource google_container_cluster self {
     }
   }
 
-  dynamic master_auth {
-    for_each = lookup(each.value, "master_auth", null ) == null ? {} : {master_auth: each.value.master_auth}
-    content {
-      client_certificate_config {
-        issue_client_certificate = lookup(master_auth.value, "issue_client_certificate", true)
-      }
+  master_auth {
+    client_certificate_config {
+      issue_client_certificate = false
     }
   }
 
@@ -290,7 +291,16 @@ resource google_container_cluster self {
     }
   }
 
-  #  pod_security_policy_config {}
+  //noinspection ConflictingProperties
+  dynamic "network_policy" {
+
+    for_each = lookup(each.value, "network_policy", null ) == null ? {} : { network_policy = each.value.network_policy }
+    content {
+      provider = lookup(network_policy.value, "provider", null )
+      enabled = false
+    }
+  }
+
   dynamic notification_config{
     for_each = lookup(each.value, "notification_config", null) == null ? {} : {notification_config: each.value.notification_config}
     content {
@@ -303,6 +313,20 @@ resource google_container_cluster self {
             event_type = lookup(filter.value, "event_type", null )
           }
         }
+      }
+    }
+  }
+
+  #  pod_security_policy_config {} (beta)
+
+  dynamic private_cluster_config {
+    for_each = lookup(each.value, "private_cluster_config", null) == null ? {} : {private_cluster_config = each.value.private_cluster_config}
+    content {
+      enable_private_endpoint = true
+      enable_private_nodes = true
+      master_ipv4_cidr_block = lookup(private_cluster_config.value, "master_ipv4_cidr_block", null)
+      master_global_access_config {
+        enabled = lookup(private_cluster_config.value, "master_global_access_config", false)
       }
     }
   }
@@ -328,6 +352,7 @@ resource google_container_cluster self {
     }
   }
 
+  //noinspection ConflictingProperties
   dynamic workload_identity_config {
     for_each = each.value.autopilot ? {} : lookup(each.value, "workload_identity_config", null) == null ? {} : {workload_identity_config = each.value.workload_identity_config}
     content {
