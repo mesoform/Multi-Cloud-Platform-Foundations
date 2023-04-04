@@ -160,3 +160,11 @@ components:
             allowed_audiences:
               - 'default'
 ```
+
+## Outputs
+* `pool_id` - Map of pool IDs for each created pool. E.g.: 
+  ```hcl
+  pool_id = {
+    cicd = "projects/project-id/locations/global/workloadIdentityPools/cicd"
+  }
+  ```

@@ -1,6 +1,6 @@
 # Google Project Module  
 This module can be used to deploy Google Projects in a specified folder or organisation.
-This is created by defining a Terraform `module` which references a `yaml` configuration file (see [configuration](#google-project-basic-configuration)).
+This is created by defining a Terraform `module` which references a `yaml` configuration file (see [configuration](#google-project-basic-configuration).
 e.g. `main.tf`:
 ```terraform
 module dev_projects {
@@ -9,16 +9,21 @@ module dev_projects {
   #parent_folder = <dev-folder-id>   (optional) 
 }
 ```
-
+## Prerequisites
+### Required Services
+The following services must be enabled in the project which the deploying service account comes from:
+* `cloudbilling.googleapis.com`
+* `cloudresourcemanager.googleapis.com`
 ### Required Permissions
 The account used for creating the project will need to have the following roles in the relevant folder/organization:
  * `roles/resourcemanager.projectCreator` for creating projects
  * `roles/resourcemanager.projectDeletor` for deleting projects
+ * `roles/billing.user` for attaching a billing account to a project (can be applied to organization or individual billing accounts)
 
 And optionally:
  * `roles/resourcemanager.projectMover` for moving projects
  * `roles/resourcemanager.projectIamAdmin` for managing the projects IAM policy
- * `roles/serviceusage.serviceUsageAdmin` for enabling services in the projects. 
+ * `roles/serviceusage.serviceUsageAdmin` for enabling services in the projects.
   This role can be assigned at the project level if necessary. 
 
 ## Google Project basic configuration  
