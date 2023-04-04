@@ -9,16 +9,21 @@ module dev_projects {
   #parent_folder = <dev-folder-id>   (optional) 
 }
 ```
-
+## Prerequisites
+### Required Services
+The following services must be enabled in the project which the deploying service account comes from:
+* `cloudbilling.googleapis.com`
+* `cloudresourcemanager.googleapis.com`
 ### Required Permissions
 The account used for creating the project will need to have the following roles in the relevant folder/organization:
  * `roles/resourcemanager.projectCreator` for creating projects
  * `roles/resourcemanager.projectDeletor` for deleting projects
+ * `roles/billing.user` for attaching a billing account to a project
 
 And optionally:
  * `roles/resourcemanager.projectMover` for moving projects
  * `roles/resourcemanager.projectIamAdmin` for managing the projects IAM policy
- * `roles/serviceusage.serviceUsageAdmin` for enabling services in the projects. 
+ * `roles/serviceusage.serviceUsageAdmin` for enabling services in the projects.
   This role can be assigned at the project level if necessary. 
 
 ## Google Project basic configuration  
