@@ -9,6 +9,10 @@ on:
     branches:
       - develop
 
+permissions:
+  contents: 'read'
+  id-token: 'write'
+
 jobs:
   deployment-test-plans:
     runs-on: ubuntu-latest
@@ -38,7 +42,10 @@ jobs:
       - id: 'auth'
         uses: 'google-github-actions/auth@v1'
         with:
-          credentials_json: ${{secrets.GCP_SA_KEY}}
+          service_account: ${{secrets.GCP_SA_EMAIL}}
+          workload_identity_provider: ${{secrets.GCP_WORKLOAD_IDENTITY_PROVIDER}}
+          token_format: 'access_token'
+          access_token_lifetime: 1200s # 20 minutes
 
       - name: 'Set up Cloud SDK'
         uses: 'google-github-actions/setup-gcloud@v1'
@@ -49,35 +56,27 @@ jobs:
 
       # Deploy google folders
       - name: Add IDs to GCP Folder Files
-        env:
-          GOOGLE_CREDENTIALS: ${{secrets.GCP_SA_KEY}}
         run: |
           cd google_folder/resource
-          sed -i "s/<folder_id>/folders\/${{secrets.GCP_FOLDER_ID}}/" folders.yaml
-          SERVICE_ACCOUNT=$(echo $GOOGLE_CREDENTIALS | jq -r '.client_email')
-          sed -i "s/<service_account>/$SERVICE_ACCOUNT/"  folders.yaml
+          sed -i "s/<folder_id>/folders\/${{secrets.GCP_FOLDER_ID}}/g" folders.yaml
+          sed -i "s/<service_account>/${{secrets.GCP_SA_EMAIL}}/g"  folders.yaml
           cat folders.yaml
 
       - name: Add IDs to GCP Project Files
-        env:
-          GOOGLE_CREDENTIALS: ${{secrets.GCP_SA_KEY}}
         run: |
           cd google_project/resource
           sed -i "s/<project_date>/${{ steps.vars.outputs.DATE }}/g" projects.yaml
-          sed -i "s/<folder_id>/folders\/${{secrets.GCP_FOLDER_ID}}/" projects.yaml
-          sed -i "s/<billing_account>/${{secrets.GCP_BILLING_ACCOUNT}}/" projects.yaml
-          SERVICE_ACCOUNT=$(echo $GOOGLE_CREDENTIALS | jq -r '.client_email')
-          sed -i "s/<service_account>/$SERVICE_ACCOUNT/"  projects.yaml
+          sed -i "s/<folder_id>/folders\/${{secrets.GCP_FOLDER_ID}}/g" projects.yaml
+          sed -i "s/<billing_account>/${{secrets.GCP_BILLING_ACCOUNT}}/g" projects.yaml
+          sed -i "s/<service_account>/${{secrets.GCP_SA_EMAIL}}/g"  projects.yaml
           cat projects.yaml
 
       # Deploy google service accounts
       - name: Add IDs to GCP Service Accounts File
-        env:
-          GOOGLE_CREDENTIALS: ${{secrets.GCP_SA_KEY}}
         run: |
           cd google_service_account/resource
-          sed -i "s/<project_id>/mcp-test-project-${{ steps.vars.outputs.DATE }}/" service_accounts.yaml
-          sed -i "s/<user_email>/${{secrets.GCP_USER}}/" service_accounts.yaml
+          sed -i "s/<project_id>/mcp-test-project-${{ steps.vars.outputs.DATE }}/g" service_accounts.yaml
+          sed -i "s/<user_email>/${{secrets.GCP_USER}}/g" service_accounts.yaml
           cat service_accounts.yaml
 
 
@@ -141,7 +140,10 @@ jobs:
       - id: 'auth'
         uses: 'google-github-actions/auth@v1'
         with:
-          credentials_json: ${{secrets.GCP_SA_KEY}}
+          service_account: ${{secrets.GCP_SA_EMAIL}}
+          workload_identity_provider: ${{secrets.GCP_WORKLOAD_IDENTITY_PROVIDER}}
+          token_format: 'access_token'
+          access_token_lifetime: 1200s # 20 minutes
 
       - name: 'Set up Cloud SDK'
         uses: 'google-github-actions/setup-gcloud@v1'
@@ -156,13 +158,10 @@ jobs:
 
       # Deploy google folders
       - name: Add IDs to GCP Folder Files
-        env:
-          GOOGLE_CREDENTIALS: ${{secrets.GCP_SA_KEY}}
         run: |
           cd google_folder/resource
-          sed -i "s/<folder_id>/folders\/${{secrets.GCP_FOLDER_ID}}/" folders.yaml
-          SERVICE_ACCOUNT=$(echo $GOOGLE_CREDENTIALS | jq -r '.client_email')
-          sed -i "s/<service_account>/$SERVICE_ACCOUNT/"  folders.yaml
+          sed -i "s/<folder_id>/folders\/${{secrets.GCP_FOLDER_ID}}/g" folders.yaml
+          sed -i "s/<service_account>/${{secrets.GCP_SA_EMAIL}}/g"  folders.yaml
           cat folders.yaml
 
       - name: Deploy Google folder
@@ -174,7 +173,7 @@ jobs:
           terraform apply plan.tfplan
 
       - name: Destroy Google Folders
-        if: steps.deploy-folders.outcome != 'skipped'
+        if: always()
         run: |
           cd google_folder
           terraform destroy -auto-approve
@@ -182,15 +181,12 @@ jobs:
 
       # Deploy google projects
       - name: Add IDs to GCP Project Files
-        env:
-          GOOGLE_CREDENTIALS: ${{secrets.GCP_SA_KEY}}
         run: |
           cd google_project/resource
           sed -i "s/<project_date>/${{ steps.vars.outputs.DATE }}/g" projects.yaml
-          sed -i "s/<folder_id>/folders\/${{secrets.GCP_FOLDER_ID}}/" projects.yaml
-          sed -i "s/<billing_account>/${{secrets.GCP_BILLING_ACCOUNT}}/" projects.yaml
-          SERVICE_ACCOUNT=$(echo $GOOGLE_CREDENTIALS | jq -r '.client_email')
-          sed -i "s/<service_account>/$SERVICE_ACCOUNT/"  projects.yaml
+          sed -i "s/<folder_id>/folders\/${{secrets.GCP_FOLDER_ID}}/g" projects.yaml
+          sed -i "s/<billing_account>/${{secrets.GCP_BILLING_ACCOUNT}}/g" projects.yaml
+          sed -i "s/<service_account>/${{secrets.GCP_SA_EMAIL}}/g" projects.yaml
           cat projects.yaml
 
       - name: Deploy Google project
@@ -203,12 +199,10 @@ jobs:
 
       # Deploy google service accounts
       - name: Add IDs to GCP Service Accounts File
-        env:
-          GOOGLE_CREDENTIALS: ${{secrets.GCP_SA_KEY}}
         run: |
           cd google_service_account/resource
-          sed -i "s/<project_id>/mcp-test-project-${{ steps.vars.outputs.DATE }}/" service_accounts.yaml
-          sed -i "s/<user_email>/${{secrets.GCP_USER}}/" service_accounts.yaml
+          sed -i "s/<project_id>/mcp-test-project-${{ steps.vars.outputs.DATE }}/g" service_accounts.yaml
+          sed -i "s/<user_email>/${{secrets.GCP_USER}}/g" service_accounts.yaml
           cat service_accounts.yaml
           
 
@@ -232,19 +226,19 @@ jobs:
 #          terraform apply plan.tfplan
 #
 #      - name: Destroy GKE clusters
-#        if: steps.deploy-gke.outcome != 'skipped'
+#        if: always()
 #        run: |
 #          cd gke
 #          terraform destroy -auto-approve
 
       - name: Destroy Google Service Accounts
-        if: steps.deploy-GSAs.outcome != 'skipped'
+        if: always()
         run: |
           cd google_service_account
           terraform destroy -auto-approve
 
       - name: Destroy Google Projects
-        if: steps.deploy-projects.outcome != 'skipped'
+        if: always()
         run: |
           cd google_project
           terraform destroy -auto-approve
