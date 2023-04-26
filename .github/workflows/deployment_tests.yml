@@ -67,7 +67,7 @@ jobs:
           cd google_project/resource
           sed -i "s/<project_date>/${{ steps.vars.outputs.DATE }}/g" projects.yaml
           sed -i "s/<folder_id>/folders\/${{secrets.GCP_FOLDER_ID}}/g" projects.yaml
-          sed -i "s/<billing_account>/${{secrets.GCP_BILLING_ACCOUNT}}/g" projects.yaml
+          sed -i "s/<billing_account>/${{secrets.GCP_BILLING_ID}}/g" projects.yaml
           sed -i "s/<service_account>/${{secrets.GCP_SA_EMAIL}}/g"  projects.yaml
           cat projects.yaml
 
@@ -185,7 +185,7 @@ jobs:
           cd google_project/resource
           sed -i "s/<project_date>/${{ steps.vars.outputs.DATE }}/g" projects.yaml
           sed -i "s/<folder_id>/folders\/${{secrets.GCP_FOLDER_ID}}/g" projects.yaml
-          sed -i "s/<billing_account>/${{secrets.GCP_BILLING_ACCOUNT}}/g" projects.yaml
+          sed -i "s/<billing_account>/${{secrets.GCP_BILLING_ID}}/g" projects.yaml
           sed -i "s/<service_account>/${{secrets.GCP_SA_EMAIL}}/g" projects.yaml
           cat projects.yaml
 
@@ -214,22 +214,21 @@ jobs:
           terraform plan -out="./plan.tfplan"
           terraform apply plan.tfplan
 
-# TODO: re-enable steps when billing is configured
-#      - name: Deploy GKE clusters
-#        id : deploy-gke
-#        env:
-#          TF_VAR_project_id: mcp-test-project-${{ steps.vars.outputs.DATE }}
-#        run: |
-#          cd gke
-#          terraform init
-#          terraform plan -out="./plan.tfplan"
-#          terraform apply plan.tfplan
-#
-#      - name: Destroy GKE clusters
-#        if: always()
-#        run: |
-#          cd gke
-#          terraform destroy -auto-approve
+      - name: Deploy GKE clusters
+        id : deploy-gke
+        env:
+          TF_VAR_project_id: mcp-test-project-${{ steps.vars.outputs.DATE }}
+        run: |
+          cd gke
+          terraform init
+          terraform plan -out="./plan.tfplan"
+          terraform apply plan.tfplan
+
+      - name: Destroy GKE clusters
+        if: always()
+        run: |
+          cd gke
+          terraform destroy -auto-approve
 
       - name: Destroy Google Service Accounts
         if: always()
