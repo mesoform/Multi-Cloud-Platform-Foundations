@@ -20,11 +20,10 @@ components:
         key-1: overwrite-value
         key-2: value-2
       auto_create_network: true
-# TODO: re-nenable services when billing is configured
-#      services:
-#        - service: container.googleapis.com
-#          disable_dependent_services: true
-#        - service: gkebackup.googleapis.com
+      services:
+        - service: container.googleapis.com
+          disable_dependent_services: true
+        - service: gkebackup.googleapis.com
     test-project:
       project_id: mcp-test-project-<project_date>
       auto_create_network: true
