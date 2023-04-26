@@ -220,6 +220,7 @@ jobs:
           TF_VAR_project_id: mcp-test-project-${{ steps.vars.outputs.DATE }}
         run: |
           cd gke
+          sleep 3m
           terraform init
           terraform plan -out="./plan.tfplan"
           terraform apply plan.tfplan
