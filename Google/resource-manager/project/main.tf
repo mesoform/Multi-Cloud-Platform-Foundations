@@ -41,6 +41,7 @@ resource time_sleep self {
   count = local.enable_service_delay == null ? 0 : 1
   depends_on = [google_project_iam_policy.self]
   create_duration = local.enable_service_delay
+  destroy_duration = local.enable_service_delay
 }
 
 //noinspection HILUnresolvedReference
