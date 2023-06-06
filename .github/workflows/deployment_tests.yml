@@ -8,6 +8,15 @@ on:
   pull_request:
     branches:
       - develop
+  workflow_dispatch:
+    inputs:
+      action:
+        required: true
+        description: What terraform action to perform
+        default: 'plan'
+        options:
+         - plan
+         - deploy
 
 permissions:
   contents: 'read'
@@ -17,7 +26,7 @@ jobs:
   deployment-test-plans:
     runs-on: ubuntu-latest
     name: Deployment Test Plans
-    if: github.event_name != 'push'
+    if: github.event_name != 'push' || github.event.inputs.action == 'plan'
     env:
       working-directory: ./tests/gcp/deployment
       DATE: $(date +%m%d%H%M)
@@ -114,7 +123,7 @@ jobs:
   ############################# Deployment Tests for GCP modules #####################################################
   deployment-tests:
     runs-on: ubuntu-latest
-    if: github.event_name == 'push'
+    if: github.event_name == 'push' || github.event.inputs.action == 'deploy'
     name: Deployment Tests
     env:
       working-directory: ./tests/gcp/deployment
