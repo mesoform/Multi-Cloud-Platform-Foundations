@@ -252,5 +252,5 @@ jobs:
         if: always()
         run: |
           cd google_project
-          sleep 60
+          sleep 3m
           terraform destroy -auto-approve
