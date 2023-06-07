@@ -234,13 +234,14 @@ jobs:
           terraform plan -out="./plan.tfplan"
           terraform apply plan.tfplan
 
-      - name: Destroy GKE clusters
-        if: always()
-        env:
-          TF_VAR_project_id: mcp-test-project-${{ steps.vars.outputs.DATE }}
-        run: |
-          cd gke
-          terraform destroy -auto-approve
+## Commented out due to conflicting IAM updates
+#      - name: Destroy GKE clusters
+#        if: always()
+#        env:
+#          TF_VAR_project_id: mcp-test-project-${{ steps.vars.outputs.DATE }}
+#        run: |
+#          cd gke
+#          terraform destroy -auto-approve
 
       - name: Destroy Google Service Accounts
         if: always()
@@ -252,5 +253,4 @@ jobs:
         if: always()
         run: |
           cd google_project
-          sleep 3m
           terraform destroy -auto-approve
