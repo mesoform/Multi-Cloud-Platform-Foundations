@@ -7,7 +7,6 @@ components:
     labels:
       default: value
       key-1: value-1
-    enable_service_delay: 5m
     project_iam:
       - role: "roles/owner"
         members:
