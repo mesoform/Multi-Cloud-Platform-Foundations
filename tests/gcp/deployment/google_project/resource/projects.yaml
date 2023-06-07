@@ -7,6 +7,7 @@ components:
     labels:
       default: value
       key-1: value-1
+    enable_service_delay: 5m
     project_iam:
       - role: "roles/owner"
         members:
@@ -23,7 +24,6 @@ components:
     test-project:
       project_id: mcp-test-project-<project_date>
       auto_create_network: true
-      enable_service_delay: 5m
       services:
         - service: container.googleapis.com
           disable_dependent_services: true
