@@ -26,5 +26,6 @@ components:
       auto_create_network: true
       services:
         - service: container.googleapis.com
-          disable_dependent_services: true
+          disable_on_destroy: false
         - service: gkebackup.googleapis.com
+          disable_on_destroy: false
