@@ -7,7 +7,7 @@ resource google_gke_backup_backup_plan self {
   for_each = local.backup_plans_specs
   project = data.google_project.self.project_id
   cluster = var.cluster_id == null ? each.value.cluster_id : var.cluster_id
-  name = lookup(each.value, "name", each.key)
+  name = replace(lookup(each.value, "name", each.key), "_", "-")
   location = lookup(each.value, "location", null)
   dynamic backup_config {
     for_each = lookup(each.value, "backup_config", null) == null ? {backup_config = {}} : {backup_config = each.value.backup_config}

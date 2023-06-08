@@ -16,6 +16,10 @@ on:
           - folders
         default: 'projects'
 
+permissions:
+  contents: 'read'
+  id-token: 'write'
+
 jobs:
   destroy-folders:
     name: "Destroy folder"
@@ -41,10 +45,14 @@ jobs:
         with:
           terraform_wrapper: false
 
+      # Install gcloud sdk and set the service account
       - id: 'auth'
         uses: 'google-github-actions/auth@v1'
         with:
-          credentials_json: ${{secrets.GCP_SA_KEY}}
+          service_account: ${{secrets.GCP_SA_EMAIL}}
+          workload_identity_provider: ${{secrets.GCP_WORKLOAD_IDENTITY_PROVIDER}}
+          token_format: 'access_token'
+          access_token_lifetime: 1200s # 20 minutes
 
       - name: 'Set up Cloud SDK'
         uses: 'google-github-actions/setup-gcloud@v1'
@@ -58,24 +66,18 @@ jobs:
       - run: pip install pyyaml
 
       - name: Add IDs to GCP Folder Files
-        env:
-          GOOGLE_CREDENTIALS: ${{secrets.GCP_SA_KEY}}
         run: |
           cd resource
           sed -i "s/<folder_id>/folders\/${{secrets.GCP_FOLDER_ID}}/" folders.yaml
-          SERVICE_ACCOUNT=$(echo $GOOGLE_CREDENTIALS | jq -r '.client_email')
-          sed -i "s/<service_account>/$SERVICE_ACCOUNT/"  folders.yaml
+          sed -i "s/<service_account>/${{secrets.GCP_SA_EMAIL}}/"  folders.yaml
           cat folders.yaml
 
       - name: Import Folders to terraform state
         env:
-          GOOGLE_CREDENTIALS: ${{secrets.GCP_SA_KEY}}
           GCP_FOLDER_ID: ${{secrets.GCP_FOLDER_ID}}
         run: ./folder_import_script.sh
 
       - name: Destroy folders
-        env:
-          GOOGLE_CREDENTIALS: ${{secrets.GCP_SA_KEY}}
         run: terraform destroy -auto-approve
 
   delete-projects:
@@ -94,10 +96,14 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
+      # Install gcloud sdk and set the service account
       - id: 'auth'
         uses: 'google-github-actions/auth@v1'
         with:
-          credentials_json: ${{secrets.GCP_SA_KEY}}
+          service_account: ${{secrets.GCP_SA_EMAIL}}
+          workload_identity_provider: ${{secrets.GCP_WORKLOAD_IDENTITY_PROVIDER}}
+          token_format: 'access_token'
+          access_token_lifetime: 1200s # 20 minutes
 
       - name: 'Set up Cloud SDK'
         uses: 'google-github-actions/setup-gcloud@v1'
@@ -112,6 +118,5 @@ jobs:
 
       - name: Delete projects
         env:
-          GOOGLE_CREDENTIALS: ${{secrets.GCP_SA_KEY}}
           GCP_FOLDER_ID: ${{secrets.GCP_FOLDER_ID}}
         run: ./delete_projects.sh
