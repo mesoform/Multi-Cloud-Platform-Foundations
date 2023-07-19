@@ -297,7 +297,7 @@ resource google_container_cluster self {
     for_each = lookup(each.value, "network_policy", null ) == null ? {} : { network_policy = each.value.network_policy }
     content {
       provider = lookup(network_policy.value, "provider", null )
-      enabled = false
+      enabled = true
     }
   }
 
