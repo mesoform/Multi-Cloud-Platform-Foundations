@@ -1,5 +1,5 @@
 # Google Secret Manage Module  
-This module can be used to manage Secret Manager Secrets in a project (Note: this module does not manage the secret versions).
+This module can be used to manage Secret Manager Secrets and their IAM policies in a project (Note: this module does not manage the secret versions, i.e. the data).
 This is created by defining a Terraform `module` which references a `yaml` configuration file (see [configuration](#google-project-basic-configuration).
 e.g. `main.tf`:
 ```terraform
