@@ -15,8 +15,24 @@ The following services must be enabled in the project the secrets will be deploy
 ### Required Permissions
 The account used for creating the secret will need to have the following roles:
  * `roles/secretmanager.admin` for creating secrets and managing the IAM policy (note: this will also give the service 
-account permission to access the secret versions)
+account permission to access the secret versions)  
 
+A custom role can also be created with at least the following permissions:
+```
+resourcemanager.projects.get
+resourcemanager.projects.list
+secretmanager.locations.get
+secretmanager.locations.list
+secretmanager.secrets.create
+secretmanager.secrets.delete
+secretmanager.secrets.get
+secretmanager.secrets.getIamPolicy
+secretmanager.secrets.list
+secretmanager.secrets.setIamPolicy
+secretmanager.secrets.update
+secretmanager.versions.get
+secretmanager.versions.list
+```
 ## Secret Manager basic configuration  
 The yaml file must contain a top level attribute `project_id` with the project_id
 The `components.common` block contains attributes common across all secrets which are available in `components.specs`.
