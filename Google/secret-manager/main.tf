@@ -11,7 +11,7 @@ resource google_secret_manager_secret self {
   version_aliases = lookup(each.value, "version_aliases", {})
   expire_time     = lookup(each.value, "expire_time", null)
   ttl             = lookup(each.value, "ttl", null)
-  version_destroy_ttl = lookup(each.value, "ttl", null)
+  version_destroy_ttl = lookup(each.value, "version_destroy_ttl", null)
   replication {
     dynamic auto {
       for_each = lookup(each.value, "user_managed_replicas", false) == false ? { auto = true } : {}
