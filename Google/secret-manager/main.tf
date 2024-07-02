@@ -14,7 +14,7 @@ resource google_secret_manager_secret self {
   version_destroy_ttl = lookup(each.value, "ttl", null)
   replication {
     dynamic auto {
-      for_each = lookup(each.value, "user_managed_replicas", false) == false ? true : null
+      for_each = lookup(each.value, "user_managed_replicas", false) == false ? { auto = true } : {}
       content {
         dynamic customer_managed_encryption {
           for_each = lookup(each.value, "kms_key_name", null) == null ? {} : {
