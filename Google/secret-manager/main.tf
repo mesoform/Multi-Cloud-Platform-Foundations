@@ -13,7 +13,19 @@ resource google_secret_manager_secret self {
   ttl             = lookup(each.value, "ttl", null)
   version_destroy_ttl = lookup(each.value, "ttl", null)
   replication {
-    automatic = lookup(each.value, "user_managed_replicas", false) == false ? true : null
+    dynamic auto {
+      for_each = lookup(each.value, "user_managed_replicas", false) == false ? true : null
+      content {
+        dynamic customer_managed_encryption {
+          for_each = lookup(each.value, "kms_key_name", null) == null ? {} : {
+            kms_key_name = each.value.kms_key_name
+          }
+          content {
+            kms_key_name = customer_managed_encryption.value
+          }
+        }
+      }
+    }
     dynamic user_managed {
       for_each = lookup(each.value, "user_managed_replicas", null) == null ? {} : { user_managed_replicas = toset(each.value.user_managed_replicas) }
       content {
