@@ -11,17 +11,15 @@ resource google_secret_manager_secret self {
   version_aliases = lookup(each.value, "version_aliases", {})
   expire_time     = lookup(each.value, "expire_time", null)
   ttl             = lookup(each.value, "ttl", null)
-  version_destroy_ttl = lookup(each.value, "ttl", null)
+  version_destroy_ttl = lookup(each.value, "version_destroy_ttl", null)
   replication {
     dynamic auto {
-      for_each = lookup(each.value, "user_managed_replicas", false) == false ? true : null
+      for_each = lookup(each.value, "automatic_replication", null) != null ? [each.value.automatic_replication] : []
       content {
         dynamic customer_managed_encryption {
-          for_each = lookup(each.value, "kms_key_name", null) == null ? {} : {
-            kms_key_name = each.value.kms_key_name
-          }
+          for_each = try(auto.value[0].kms_key_name, null) != null ? [auto.value[0]] : []
           content {
-            kms_key_name = customer_managed_encryption.value
+            kms_key_name = auto.value[0].kms_key_name
           }
         }
       }
