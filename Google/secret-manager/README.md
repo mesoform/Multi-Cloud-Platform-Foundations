@@ -42,6 +42,7 @@ The `components.specs` block contains maps of project configuration, with the fo
 |:------------------------|:---------:|:--------:|:------------------------------------------------------------------------------------------------------------------------------------------------------|:----------------------------------------:|
 | `secret_id`             |  string   |  false   | ID of the secret                                                                                                                                      | secret key, from `component.specs.<key>` |
 | `user_managed_replicas` | list(map) |  false   | (Ignore if using automatic replication). List of user managed replication configurations, each item contains `location` and optionally `kms_key_name` |                   none                   |
+| `automatic_replication` |  string   |  false   | (Ignore if using user managed replication). To automatically replicate a secret without any restrictions. Optionally `kms_key_name`                   |                   none                   |
 | `labels`                |    map    |  false   | Key Value pairs of labels for project                                                                                                                 |                   none                   |
 | `annotations`           |    map    |  false   | Key Value pairs of annotaions for project                                                                                                             |                   none                   |
 | `ttl`                   |  string   |  false   | Time to Live for the secret in seconds (must have "s" at the end)                                                                                     |                   none                   |
@@ -70,6 +71,7 @@ components:
   specs:
     test_secret:
       ttl: 16000s
+      version_destroy_ttl: 604800s
       automatic_replication: true
       secret_iam:
         - role: roles/secretmanager.secretAdmin
