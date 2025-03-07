@@ -23,7 +23,7 @@ data "google_iam_policy" "self" {
         content {
           title       = lookup(condition.value, "title", null)
           description = lookup(condition.value, "description", null)
-          expression  = lookup(condition.value, "expression", {condition = null})
+          expression  = lookup(condition.value, "expression", null)
         }
       }
     }
